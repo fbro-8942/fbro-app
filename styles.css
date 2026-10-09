@@ -410,10 +410,10 @@
     :root:not([data-theme="light"]) .cc-f { background: #2B1D36; color: #C79BE0; }
   }
   /* «Ich» immer rot und kräftig, unabhängig von der Gruppe */
-  .ccp.ccme { background: #FBDADA; color: #B3261E; font-weight: 400; box-shadow: inset 0 0 0 2px #B3261E; }
-  :root[data-theme="dark"] .ccp.ccme { background: #4A1B1B; color: #FF9A92; box-shadow: inset 0 0 0 2px #FF9A92; }
+  .ccp.ccme { background: #FBDADA; color: #B3261E; font-weight: 400; box-shadow: inset 0 0 0 1px #B3261E; }
+  :root[data-theme="dark"] .ccp.ccme { background: #4A1B1B; color: #FF9A92; box-shadow: inset 0 0 0 1px #FF9A92; }
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .ccp.ccme { background: #4A1B1B; color: #FF9A92; box-shadow: inset 0 0 0 2px #FF9A92; }
+    :root:not([data-theme="light"]) .ccp.ccme { background: #4A1B1B; color: #FF9A92; box-shadow: inset 0 0 0 1px #FF9A92; }
   }
   .cclegend { display: flex; flex-wrap: wrap; gap: 6px; }
   button.ccp { cursor: pointer; }
@@ -526,7 +526,9 @@
   .cntbtn.low b { color: var(--no); }
   .cntbtn.ok b { color: var(--yes); }
   .cntbtn.high b { color: var(--no); }
-  .cceh.grey { background: var(--bg); }
+  /* Abgesagte Trainings und Events: dezent grau abgehoben */
+  .ccel.off { background: color-mix(in srgb, var(--ink) 7%, var(--bg)); border-color: color-mix(in srgb, var(--ink) 18%, var(--bg)); }
+  .cceh.grey { background: transparent; }
   .cceh.grey > b { color: var(--muted); }
   .resp.yes[aria-pressed="true"] { background: #8FC7F2; border-color: #8FC7F2; color: #0B2F5E; }
   .resp.yes:not([aria-pressed="true"]) { color: #2B7FC7; border-color: color-mix(in srgb, #2B7FC7 45%, var(--line)); }
