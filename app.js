@@ -1147,7 +1147,7 @@
       (canEditEvPeople() ? '<button type="button" class="hico" data-act="ev-menu" data-id="' + e.id + '" aria-label="' + esc(L('ccActions') + ': ' + e.title) + '" title="' + esc(L('ccActions')) + '">' + ICON.dots + '</button>' : '') +
       '</div>' +
       '<div class="ccbody">' +
-        '<p class="muted small">' + esc(L('timePlace', { time: e.time, place: e.place })) + '</p>' +
+        '<p class="muted small evinfo">' + esc(L('timePlace', { time: e.time, place: e.place })) + '</p>' +
         (e.rsvp ? (
           '<div class="actrow4">' +
             btn('solo', 'yes', ICON.one, L('solo')) + btn('duo', 'yes', ICON.two, L('duo')) + btn('no', 'no', '', L('no')) +
@@ -1437,6 +1437,13 @@
   }
   function ccKindLabel(k) { return k === 'a' ? L('grpActive') : k === 'p' ? L('grpPassive') : k === 'f' ? L('grpSupporter') : k === 'g' ? L('ccGuests') : L('ccOthers'); }
   // Legende der Farben (Gruppen) und «ich»
+  // Seitentitel mit Info-Icon rechts; der Klick blendet die Farblegende darunter ein/aus
+  function pageTopLegend(titleKey, id) {
+    var on = !!S.info[id];
+    return '<div class="top" style="align-items:center"><div><h1 class="pagetitle">' + L(titleKey) + '</h1></div>' +
+      hico('info-toggle', ICON.info, on ? L('infoHide') : L('infoShow'), { on: on, data: { id: id } }) + '</div>' +
+      (on ? '<div class="infobar">' + ccLegend() + '</div>' : '');
+  }
   function ccLegend() {
     var chip = function (cls, label) { return '<span class="ccp ' + cls + '">' + esc(label) + '</span>'; };
     return '<div class="cclegend">' + chip('cc-a', ccKindLabel('a')) + chip('cc-p', ccKindLabel('p')) + chip('cc-f', ccKindLabel('f')) +
@@ -1656,10 +1663,7 @@
 
   function viewCC() {
     var map = ccMap(), ed = canCC();
-    var legOn = !!S.info.cclegend;
-    var html = '<div class="top" style="align-items:center"><div><h1 class="pagetitle">' + L('titleCC') + '</h1></div>' +
-      hico('info-toggle', ICON.info, legOn ? L('infoHide') : L('infoShow'), { on: legOn, data: { id: 'cclegend' } }) + '</div>';
-    if (legOn) html += '<div class="infobar">' + ccLegend() + '</div>';
+    var html = pageTopLegend('titleCC', 'cclegend');
     // ccPublic-Toggle entfernt auf Wunsch (war: «Für alle Aktiv- und Passivmitglieder sichtbar»)
     if (S.ccErr) return html + '<div class="empty"><p>' + L('ccSetup') + '</p></div>';
     var tree = ccTree();
@@ -2089,7 +2093,7 @@
   }
 
   function viewJass() {
-    var topHtml = '<div class="top"><div><h1 class="pagetitle">' + L('titleJass') + '</h1></div></div>';
+    var topHtml = pageTopLegend('titleJass', 'jslegend');
     if (S.jsErr) return topHtml + '<div class="empty"><p>' + L('jsSetup') + '</p></div>';
     var ed = jsEdit(), map = ccMap(), html = topHtml;
     var all = S.js.days.slice().sort(function (a, b) { return a.day < b.day ? -1 : a.day > b.day ? 1 : ccByCreated(a, b); });
@@ -3164,7 +3168,7 @@
     if (act_ === 'mode') { S.mode = S.mode === 'login' ? 'register' : 'login'; S.err = ''; render(); return; }
     if (act_ === 'tab') { S.tab = D.tab; S.edit = null; render(); window.scrollTo(0, 0); return; }
     if (act_ === 'who') { S.open[D.key] = !S.open[D.key]; render(); return; }
-    if (act_ === 'js-fold') { S.jsFold[D.id] = !S.jsFold[D.id]; render(); return; }
+    if (act_ === 'js-fold') { S.jsFold[D.id] = !S.jsFold[D.id]; delete S.info['jsh:' + D.id]; delete S.info['jsh:' + String(D.id).replace(/:s$/, '')]; render(); return; }   // Auf-/Zuklappen blendet den Infotext immer aus; Info nur über das Info-Icon
     if (act_ === 'js-print-past') { if (!jsEdit()) return; try { await jsPrintMatrix(); } catch (err) { console.error(err); toast(L('ccPdfFailed')); } return; }
     if (act_ === 'js-hint') { S.info['jsh:' + D.id] = !S.info['jsh:' + D.id]; render(); return; }   // nur den Text ein-/ausblenden
     if (act_ === 'js-menu') { if (jsEdit()) jsOpen({ lvl: D.lvl, id: D.id, mode: 'menu' }); return; }
