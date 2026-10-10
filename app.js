@@ -874,7 +874,7 @@
     print: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7"/><rect x="6" y="14" width="12" height="8"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><circle cx="18" cy="12" r="1" fill="currentColor" stroke="none"/></svg>',
     logout: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>',
     music: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
-    stage: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3.5h18"/><path d="M5 3.5v3c0 5-1 9.500-2 13.500h5c.6-4.500 1-9 1-16.500"/><path d="M19 3.5v3c0 5 1 9.500 2 13.500h-5c-.6-4.500-1-9-1-16.500"/><path d="M12 10.500l.9 1.800 2 .3-1.450 1.400.35 2-1.800-.95-1.800.95.35-2-1.450-1.400 2-.3z"/></svg>',
+    stage: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M7.2 10c.8-1.6 2.4-1.6 3.2 0M13.6 10c.8-1.6 2.4-1.6 3.2 0"/><path d="M6.8 13.5h10.4a5.2 5.2 0 0 1-10.4 0z"/></svg>',
     glass: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="liq" d="M6.3 10.6a5 5 0 0 1 5.7-.6a5 5 0 0 0 5.7.6c-.4 2.6-2.8 4.4-5.7 4.4s-5.3-1.8-5.7-4.4z" stroke="none"/><path d="M8 21h8"/><path d="M12 15v6"/><path d="M17 3l1 7c0 3-2.7 5-6 5s-6-2-6-5l1-7z"/><path d="M6.2 10a5 5 0 0 1 5.8 0a5 5 0 0 0 5.8 0"/></svg>',
     dialpad: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><circle cx="6" cy="4" r="1.8"/><circle cx="12" cy="4" r="1.8"/><circle cx="18" cy="4" r="1.8"/><circle cx="6" cy="10" r="1.8"/><circle cx="12" cy="10" r="1.8"/><circle cx="18" cy="10" r="1.8"/><circle cx="6" cy="16" r="1.8"/><circle cx="12" cy="16" r="1.8"/><circle cx="18" cy="16" r="1.8"/><circle cx="12" cy="21.5" r="1.8"/></svg>',
     trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12"/><path d="M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg>',
@@ -1775,8 +1775,8 @@
   function shMusicRow(a) {
     if (!a.music_name && !a.music_url) return '';
     var ok = a.music_url && shSpotifyOk(a.music_url);
-    var ic = ok ? '<a class="shsp" href="' + esc(a.music_url) + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(L('shOpenSpotify')) + '" title="' + esc(L('shOpenSpotify')) + '">' + '<img src="icons/spotify.png" alt="" width="28" height="28">' + '</a>'
-                : '<span class="shsp off" aria-hidden="true">' + '<img src="icons/spotify.png" alt="" width="28" height="28">' + '</span>';
+    var ic = ok ? '<a class="shsp" href="' + esc(a.music_url) + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(L('shOpenSpotify')) + '" title="' + esc(L('shOpenSpotify')) + '">' + '<img src="icons/spotify.png" alt="" width="21" height="21">' + '</a>'
+                : '<span class="shsp off" aria-hidden="true">' + '<img src="icons/spotify.png" alt="" width="21" height="21">' + '</span>';
     return '<div class="shmusic"><span class="shml">' + L('shMusic') + '</span><span class="shmn">' + (a.music_name ? esc(a.music_name) : '') + '</span>' + ic + '</div>';
   }
   // Vorgabe für die Beschreibung eines neuen Akts / einer neuen Szene: «1. Akt - …», «2. Szene - …» (nächste freie Nummer)
@@ -1784,13 +1784,9 @@
     var n = kind === 'act' ? S.cc.acts.length + 1 : S.cc.scenes.filter(function (x) { return ccSheet && x.act_id === ccSheet.id; }).length + 1;
     return n + '. ' + (kind === 'act' ? 'Akt' : 'Szene') + ' - …';
   }
-  function shInfoBtn(o) {
-    if (!o.description) return '';
-    var on = !!S.info['shh:' + o.id];
-    return hico('sh-hint', ICON.info, on ? L('infoHide') : L('infoShow'), { on: on, data: { id: o.id } });
-  }
-  function shInfoText(o) {
-    return o.description && S.info['shh:' + o.id] ? '<div class="infobar shdesc">' + esc(o.description) + '</div>' : '';
+  // Beschreibung von Akt/Szene: immer sichtbar, solange der Abschnitt aufgeklappt ist (kein Info-Icon)
+  function shDescText(o, open) {
+    return o.description && open ? '<div class="infobar shdesc">' + esc(o.description) + '</div>' : '';
   }
   function viewShow() {
     var map = ccMap(), ed = shEdit();
@@ -1803,9 +1799,9 @@
       html += '<section class="ccel' + (a.active ? '' : ' ccoff') + '"><div class="cceh">' +
         (ed ? '<input type="checkbox" class="ccck" data-shactive="' + esc(a.id) + '"' + (a.active ? ' checked' : '') + ' aria-label="' + esc(a.name + ': ' + L('shVisible')) + '" title="' + esc(L('shVisible')) + '">' : '') +
         '<button type="button" class="cct" data-act="sh-fold" data-id="' + esc(a.id) + '" aria-expanded="' + !folded + '">' + esc(a.name) + '</button>' +
-        shInfoBtn(a) + (ed ? shDots('act', a.id, a.name) : '') +
+        (ed ? shDots('act', a.id, a.name) : '') +
         '<button type="button" class="ccfold' + (folded ? '' : ' open') + '" data-act="sh-fold" data-id="' + esc(a.id) + '" aria-expanded="' + !folded + '" aria-label="' + esc(a.name) + '">' + ICON.chev + '</button></div>' +
-        shMusicRow(a) + shInfoText(a);
+        shMusicRow(a) + shDescText(a, !folded);
       if (!folded) {
         html += '<div class="ccbody">';
         if (!A.scenes.length) html += '<p class="ccsum" style="padding-top:10px">' + L('shNoScenes') + '</p>';
@@ -1813,9 +1809,9 @@
           var sc = Sc.s, sf = !!S.ccFold[sc.id];
           html += '<div class="ccday"><div class="ccdh">' +
             '<button type="button" class="ccdt" data-act="sh-fold" data-id="' + esc(sc.id) + '" aria-expanded="' + !sf + '"><b>' + esc(sc.name) + '</b></button>' +
-            shInfoBtn(sc) + (ed ? shDots('scene', sc.id, sc.name) : '') +
+            (ed ? shDots('scene', sc.id, sc.name) : '') +
             '<button type="button" class="ccfold ccfold-day' + (sf ? '' : ' open') + '" data-act="sh-fold" data-id="' + esc(sc.id) + '" aria-expanded="' + !sf + '" aria-label="' + esc(sc.name) + '">' + ICON.chev + '</button></div>' +
-            shInfoText(sc);
+            shDescText(sc, !sf);
           if (sf) html += '<div class="ccsum">' + L('shSummary', { r: Sc.parts.length }) + '</div>';
           else {
             html += '<div class="ccsh">';
@@ -3332,8 +3328,7 @@
     if (act_ === 'mb-menu') { if (S.me && S.me.isAdmin) mbOpen(D.id); return; }
     if (act_ === 'mb-grp') { S.sec[D.id] = S.sec[D.id] !== true; render(); return; }
     if (act_ === 'cc-addevent') { if (canCC()) ccOpen('root', null, 'add'); return; }
-    if (act_ === 'sh-fold') { S.ccFold[D.id] = !shIsFolded(D.id); delete S.info['shh:' + D.id]; S.cc.scenes.forEach(function (x) { if (x.act_id === D.id) delete S.info['shh:' + x.id]; }); render(); return; }
-    if (act_ === 'sh-hint') { S.info['shh:' + D.id] = !S.info['shh:' + D.id]; render(); return; }
+    if (act_ === 'sh-fold') { S.ccFold[D.id] = !shIsFolded(D.id); render(); return; }
     if (act_ === 'sh-addact') { if (shEdit()) ccOpen('shroot', null, 'add'); return; }
     if (act_ === 'sh-menu') { if (shEdit()) ccOpen(D.lvl, D.id || null, 'menu'); return; }
     if (act_ === 'cc-fold') { S.ccFold[D.id] = !ccIsFolded(D.id); render(); return; }
