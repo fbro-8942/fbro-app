@@ -1773,7 +1773,7 @@
 
     var doc = new window.jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     var PAGE_W = doc.internal.pageSize.getWidth(), PAGE_H = doc.internal.pageSize.getHeight();
-    var MARGIN = 12, GAP = 6, COLW = (PAGE_W - 2 * MARGIN - GAP) / 2, TOP = 30, BOTTOM = PAGE_H - 12;
+    var MARGIN = 12, GAP = 6, COLW = PAGE_W - 2 * MARGIN, TOP = 30, BOTTOM = PAGE_H - 12;
     var BLUE = [48, 124, 192], BLUE_DARK = [11, 47, 94], BLUE_SOFT = [227, 239, 249], GREY = [93, 103, 122], INK = [22, 35, 59], LINE = [218, 222, 214];
     var logo = await ensureLogoDataUrl();
 
@@ -1869,12 +1869,9 @@
       colY = [y0 + bandH + 4, y0 + bandH + 4];
       A.scenes.forEach(function (Sc) {
         var h = sceneHeight(Sc, COLW);
-        var c = colY[0] <= colY[1] ? 0 : 1;
-        if (colY[c] + h > BOTTOM) {
-          var o = 1 - c;
-          if (colY[o] + h <= BOTTOM) c = o; else { newPage(); c = 0; }
-        }
-        var x = c === 0 ? MARGIN : MARGIN + COLW + GAP;
+        var c = 0;
+        if (colY[c] + h > BOTTOM) { newPage(); }
+        var x = MARGIN;
         colY[c] = drawScene(Sc, x, colY[c], COLW) + 5;
       });
       colY = [Math.max(colY[0], colY[1]) + 2, Math.max(colY[0], colY[1]) + 2];
@@ -1951,7 +1948,23 @@
     var ic = a.video_url && shYoutubeOk(a.video_url)
       ? '<a class="shsp" href="' + esc(a.video_url) + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(L('shOpenYoutube')) + '" title="' + esc(L('shOpenYoutube')) + '">' + img + '</a>'
       : '<span class="shsp off" aria-hidden="true">' + img + '</span>';
-    return '<div class="shmusic shvideo"><span class="shml">' + L('shVideo') + '</span><span class="shmn">' + (a.video_desc ? esc(a.video_desc) : '') + '</span>' + ic + '</div>';
+    // Player (YouTube-Einbettung): ausbaubar, indem shYoutubeEmbed()/Play-Button/Player-Block entfernt werden
+    var emb = a.video_url && shYoutubeOk(a.video_url) ? shYoutubeEmbed(a.video_url) : '', pid = 'v:' + a.id, playing = !!(emb && a.id && S.play[pid]);
+    var pb = emb && a.id ? '<button type="button" class="shplaybtn' + (playing ? ' on' : '') + '" data-act="sh-play" data-id="' + esc(pid) + '" aria-pressed="' + playing + '" aria-label="' + esc(L(playing ? 'shPlayStop' : 'shPlay')) + '" title="' + esc(L(playing ? 'shPlayStop' : 'shPlay')) + '">' +
+      (playing ? '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/></svg>' : '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>') + '</button>' : '';
+    var pl = playing ? '<div class="shplayer shvplayer"><iframe src="' + esc(emb) + '" width="100%" frameborder="0" loading="lazy" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" title="YouTube"></iframe></div>' : '';
+    return '<div class="shmusic shvideo"><span class="shml">' + L('shVideo') + '</span><span class="shmn">' + (a.video_desc ? esc(a.video_desc) : '') + '</span>' + pb + ic + pl + '</div>';
+  }
+  // Einbettungs-URL (datenschutzfreundlich: youtube-nocookie.com) für Video- oder Playlist-Links
+  function shYoutubeEmbed(u) {
+    var url; try { url = new URL(String(u).trim()); } catch (e) { return ''; }
+    var id = '', host = url.hostname.replace(/^www\./, '');
+    if (host === 'youtu.be') id = url.pathname.slice(1).split('/')[0];
+    else { id = url.searchParams.get('v') || ''; var m = url.pathname.match(/^\/(?:shorts|embed|live)\/([A-Za-z0-9_-]{6,})/); if (!id && m) id = m[1]; }
+    var list = url.searchParams.get('list') || '';
+    if (/^[A-Za-z0-9_-]{6,}$/.test(id)) return 'https://www.youtube-nocookie.com/embed/' + id + (/^[A-Za-z0-9_-]+$/.test(list) ? '?list=' + list : '');
+    if (/^[A-Za-z0-9_-]+$/.test(list) && url.pathname === '/playlist') return 'https://www.youtube-nocookie.com/embed/videoseries?list=' + list;
+    return '';
   }
   // Vorgabe für den Namen eines neuen Akts / einer neuen Szene: «1. Akt - ...», «2. Szene - ...» (nächste freie Nummer)
   function shDefaultName(kind) {
@@ -2051,6 +2064,15 @@
       '<button type="submit" class="btn inline">' + (saveLabel || L('save')) + '</button></div>';
   }
 
+  // Zeile Musik/Video im Szenen-Formular: Textfeld mit Icon rechts; hinter dem Icon verbirgt sich das Link-Feld (leer lassen = löschen)
+  function shMediaField(label, nameF, nameV, namePh, urlF, urlV, urlPh, img, iconLabel) {
+    return '<div class="field"><span>' + label + '</span><div class="shfm">' +
+      '<input class="input" name="' + nameF + '" value="' + esc(nameV || '') + '" placeholder="' + esc(namePh) + '">' +
+      '<button type="button" class="shficon' + (urlV ? ' on' : '') + '" data-cca="tog" data-t="' + urlF + '" aria-pressed="false" aria-label="' + esc(iconLabel) + '" title="' + esc(iconLabel) + '"><img src="' + img + '" alt="" width="24" height="24"></button></div>' +
+      '<input class="input shfmu" name="' + urlF + '" inputmode="url" value="' + esc(urlV || '') + '" placeholder="' + esc(urlPh) + '" hidden></div>';
+  }
+  function shReveal(n) { var f = document.querySelector('#ccsheet [name="' + n + '"]'), bt = document.querySelector('#ccsheet [data-t="' + n + '"]'); if (f) { f.hidden = false; if (bt) bt.setAttribute('aria-pressed', 'true'); f.focus(); } }
+  function shGrow(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; }
   function ccForm(kind, o, isNew) {
     var h = '<p class="cck">' + L(CC_LVL[kind]) + '</p><h3>' + esc(isNew ? L(CC_ADD[kind]) : ccTitle(kind, o)) + '</h3>' +
       '<form data-ccform="' + kind + '" novalidate>';
@@ -2066,11 +2088,9 @@
         fld(L('ccNameOpt'), '<input class="input" name="name" value="' + esc(o && o.name ? o.name : '') + '" placeholder="Abendschicht">');
     } else if (kind === 'act' || kind === 'scene') {
       h += fld(L('nameLabel'), '<input class="input" name="name" value="' + esc(o ? o.name : shDefaultName(kind)) + '" required>') +
-        (kind === 'scene' ? fld(L('shMusic'), '<input class="input" name="music_name" value="' + esc(o && o.music_name ? o.music_name : '') + '" placeholder="Titel / Interpret">') +
-          fld(L('shSpotify'), '<input class="input" type="url" name="music_url" inputmode="url" value="' + esc(o && o.music_url ? o.music_url : '') + '" placeholder="https://open.spotify.com/…">') +
-          fld(L('shVideo'), '<input class="input" name="video_desc" value="' + esc(o && o.video_desc ? o.video_desc : '') + '" placeholder="Beschreibung">') +
-          fld(L('shYoutube'), '<input class="input" type="url" name="video_url" inputmode="url" value="' + esc(o && o.video_url ? o.video_url : '') + '" placeholder="https://www.youtube.com/watch?v=…">') : '') +
-        fld(L('shDesc'), '<textarea class="input" name="desc" rows="4">' + esc(o && o.description ? o.description : '') + '</textarea>') +
+        fld(L('shDesc'), '<textarea class="input shgrow" name="desc" rows="1">' + esc(o && o.description ? o.description : '') + '</textarea>') +
+        (kind === 'scene' ? shMediaField(L('shMusic'), 'music_name', o && o.music_name, 'Titel / Interpret', 'music_url', o && o.music_url, 'https://open.spotify.com/…', 'icons/spotify.png', L('shSpotify')) +
+          shMediaField(L('shVideo'), 'video_desc', o && o.video_desc, 'Beschreibung', 'video_url', o && o.video_url, 'https://www.youtube.com/watch?v=…', 'icons/youtube.png', L('shYoutube')) : '') +
         (kind === 'act' ? '<label class="check"><input type="checkbox" name="active"' + (o && o.active ? ' checked' : '') + '><span>' + L('shVisible') + '</span></label>' : '');
     } else if (ccIsPersonLvl(kind)) {
       h += fld(L('nameLabel'), '<input class="input" name="name" value="' + esc(o ? o.name : '') + '" placeholder="Bar" required>') +
@@ -2136,6 +2156,7 @@
       document.addEventListener('keydown', ccKey, true);
     }
     wrap.innerHTML = '<div class="ccsheetcard" role="dialog" aria-modal="true" aria-label="' + esc(L(CC_LVL[st.lvl] || 'ccOthers')) + '">' + body + '</div>';
+    Array.prototype.forEach.call(wrap.querySelectorAll('textarea.shgrow'), shGrow);
     if (st.mode === 'edit' && ccIsPersonLvl(st.lvl) || st.mode === 'add' && ccIsPersonLvl(CC_SUB[st.lvl])) { ccDrawSel(); ccDrawList(); }
     var first = wrap.querySelector('form .input');
     if (first) { try { first.focus({ preventScroll: true }); } catch (e) { first.focus(); } }
@@ -2196,6 +2217,8 @@
     var t = e.target;
     if (t.name === 'q') { ccSheet.q = t.value; ccDrawList(); }
     else if (t.name === 'other') ccDrawSug(t.value);
+    else if (t.name === 'desc') shGrow(t);
+    else if (t.name === 'music_url' || t.name === 'video_url') { var ib = document.querySelector('#ccsheet [data-t="' + t.name + '"]'); if (ib) ib.classList.toggle('on', !!t.value.trim()); }
   }
   function ccSheetChange(e) {
     var t = e.target;
@@ -2214,6 +2237,7 @@
     if (!st) return;
     var o = ccObj(st.lvl, st.id);
     if (a === 'close') { ccCloseSheet(); return; }
+    if (a === 'tog') { var tf = wrap.querySelector('[name="' + b.dataset.t + '"]'); if (tf) { tf.hidden = !tf.hidden; b.setAttribute('aria-pressed', String(!tf.hidden)); if (!tf.hidden) tf.focus(); } return; }
     if (a === 'edit') {
       st.mode = 'edit';
       if (ccIsPersonLvl(st.lvl)) { st.persons = (o.persons || []).map(function (p) { return { id: p.id, name: p.name }; }); st.q = ''; }
@@ -2315,8 +2339,8 @@
     if ((kind === 'event' || kind === 'role' || kind === 'act' || kind === 'scene' || kind === 'part' || kind === 'copy-event') && !g('name')) { ccErr(L('ccNeedName')); return; }
     if ((kind === 'day' || kind === 'copy-day') && !g('date')) { ccErr(L('date') + '?'); return; }
     if (kind === 'shift' && (!g('start') || !g('end'))) { ccErr(L('time') + '?'); return; }
-    if (kind === 'scene' && g('music_url') && !shSpotifyOk(g('music_url'))) { ccErr(L('shMusicBad')); return; }
-    if (kind === 'scene' && g('video_url') && !shYoutubeOk(g('video_url'))) { ccErr(L('shVideoBad')); return; }
+    if (kind === 'scene' && g('music_url') && !shSpotifyOk(g('music_url'))) { shReveal('music_url'); ccErr(L('shMusicBad')); return; }
+    if (kind === 'scene' && g('video_url') && !shYoutubeOk(g('video_url'))) { shReveal('video_url'); ccErr(L('shVideoBad')); return; }
     ccCloseSheet();
 
     if (kind === 'event') {
