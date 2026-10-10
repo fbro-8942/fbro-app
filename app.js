@@ -98,6 +98,7 @@
       navCC: 'C&C', ccMembers: 'Mitglieder', ccGuests: 'Gäste', ccOthers: 'Andere', ccEmpty: 'Noch keine Anlässe erfasst.', ccNoDays: 'Noch keine Tage erfasst.', ccSummary: '{s} Schichten · {r} Rollen', ccLvlAll: 'Chränzli und Chilbi', ccLvlEvent: 'Anlass', ccLvlDay: 'Tag', ccLvlShift: 'Schicht', ccLvlRole: 'Rolle', ccActions: 'Aktionen', ccAddEvent: 'Anlass hinzufügen', ccAddDay: 'Tag hinzufügen', ccAddShift: 'Schicht hinzufügen', ccAddRole: 'Rolle hinzufügen', ccChange: 'Ändern', ccCopy: 'Kopieren', ccClose: 'Schliessen', ccNameOpt: 'Name (optional)', ccStart: 'Start', ccEnd: 'Ende', ccActive: 'Aktiv', ccPersons: 'Verantwortliche', ccSearch: 'Namen suchen', ccOtherPerson: 'Andere Person (nicht in der App)', ccAdd: 'Hinzufügen', ccDidYouMean: 'Meinst du {name}?', ccNobody: 'Noch niemand', ccConfirmDel: '«{name}» löschen? Alles, was darunter erfasst ist, wird ebenfalls gelöscht.', ccConfirmDelRole: '«{name}» löschen?', ccCopyEventNote: 'Die Kopie ist zuerst inaktiv. Alle Tage werden um 52 Wochen verschoben, damit die Wochentage gleich bleiben.', ccCopyDayNote: 'Schichten und Rollen werden mit den Verantwortlichen kopiert.', ccSaved: 'Gespeichert', ccCopied: 'Kopiert', ccDeleted: 'Gelöscht', ccNotInApp: '{name} ist noch nicht in der App. Mit der Handynummer kannst du die Person als Gast hinzufügen.', ccAsGuest: 'Als Gast hinzufügen', ccNeedName: 'Gib einen Namen ein.', ccSetup: 'Für C&C muss das Datenbank-Schema aktualisiert werden (supabase/schema.sql).', grpCandidate: 'Kandidaten', candidateTitle: 'Besten Dank für Dein Interesse', candidateMsg: 'Deine Anfrage wird durch unsere Administratoren geprüft.', mGroupActive: 'Zu Aktivmitglied machen', mGroupPassive: 'Zu Passivmitglied machen', mGroupGuest: 'Zu Gast machen', mGroupOther: 'Zu Friends & Family machen', mGroupCandidate: 'Zu Kandidat machen', groupChanged: 'Gruppe geändert', jsEternal: 'Ewige Rangliste', jsEternalHint: 'Über die letzten {n} abgeschlossenen Runden', jsEternalRounds: '{n} Runden', jsEternalRound: '1 Runde', jsVisibleHint: 'Ohne Haken sehen nur Admin und Jass Manager diese Runde', evEdit: 'Event ändern', evManagePeople: 'Teilnehmer verwalten', grpSupporter: 'Friends & Family', mMakeSupporter: 'Zu Friends & Family machen', supporterSet: 'Als Friends & Family eingeordnet', pinLampOk: 'Hat den PIN schon geändert', pinLampNo: 'Nutzt noch den Standard-PIN', pinBannerMsg: 'Bitte setze deinen persönlichen PIN-Code, um alle Funktionen freizuschalten.', pinBannerBtn: 'PIN jetzt setzen', ccPublicLabel: 'Für alle Aktiv- und Passivmitglieder sichtbar', ccPublicOn: 'C&C ist jetzt für alle sichtbar (nur lesend)', ccPublicOff: 'C&C ist jetzt wieder nur für Admin, Chilbi Manager und Chränzli Manager sichtbar', ccCopySuffix: 'Kopie', ccLegendMe: 'Ich', ccPrint: 'PDF teilen', jsPrint: 'Jassmasters-Übersicht als PDF', ccPdfBuilding: 'PDF wird erstellt…', ccPdfFailed: 'PDF konnte nicht erstellt werden.',
       mMakeAdmin: 'Zum Admin machen', mRevokeAdmin: 'Admin-Rechte entziehen', mMakeEm: 'Zum Event Manager machen', mRevokeEm: 'Event Manager-Rechte entziehen', mMakeGuest: 'Zum Gast machen', mMakeMember: 'Zum Mitglied machen', mEdit: 'Name und Handynummer ändern', mEditNote: 'Bei einer neuen Handynummer gilt wieder der Standard-PIN: die letzten 6 Ziffern der neuen Nummer.', mSaved: 'Gespeichert', mDelete: 'Mitglied löschen', mPhoneTaken: 'Diese Handynummer gehört bereits einer anderen Person.',
       navJass: 'Jass', jsParticipants: 'Teilnehmer', jsSchedule: 'Spielplan', jsRanking: 'Tagesrangliste', jsRound: 'Runde {n}', jsTable: 'Tisch {t}', jsTeam1: 'Team I', jsTeam2: 'Team II', jsPlayer: 'Spieler {n}', jsFree: 'frei', jsEmpty: 'Noch kein Jassmasters erfasst.', jsNoDays: 'Noch kein Datum erfasst.', jsAddSeries: 'Jassmasters hinzufügen', jsAddDay: 'Datum hinzufügen', jsLvlSeries: 'Jassmasters', jsLvlDay: 'Jasstag', jsPick: 'Spieler {n} wählen', jsClear: 'Platz freigeben', jsAlready: 'bereits Spieler {n}', jsPoints: 'Punkte', jsGames: '{n} Spiele', jsPtsAbbr: 'Pkt.', jsGame: '{n} Spiel', jsNoPoints: 'Noch keine Punkte erfasst.', jsHint: 'Trage die Punkte beim Siegerteam ein. Das andere Team erhält sie automatisch negativ.', jsSetup: 'Für Jass muss das Datenbank-Schema aktualisiert werden (supabase/schema.sql).', jsFinish: 'Jassmaster abschliessen', jsConfirmFinish: '«{name}» abschliessen? Es wird unter Vergangene Jassmasters verschoben und ist danach nur noch als Rangliste sichtbar. Fortfahren?', jsFinished: 'Als abgeschlossen markiert', jsEditRanking: 'Rangliste bearbeiten', jsRankName: 'Name', jsRankPoints: 'Punkte', jsAddRow: 'Zeile hinzufügen', jsNoRows: 'Noch niemand erfasst.',
+      shPlay: 'Hier abspielen', shPlayStop: 'Player schliessen',
       shVideo: 'Video', shYoutube: 'YouTube-Link', shOpenYoutube: 'Auf YouTube öffnen', shVideoBad: 'Bitte einen YouTube-Link angeben (https://www.youtube.com/… oder https://youtu.be/…).',
       shMusic: 'Musik', shSpotify: 'Spotify-Link', shOpenSpotify: 'In Spotify öffnen', shMusicBad: 'Bitte einen Spotify-Link angeben (https://open.spotify.com/…).',
       navShow: 'Show', titleShow: 'Bühnen-Einsatz', dirTag: 'Regisseur', actTag: 'Schauspieler', mMakeDir: 'Zum Regisseur machen', mRevokeDir: 'Regisseur-Rechte entziehen', mMakeActor: 'Zum Schauspieler machen', mRevokeActor: 'Schauspieler-Rolle entziehen', dirGranted: 'Als Regisseur festgelegt', dirRevoked: 'Regisseur-Rechte entzogen', actorGranted: 'Als Schauspieler festgelegt', actorRevoked: 'Schauspieler-Rolle entzogen', shEmpty: 'Noch kein Akt erfasst.', shSetup: 'Die Show-Tabellen fehlen. Bitte PRD_v97_show.sql im SQL Editor ausführen.', shAddAct: 'Akt hinzufügen', shAddScene: 'Szene hinzufügen', shAddPart: 'Rolle hinzufügen', shLvlAll: 'Show', shLvlAct: 'Akt', shLvlScene: 'Szene', shLvlPart: 'Rolle', shDesc: 'Beschreibung', shNoScenes: 'Noch keine Szenen erfasst.', shSummary: '{r} Rollen', shVisible: 'Planung für Schauspieler sichtbar',
@@ -176,6 +177,7 @@
       navCC: 'C&C', ccMembers: 'Membres', ccGuests: 'Invités', ccOthers: 'Autres', ccEmpty: 'Aucune manifestation pour l’instant.', ccNoDays: 'Aucun jour pour l’instant.', ccSummary: '{s} créneaux · {r} rôles', ccLvlAll: 'Chränzli et Chilbi', ccLvlEvent: 'Manifestation', ccLvlDay: 'Jour', ccLvlShift: 'Créneau', ccLvlRole: 'Rôle', ccActions: 'Actions', ccAddEvent: 'Ajouter une manifestation', ccAddDay: 'Ajouter un jour', ccAddShift: 'Ajouter un créneau', ccAddRole: 'Ajouter un rôle', ccChange: 'Modifier', ccCopy: 'Copier', ccClose: 'Fermer', ccNameOpt: 'Nom (facultatif)', ccStart: 'Début', ccEnd: 'Fin', ccActive: 'Actif', ccPersons: 'Responsables', ccSearch: 'Rechercher un nom', ccOtherPerson: 'Autre personne (pas dans l’application)', ccAdd: 'Ajouter', ccDidYouMean: 'Tu veux dire {name} ?', ccNobody: 'Personne pour l’instant', ccConfirmDel: 'Supprimer « {name} » ? Tout ce qui y est rattaché sera aussi supprimé.', ccConfirmDelRole: 'Supprimer « {name} » ?', ccCopyEventNote: 'La copie est d’abord inactive. Tous les jours sont décalés de 52 semaines pour garder les mêmes jours de la semaine.', ccCopyDayNote: 'Les créneaux et rôles sont copiés avec les responsables.', ccSaved: 'Enregistré', ccCopied: 'Copié', ccDeleted: 'Supprimé', ccNotInApp: '{name} n’est pas encore dans l’application. Avec son numéro de mobile, tu peux l’ajouter comme invité.', ccAsGuest: 'Ajouter comme invité', ccNeedName: 'Saisis un nom.', ccSetup: 'Pour C&C, le schéma de la base de données doit être mis à jour (supabase/schema.sql).', grpCandidate: 'Candidats', candidateTitle: 'Merci beaucoup pour ton intérêt', candidateMsg: 'Ta demande est examinée par nos administrateurs.', mGroupActive: 'Passer en membre actif', mGroupPassive: 'Passer en membre passif', mGroupGuest: 'Passer en invité', mGroupOther: 'Passer en Friends & Family', mGroupCandidate: 'Passer en candidat', groupChanged: 'Groupe modifié', jsEternal: 'Classement perpétuel', jsEternalHint: 'Sur les {n} dernières manches terminées', jsEternalRounds: '{n} manches', jsEternalRound: '1 manche', jsVisibleHint: 'Sans coche, seuls Admin et Jass Manager voient cette manche', evEdit: 'Modifier l’événement', evManagePeople: 'Gérer les participants', grpSupporter: 'Friends & Family', mMakeSupporter: 'Passer en Friends & Family', supporterSet: 'Classé·e dans Friends & Family', pinLampOk: 'A déjà changé son code PIN', pinLampNo: 'Utilise encore le code PIN standard', pinBannerMsg: 'Définis ton code PIN personnel pour débloquer toutes les fonctions.', pinBannerBtn: 'Définir le PIN', ccPublicLabel: 'Visible pour tous les membres actifs et passifs', ccPublicOn: 'C&C est maintenant visible pour tout le monde (lecture seule)', ccPublicOff: 'C&C n’est de nouveau visible que pour Admin, Chilbi Manager et Chränzli Manager', ccCopySuffix: 'copie', ccLegendMe: 'Moi', ccPrint: 'Partager en PDF', jsPrint: 'Aperçu Jassmasters en PDF', ccPdfBuilding: 'Création du PDF…', ccPdfFailed: 'Le PDF n’a pas pu être créé.',
       mMakeAdmin: 'Nommer admin', mRevokeAdmin: 'Retirer les droits d’admin', mMakeEm: 'Nommer responsable des événements', mRevokeEm: 'Retirer les droits de responsable des événements', mMakeGuest: 'Définir comme invité', mMakeMember: 'Définir comme membre', mEdit: 'Modifier le nom et le numéro de mobile', mEditNote: 'Avec un nouveau numéro, le PIN par défaut s’applique à nouveau : les 6 derniers chiffres du nouveau numéro.', mSaved: 'Enregistré', mDelete: 'Supprimer le membre', mPhoneTaken: 'Ce numéro de mobile appartient déjà à une autre personne.',
       navJass: 'Jass', jsParticipants: 'Participants', jsSchedule: 'Programme des parties', jsRanking: 'Classement du jour', jsRound: 'Manche {n}', jsTable: 'Table {t}', jsTeam1: 'Équipe I', jsTeam2: 'Équipe II', jsPlayer: 'Joueur {n}', jsFree: 'libre', jsEmpty: 'Aucun Jassmasters pour l’instant.', jsNoDays: 'Aucune date pour l’instant.', jsAddSeries: 'Ajouter un Jassmasters', jsAddDay: 'Ajouter une date', jsLvlSeries: 'Jassmasters', jsLvlDay: 'Journée de jass', jsPick: 'Choisir le joueur {n}', jsClear: 'Libérer la place', jsAlready: 'déjà joueur {n}', jsPoints: 'Points', jsGames: '{n} parties', jsPtsAbbr: 'pts', jsGame: '{n} partie', jsNoPoints: 'Aucun point saisi pour l’instant.', jsHint: 'Saisis les points pour l’équipe gagnante. L’autre équipe les reçoit automatiquement en négatif.', jsSetup: 'Pour le jass, le schéma de la base de données doit être mis à jour (supabase/schema.sql).', jsFinish: 'Clôturer le Jassmaster', jsConfirmFinish: 'Clôturer « {name} » ? La manche sera déplacée sous Jassmasters passés et ne sera plus visible que comme classement. Continuer ?', jsFinished: 'Marqué comme terminé', jsEditRanking: 'Modifier le classement', jsRankName: 'Nom', jsRankPoints: 'Points', jsAddRow: 'Ajouter une ligne', jsNoRows: 'Personne n’a encore été saisi.',
+      shPlay: 'Écouter ici', shPlayStop: 'Fermer le lecteur',
       shVideo: 'Vidéo', shYoutube: 'Lien YouTube', shOpenYoutube: 'Ouvrir sur YouTube', shVideoBad: 'Veuillez indiquer un lien YouTube (https://www.youtube.com/… ou https://youtu.be/…).',
       shMusic: 'Musique', shSpotify: 'Lien Spotify', shOpenSpotify: 'Ouvrir dans Spotify', shMusicBad: 'Veuillez indiquer un lien Spotify (https://open.spotify.com/…).',
       navShow: 'Show', titleShow: 'Bühnen-Einsatz', dirTag: 'Metteur en scène', actTag: 'Acteur', mMakeDir: 'Nommer metteur en scène', mRevokeDir: 'Retirer les droits de metteur en scène', mMakeActor: 'Nommer acteur', mRevokeActor: 'Retirer le rôle d’acteur', dirGranted: 'Défini comme metteur en scène', dirRevoked: 'Droits de metteur en scène retirés', actorGranted: 'Défini comme acteur', actorRevoked: 'Rôle d’acteur retiré', shEmpty: 'Aucun acte pour l’instant.', shSetup: 'Les tables Show manquent. Exécuter PRD_v97_show.sql dans le SQL Editor.', shAddAct: 'Ajouter un acte', shAddScene: 'Ajouter une scène', shAddPart: 'Ajouter un rôle', shLvlAll: 'Show', shLvlAct: 'Acte', shLvlScene: 'Scène', shLvlPart: 'Rôle', shDesc: 'Description', shNoScenes: 'Aucune scène pour l’instant.', shSummary: '{r} rôles', shVisible: 'Planification visible pour les acteurs',
@@ -254,6 +256,7 @@
       navCC: 'C&C', ccMembers: 'Members', ccGuests: 'Guests', ccOthers: 'Others', ccEmpty: 'No occasions yet.', ccNoDays: 'No days yet.', ccSummary: '{s} shifts · {r} roles', ccLvlAll: 'Chränzli and Chilbi', ccLvlEvent: 'Occasion', ccLvlDay: 'Day', ccLvlShift: 'Shift', ccLvlRole: 'Role', ccActions: 'Actions', ccAddEvent: 'Add occasion', ccAddDay: 'Add day', ccAddShift: 'Add shift', ccAddRole: 'Add role', ccChange: 'Edit', ccCopy: 'Copy', ccClose: 'Close', ccNameOpt: 'Name (optional)', ccStart: 'Start', ccEnd: 'End', ccActive: 'Active', ccPersons: 'Responsible', ccSearch: 'Search names', ccOtherPerson: 'Other person (not in the app)', ccAdd: 'Add', ccDidYouMean: 'Did you mean {name}?', ccNobody: 'Nobody yet', ccConfirmDel: 'Delete “{name}”? Everything under it will be deleted too.', ccConfirmDelRole: 'Delete “{name}”?', ccCopyEventNote: 'The copy starts inactive. All days move by 52 weeks so the weekdays stay the same.', ccCopyDayNote: 'Shifts and roles are copied with the people responsible.', ccSaved: 'Saved', ccCopied: 'Copied', ccDeleted: 'Deleted', ccNotInApp: '{name} is not in the app yet. With a mobile number you can add them as a guest.', ccAsGuest: 'Add as guest', ccNeedName: 'Enter a name.', ccSetup: 'C&C needs an updated database schema (supabase/schema.sql).', grpCandidate: 'Candidates', candidateTitle: 'Thank you for your interest', candidateMsg: 'Your request is being reviewed by our administrators.', mGroupActive: 'Make active member', mGroupPassive: 'Make passive member', mGroupGuest: 'Make guest', mGroupOther: 'Make Friends & Family', mGroupCandidate: 'Make candidate', groupChanged: 'Group changed', jsEternal: 'All-time ranking', jsEternalHint: 'Over the last {n} completed rounds', jsEternalRounds: '{n} rounds', jsEternalRound: '1 round', jsVisibleHint: 'Without the tick, only Admin and Jass Manager see this round', evEdit: 'Edit event', evManagePeople: 'Manage participants', grpSupporter: 'Friends & Family', mMakeSupporter: 'Make Friends & Family', supporterSet: 'Set to Friends & Family', pinLampOk: 'Has already changed their PIN', pinLampNo: 'Still using the default PIN', pinBannerMsg: 'Please set your personal PIN code to unlock all features.', pinBannerBtn: 'Set PIN now', ccPublicLabel: 'Visible to all active and passive members', ccPublicOn: 'C&C is now visible to everyone (read-only)', ccPublicOff: 'C&C is now visible only to Admin, Chilbi Manager and Chränzli Manager again', ccCopySuffix: 'copy', ccLegendMe: 'Me', ccPrint: 'Share as PDF', jsPrint: 'Jassmasters overview as PDF', ccPdfBuilding: 'Creating PDF…', ccPdfFailed: 'The PDF could not be created.',
       mMakeAdmin: 'Make admin', mRevokeAdmin: 'Remove admin rights', mMakeEm: 'Make event manager', mRevokeEm: 'Remove event manager rights', mMakeGuest: 'Set as guest', mMakeMember: 'Set as member', mEdit: 'Change name and mobile number', mEditNote: 'With a new number the default PIN applies again: the last 6 digits of the new number.', mSaved: 'Saved', mDelete: 'Delete member', mPhoneTaken: 'This mobile number already belongs to someone else.',
       navJass: 'Jass', jsParticipants: 'Players', jsSchedule: 'Schedule', jsRanking: 'Daily ranking', jsRound: 'Round {n}', jsTable: 'Table {t}', jsTeam1: 'Team I', jsTeam2: 'Team II', jsPlayer: 'Player {n}', jsFree: 'open', jsEmpty: 'No Jassmasters yet.', jsNoDays: 'No date yet.', jsAddSeries: 'Add Jassmasters', jsAddDay: 'Add date', jsLvlSeries: 'Jassmasters', jsLvlDay: 'Jass day', jsPick: 'Choose player {n}', jsClear: 'Clear seat', jsAlready: 'already player {n}', jsPoints: 'Points', jsGames: '{n} games', jsPtsAbbr: 'pts', jsGame: '{n} game', jsNoPoints: 'No points entered yet.', jsHint: 'Enter the points for the winning team. The other team automatically gets them as negative points.', jsSetup: 'Jass needs an updated database schema (supabase/schema.sql).', jsFinish: 'Finish Jassmaster', jsConfirmFinish: 'Finish "{name}"? It will move to Past Jassmasters and will only be visible as a ranking afterwards. Continue?', jsFinished: 'Marked as finished', jsEditRanking: 'Edit ranking', jsRankName: 'Name', jsRankPoints: 'Points', jsAddRow: 'Add row', jsNoRows: 'Nobody entered yet.',
+      shPlay: 'Play here', shPlayStop: 'Close player',
       shVideo: 'Video', shYoutube: 'YouTube link', shOpenYoutube: 'Open on YouTube', shVideoBad: 'Please enter a YouTube link (https://www.youtube.com/… or https://youtu.be/…).',
       shMusic: 'Music', shSpotify: 'Spotify link', shOpenSpotify: 'Open in Spotify', shMusicBad: 'Please enter a Spotify link (https://open.spotify.com/…).',
       navShow: 'Show', titleShow: 'Bühnen-Einsatz', dirTag: 'Director', actTag: 'Actor', mMakeDir: 'Make director', mRevokeDir: 'Revoke director rights', mMakeActor: 'Make actor', mRevokeActor: 'Revoke actor role', dirGranted: 'Set as director', dirRevoked: 'Director rights revoked', actorGranted: 'Set as actor', actorRevoked: 'Actor role revoked', shEmpty: 'No acts yet.', shSetup: 'The Show tables are missing. Please run PRD_v97_show.sql in the SQL Editor.', shAddAct: 'Add act', shAddScene: 'Add scene', shAddPart: 'Add role', shLvlAll: 'Show', shLvlAct: 'Act', shLvlScene: 'Scene', shLvlPart: 'Role', shDesc: 'Description', shNoScenes: 'No scenes yet.', shSummary: '{r} roles', shVisible: 'Plan visible to actors',
@@ -332,6 +335,7 @@
       navCC: 'C&C', ccMembers: 'Soci', ccGuests: 'Ospiti', ccOthers: 'Altri', ccEmpty: 'Ancora nessuna manifestazione.', ccNoDays: 'Ancora nessun giorno.', ccSummary: '{s} turni · {r} ruoli', ccLvlAll: 'Chränzli e Chilbi', ccLvlEvent: 'Manifestazione', ccLvlDay: 'Giorno', ccLvlShift: 'Turno', ccLvlRole: 'Ruolo', ccActions: 'Azioni', ccAddEvent: 'Aggiungi manifestazione', ccAddDay: 'Aggiungi giorno', ccAddShift: 'Aggiungi turno', ccAddRole: 'Aggiungi ruolo', ccChange: 'Modifica', ccCopy: 'Copia', ccClose: 'Chiudi', ccNameOpt: 'Nome (facoltativo)', ccStart: 'Inizio', ccEnd: 'Fine', ccActive: 'Attivo', ccPersons: 'Responsabili', ccSearch: 'Cerca nomi', ccOtherPerson: 'Altra persona (non nell’app)', ccAdd: 'Aggiungi', ccDidYouMean: 'Intendi {name}?', ccNobody: 'Ancora nessuno', ccConfirmDel: 'Eliminare «{name}»? Verrà eliminato anche tutto ciò che contiene.', ccConfirmDelRole: 'Eliminare «{name}»?', ccCopyEventNote: 'La copia è inizialmente inattiva. Tutti i giorni vengono spostati di 52 settimane, così i giorni della settimana restano uguali.', ccCopyDayNote: 'Turni e ruoli vengono copiati con i responsabili.', ccSaved: 'Salvato', ccCopied: 'Copiato', ccDeleted: 'Eliminato', ccNotInApp: '{name} non è ancora nell’app. Con il numero di cellulare puoi aggiungere la persona come ospite.', ccAsGuest: 'Aggiungi come ospite', ccNeedName: 'Inserisci un nome.', ccSetup: 'Per C&C lo schema del database deve essere aggiornato (supabase/schema.sql).', grpCandidate: 'Candidati', candidateTitle: 'Grazie mille per il tuo interesse', candidateMsg: 'La tua richiesta viene esaminata dai nostri amministratori.', mGroupActive: 'Rendi membro attivo', mGroupPassive: 'Rendi membro passivo', mGroupGuest: 'Rendi ospite', mGroupOther: 'Rendi Friends & Family', mGroupCandidate: 'Rendi candidato', groupChanged: 'Gruppo modificato', jsEternal: 'Classifica perpetua', jsEternalHint: 'Sulle ultime {n} manche concluse', jsEternalRounds: '{n} manche', jsEternalRound: '1 turno', jsVisibleHint: 'Senza spunta, solo Admin e Jass Manager vedono questa manche', evEdit: 'Modifica evento', evManagePeople: 'Gestisci partecipanti', grpSupporter: 'Friends & Family', mMakeSupporter: 'Rendi Friends & Family', supporterSet: 'Assegnato a Friends & Family', pinLampOk: 'Ha già cambiato il PIN', pinLampNo: 'Usa ancora il PIN standard', pinBannerMsg: 'Imposta il tuo PIN personale per sbloccare tutte le funzioni.', pinBannerBtn: 'Imposta PIN', ccPublicLabel: 'Visibile a tutti i membri attivi e passivi', ccPublicOn: 'C&C è ora visibile a tutti (sola lettura)', ccPublicOff: 'C&C è di nuovo visibile solo ad Admin, Chilbi Manager e Chränzli Manager', ccCopySuffix: 'copia', ccLegendMe: 'Io', ccPrint: 'Condividi come PDF', jsPrint: 'Panoramica Jassmasters come PDF', ccPdfBuilding: 'Creazione del PDF…', ccPdfFailed: 'Impossibile creare il PDF.',
       mMakeAdmin: 'Rendi admin', mRevokeAdmin: 'Revoca i diritti di admin', mMakeEm: 'Nomina responsabile eventi', mRevokeEm: 'Revoca i diritti di responsabile eventi', mMakeGuest: 'Imposta come ospite', mMakeMember: 'Imposta come socio', mEdit: 'Modifica nome e numero di cellulare', mEditNote: 'Con un nuovo numero vale di nuovo il PIN predefinito: le ultime 6 cifre del nuovo numero.', mSaved: 'Salvato', mDelete: 'Elimina socio', mPhoneTaken: 'Questo numero di cellulare appartiene già a un’altra persona.',
       navJass: 'Jass', jsParticipants: 'Partecipanti', jsSchedule: 'Calendario delle partite', jsRanking: 'Classifica del giorno', jsRound: 'Turno {n}', jsTable: 'Tavolo {t}', jsTeam1: 'Squadra I', jsTeam2: 'Squadra II', jsPlayer: 'Giocatore {n}', jsFree: 'libero', jsEmpty: 'Ancora nessun Jassmasters.', jsNoDays: 'Ancora nessuna data.', jsAddSeries: 'Aggiungi Jassmasters', jsAddDay: 'Aggiungi data', jsLvlSeries: 'Jassmasters', jsLvlDay: 'Giornata di jass', jsPick: 'Scegli il giocatore {n}', jsClear: 'Libera il posto', jsAlready: 'già giocatore {n}', jsPoints: 'Punti', jsGames: '{n} partite', jsPtsAbbr: 'pt', jsGame: '{n} partita', jsNoPoints: 'Ancora nessun punto inserito.', jsHint: 'Inserisci i punti per la squadra vincente. L’altra squadra li riceve automaticamente in negativo.', jsSetup: 'Per il jass lo schema del database deve essere aggiornato (supabase/schema.sql).', jsFinish: 'Concludi il Jassmaster', jsConfirmFinish: 'Concludere «{name}»? Verrà spostato in Jassmasters passati e sarà visibile solo come classifica. Continuare?', jsFinished: 'Contrassegnato come concluso', jsEditRanking: 'Modifica classifica', jsRankName: 'Nome', jsRankPoints: 'Punti', jsAddRow: 'Aggiungi riga', jsNoRows: 'Nessuno ancora inserito.',
+      shPlay: 'Riproduci qui', shPlayStop: 'Chiudi il lettore',
       shVideo: 'Video', shYoutube: 'Link YouTube', shOpenYoutube: 'Apri su YouTube', shVideoBad: 'Inserire un link YouTube (https://www.youtube.com/… o https://youtu.be/…).',
       shMusic: 'Musica', shSpotify: 'Link Spotify', shOpenSpotify: 'Apri in Spotify', shMusicBad: 'Inserire un link Spotify (https://open.spotify.com/…).',
       navShow: 'Show', titleShow: 'Bühnen-Einsatz', dirTag: 'Regista', actTag: 'Attore', mMakeDir: 'Nomina regista', mRevokeDir: 'Revoca i diritti di regista', mMakeActor: 'Nomina attore', mRevokeActor: 'Revoca il ruolo di attore', dirGranted: 'Impostato come regista', dirRevoked: 'Diritti di regista revocati', actorGranted: 'Impostato come attore', actorRevoked: 'Ruolo di attore revocato', shEmpty: 'Ancora nessun atto.', shSetup: 'Mancano le tabelle Show. Eseguire PRD_v97_show.sql nel SQL Editor.', shAddAct: 'Aggiungi atto', shAddScene: 'Aggiungi scena', shAddPart: 'Aggiungi ruolo', shLvlAll: 'Show', shLvlAct: 'Atto', shLvlScene: 'Scena', shLvlPart: 'Ruolo', shDesc: 'Descrizione', shNoScenes: 'Ancora nessuna scena.', shSummary: '{r} ruoli', shVisible: 'Pianificazione visibile agli attori',
@@ -410,6 +414,7 @@
       navCC: 'C&C', ccMembers: 'Mitglieder', ccGuests: 'Gäscht', ccOthers: 'Anderi', ccEmpty: 'No kei Aalässe erfasst.', ccNoDays: 'No kei Täg erfasst.', ccSummary: '{s} Schichte · {r} Rolle', ccLvlAll: 'Chränzli und Chilbi', ccLvlEvent: 'Aalass', ccLvlDay: 'Tag', ccLvlShift: 'Schicht', ccLvlRole: 'Rolle', ccActions: 'Aktione', ccAddEvent: 'Aalass hinzuefüege', ccAddDay: 'Tag hinzuefüege', ccAddShift: 'Schicht hinzuefüege', ccAddRole: 'Rolle hinzuefüege', ccChange: 'Ändere', ccCopy: 'Kopiere', ccClose: 'Schliesse', ccNameOpt: 'Name (freiwillig)', ccStart: 'Start', ccEnd: 'Änd', ccActive: 'Aktiv', ccPersons: 'Verantwortlichi', ccSearch: 'Näme sueche', ccOtherPerson: 'Anderi Person (nöd i de App)', ccAdd: 'Hinzuefüege', ccDidYouMean: 'Meinsch {name}?', ccNobody: 'No niemer', ccConfirmDel: '«{name}» lösche? Alles, wo drunder erfasst isch, wird au glöscht.', ccConfirmDelRole: '«{name}» lösche?', ccCopyEventNote: 'D Kopie isch zerscht inaktiv. Alli Täg wärded um 52 Wuche verschobe, damit d Wuchetäg glich bliibed.', ccCopyDayNote: 'Schichte und Rolle wärded mit de Verantwortliche kopiert.', ccSaved: 'Gspeicheret', ccCopied: 'Kopiert', ccDeleted: 'Glöscht', ccNotInApp: '{name} isch no nöd i de App. Mit de Handynummere chasch d Person als Gascht hinzuefüege.', ccAsGuest: 'Als Gascht hinzuefüege', ccNeedName: 'Gib en Name ii.', ccSetup: 'Für C&C muess s Datebank-Schema aktualisiert wärde (supabase/schema.sql).', grpCandidate: 'Kandidate', candidateTitle: 'Merci vielmal für dis Interässe', candidateMsg: 'Dini Afrog wird vo üsne Administratore gprüeft.', mGroupActive: 'Zum Aktivmitglied mache', mGroupPassive: 'Zum Passivmitglied mache', mGroupGuest: 'Zum Gascht mache', mGroupOther: 'Zu Friends & Family mache', mGroupCandidate: 'Zum Kandidat mache', groupChanged: 'Gruppe gänderet', jsEternal: 'Ewigi Rangliste', jsEternalHint: 'Über die letschte {n} fertige Runde', jsEternalRounds: '{n} Runde', jsEternalRound: '1 Rundi', jsVisibleHint: 'Ohni Häkli gseht nur de Admin und de Jass Manager die Rundi', evEdit: 'Event ändere', evManagePeople: 'Teilnehmer verwalte', grpSupporter: 'Friends & Family', mMakeSupporter: 'Zu Friends & Family mache', supporterSet: 'Als Friends & Family iigordnet', pinLampOk: 'Het de PIN scho gänderet', pinLampNo: 'Bruucht no de Standard-PIN', pinBannerMsg: 'Setz din persönliche PIN-Code, um alli Funktione freizschalte.', pinBannerBtn: 'PIN jetzt setze', ccPublicLabel: 'Sichtbar für alli Aktiv- und Passivmitglieder', ccPublicOn: 'C&C isch jetzt für alli sichtbar (nur zum Lääse)', ccPublicOff: 'C&C isch jetzt wieder nur für Admin, Chilbi Manager und Chränzli Manager sichtbar', ccCopySuffix: 'Kopie', ccLegendMe: 'Ich', ccPrint: 'PDF teile', jsPrint: 'Jassmasters-Überblick als PDF', ccPdfBuilding: 'PDF wird erstellt…', ccPdfFailed: 'PDF het nöd chönne erstellt werde.',
       mMakeAdmin: 'Zum Admin mache', mRevokeAdmin: 'Admin-Rächt entzieh', mMakeEm: 'Zum Event Manager mache', mRevokeEm: 'Event Manager-Rächt entzieh', mMakeGuest: 'Zum Gascht mache', mMakeMember: 'Zum Mitglied mache', mEdit: 'Name und Handynummere ändere', mEditNote: 'Mit enere neue Handynummere gilt wieder de Standard-PIN: di letschte 6 Ziffere vo de neue Nummere.', mSaved: 'Gspeicheret', mDelete: 'Mitglied lösche', mPhoneTaken: 'Die Handynummere ghört scho öpper anderem.',
       navJass: 'Jass', jsParticipants: 'Teilnehmer', jsSchedule: 'Spielplan', jsRanking: 'Tagesrangliste', jsRound: 'Rundi {n}', jsTable: 'Tisch {t}', jsTeam1: 'Team I', jsTeam2: 'Team II', jsPlayer: 'Spieler {n}', jsFree: 'frei', jsEmpty: 'No kei Jassmasters erfasst.', jsNoDays: 'No kei Datum erfasst.', jsAddSeries: 'Jassmasters hinzuefüege', jsAddDay: 'Datum hinzuefüege', jsLvlSeries: 'Jassmasters', jsLvlDay: 'Jasstag', jsPick: 'Spieler {n} uswähle', jsClear: 'Platz freigäh', jsAlready: 'scho Spieler {n}', jsPoints: 'Pünkt', jsGames: '{n} Spiel', jsPtsAbbr: 'Pkt.', jsGame: '{n} Spiel', jsNoPoints: 'No kei Pünkt erfasst.', jsHint: 'Träg d Pünkt bim Siegerteam ii. S ander Team überchunnt si automatisch negativ.', jsSetup: 'Für Jass muess s Datebank-Schema aktualisiert wärde (supabase/schema.sql).', jsFinish: 'Jassmaster abschliesse', jsConfirmFinish: '«{name}» abschliesse? Chunt under Vergangeni Jassmasters und isch denn nur no als Rangliste sichtbar. Wiitermache?', jsFinished: 'Als abgschlosse markiert', jsEditRanking: 'Rangliste bearbeite', jsRankName: 'Name', jsRankPoints: 'Pünkt', jsAddRow: 'Zile dezuefüege', jsNoRows: 'No niemer erfasst.',
+      shPlay: 'Do abspile', shPlayStop: 'Player zuemache',
       shVideo: 'Video', shYoutube: 'YouTube-Link', shOpenYoutube: 'Uf YouTube uuftue', shVideoBad: 'Bitte en YouTube-Link aagäh (https://www.youtube.com/… oder https://youtu.be/…).',
       shMusic: 'Musig', shSpotify: 'Spotify-Link', shOpenSpotify: 'In Spotify uuftue', shMusicBad: 'Bitte en Spotify-Link aagäh (https://open.spotify.com/…).',
       navShow: 'Show', titleShow: 'Bühnen-Einsatz', dirTag: 'Regisseur', actTag: 'Schauspiler', mMakeDir: 'Zum Regisseur mache', mRevokeDir: 'Regisseur-Rächt wäg nää', mMakeActor: 'Zum Schauspiler mache', mRevokeActor: 'Schauspiler-Rolle wäg nää', dirGranted: 'Als Regisseur festgleit', dirRevoked: 'Regisseur-Rächt wäggnoh', actorGranted: 'Als Schauspiler festgleit', actorRevoked: 'Schauspiler-Rolle wäggnoh', shEmpty: 'No kei Akt erfasst.', shSetup: 'D Show-Tabälle fehle. Bitte PRD_v97_show.sql im SQL Editor usfüehre.', shAddAct: 'Akt hinzuefüege', shAddScene: 'Szene hinzuefüege', shAddPart: 'Rolle hinzuefüege', shLvlAll: 'Show', shLvlAct: 'Akt', shLvlScene: 'Szene', shLvlPart: 'Rolle', shDesc: 'Beschrybig', shNoScenes: 'No kei Szene erfasst.', shSummary: '{r} Rolle', shVisible: 'Planig für Schauspiler sichtbar',
@@ -489,6 +494,7 @@
       navCC: 'C&C', ccMembers: 'Члени клубу', ccGuests: 'Гості', ccOthers: 'Інші', ccEmpty: 'Заходів ще немає.', ccNoDays: 'Днів ще немає.', ccSummary: 'Змін: {s} · ролей: {r}', ccLvlAll: 'Chränzli і Chilbi', ccLvlEvent: 'Захід', ccLvlDay: 'День', ccLvlShift: 'Зміна', ccLvlRole: 'Роль', ccActions: 'Дії', ccAddEvent: 'Додати захід', ccAddDay: 'Додати день', ccAddShift: 'Додати зміну', ccAddRole: 'Додати роль', ccChange: 'Змінити', ccCopy: 'Копіювати', ccClose: 'Закрити', ccNameOpt: 'Назва (необов’язково)', ccStart: 'Початок', ccEnd: 'Кінець', ccActive: 'Активний', ccPersons: 'Відповідальні', ccSearch: 'Пошук імен', ccOtherPerson: 'Інша особа (не в застосунку)', ccAdd: 'Додати', ccDidYouMean: 'Можливо, {name}?', ccNobody: 'Ще нікого', ccConfirmDel: 'Видалити «{name}»? Усе, що в ньому, також буде видалено.', ccConfirmDelRole: 'Видалити «{name}»?', ccCopyEventNote: 'Копія спочатку неактивна. Усі дні зсуваються на 52 тижні, щоб дні тижня збігалися.', ccCopyDayNote: 'Зміни й ролі копіюються разом із відповідальними.', ccSaved: 'Збережено', ccCopied: 'Скопійовано', ccDeleted: 'Видалено', ccNotInApp: '{name} ще немає в застосунку. За номером мобільного можна додати цю особу як гостя.', ccAsGuest: 'Додати як гостя', ccNeedName: 'Введіть ім’я.', ccSetup: 'Для C&C потрібно оновити схему бази даних (supabase/schema.sql).', grpCandidate: 'Кандидати', candidateTitle: 'Щиро дякуємо за твій інтерес', candidateMsg: 'Твій запит розглядають наші адміністратори.', mGroupActive: 'Зробити активним членом', mGroupPassive: 'Зробити пасивним членом', mGroupGuest: 'Зробити гостем', mGroupOther: 'Перевести у Friends & Family', mGroupCandidate: 'Зробити кандидатом', groupChanged: 'Групу змінено', jsEternal: 'Вічний рейтинг', jsEternalHint: 'За останні {n} завершених раундів', jsEternalRounds: '{n} раундів', jsEternalRound: '1 раунд', jsVisibleHint: 'Без позначки цей раунд бачать лише Admin і Jass Manager', evEdit: 'Змінити подію', evManagePeople: 'Керувати учасниками', grpSupporter: 'Friends & Family', mMakeSupporter: 'Перевести у Friends & Family', supporterSet: 'Віднесено до Friends & Family', pinLampOk: 'Вже змінив(ла) PIN-код', pinLampNo: 'Ще користується стандартним PIN-кодом', pinBannerMsg: 'Будь ласка, встанови свій особистий PIN-код, щоб розблокувати всі функції.', pinBannerBtn: 'Встановити PIN', ccPublicLabel: 'Видно всім активним і пасивним членам', ccPublicOn: 'C&C тепер видно всім (лише перегляд)', ccPublicOff: 'C&C знову видно лише Admin, Chilbi Manager і Chränzli Manager', ccCopySuffix: 'копія', ccLegendMe: 'Я', ccPrint: 'Поділитися PDF', jsPrint: 'Огляд Jassmasters як PDF', ccPdfBuilding: 'Створення PDF…', ccPdfFailed: 'Не вдалося створити PDF.',
       mMakeAdmin: 'Призначити адміністратором', mRevokeAdmin: 'Забрати права адміністратора', mMakeEm: 'Призначити менеджером подій', mRevokeEm: 'Забрати права менеджера подій', mMakeGuest: 'Зробити гостем', mMakeMember: 'Зробити членом клубу', mEdit: 'Змінити ім’я та номер мобільного', mEditNote: 'З новим номером знову діє PIN за замовчуванням: останні 6 цифр нового номера.', mSaved: 'Збережено', mDelete: 'Видалити учасника', mPhoneTaken: 'Цей номер мобільного вже належить іншій особі.',
       navJass: 'Джас', jsParticipants: 'Учасники', jsSchedule: 'Розклад ігор', jsRanking: 'Рейтинг дня', jsRound: 'Раунд {n}', jsTable: 'Стіл {t}', jsTeam1: 'Команда I', jsTeam2: 'Команда II', jsPlayer: 'Гравець {n}', jsFree: 'вільно', jsEmpty: 'Jassmasters ще немає.', jsNoDays: 'Дати ще немає.', jsAddSeries: 'Додати Jassmasters', jsAddDay: 'Додати дату', jsLvlSeries: 'Jassmasters', jsLvlDay: 'День джасу', jsPick: 'Вибрати гравця {n}', jsClear: 'Звільнити місце', jsAlready: 'уже гравець {n}', jsPoints: 'Очки', jsGames: 'Ігор: {n}', jsPtsAbbr: 'очк.', jsGame: 'Ігор: {n}', jsNoPoints: 'Очок ще немає.', jsHint: 'Вкажіть очки команди-переможця. Інша команда автоматично отримує їх зі знаком мінус.', jsSetup: 'Для джасу потрібно оновити схему бази даних (supabase/schema.sql).', jsFinish: 'Завершити Jassmaster', jsConfirmFinish: 'Завершити «{name}»? Його буде переміщено до минулих Jassmasters і надалі буде видно лише рейтинг. Продовжити?', jsFinished: 'Позначено як завершене', jsEditRanking: 'Редагувати рейтинг', jsRankName: 'Ім\'я', jsRankPoints: 'Очки', jsAddRow: 'Додати рядок', jsNoRows: 'Ще нікого не додано.',
+      shPlay: 'Відтворити тут', shPlayStop: 'Закрити плеєр',
       shVideo: 'Відео', shYoutube: 'Посилання YouTube', shOpenYoutube: 'Відкрити на YouTube', shVideoBad: 'Вкажіть посилання YouTube (https://www.youtube.com/… або https://youtu.be/…).',
       shMusic: 'Музика', shSpotify: 'Посилання Spotify', shOpenSpotify: 'Відкрити в Spotify', shMusicBad: 'Вкажіть посилання Spotify (https://open.spotify.com/…).',
       navShow: 'Show', titleShow: 'Bühnen-Einsatz', dirTag: 'Режисер', actTag: 'Актор', mMakeDir: 'Призначити режисером', mRevokeDir: 'Скасувати права режисера', mMakeActor: 'Призначити актором', mRevokeActor: 'Скасувати роль актора', dirGranted: 'Призначено режисером', dirRevoked: 'Права режисера скасовано', actorGranted: 'Призначено актором', actorRevoked: 'Роль актора скасовано', shEmpty: 'Дій ще немає.', shSetup: 'Таблиці Show відсутні. Виконайте PRD_v97_show.sql у SQL Editor.', shAddAct: 'Додати дію', shAddScene: 'Додати сцену', shAddPart: 'Додати роль', shLvlAll: 'Show', shLvlAct: 'Дія', shLvlScene: 'Сцена', shLvlPart: 'Роль', shDesc: 'Опис', shNoScenes: 'Сцен ще немає.', shSummary: '{r} ролей', shVisible: 'План видимий для акторів',
@@ -567,6 +573,7 @@
       navCC: 'C&C', ccMembers: 'Mitglieder', ccGuests: 'Gäst', ccOthers: 'Andere', ccEmpty: 'No koane Veranstoitungen.', ccNoDays: 'No koane Tog.', ccSummary: '{s} Schichtn · {r} Rolln', ccLvlAll: 'Chränzli und Chilbi', ccLvlEvent: 'Veranstoitung', ccLvlDay: 'Tog', ccLvlShift: 'Schicht', ccLvlRole: 'Rolle', ccActions: 'Aktionen', ccAddEvent: 'Veranstoitung dazuadoa', ccAddDay: 'Tog dazuadoa', ccAddShift: 'Schicht dazuadoa', ccAddRole: 'Rolle dazuadoa', ccChange: 'Ändern', ccCopy: 'Kopiern', ccClose: 'Zumachn', ccNameOpt: 'Nama (freiwillig)', ccStart: 'Ofang', ccEnd: 'End', ccActive: 'Aktiv', ccPersons: 'Verantwortliche', ccSearch: 'Nama suacha', ccOtherPerson: 'Andere Person (ned in da App)', ccAdd: 'Dazuadoa', ccDidYouMean: 'Moanst du {name}?', ccNobody: 'No koana', ccConfirmDel: '«{name}» löschn? Ois, wos drunter erfasst is, werd aa glöscht.', ccConfirmDelRole: '«{name}» löschn?', ccCopyEventNote: 'De Kopie is zerst inaktiv. Olle Tog wern um 52 Wochn verschobn, damit de Wochentog gleich bleibn.', ccCopyDayNote: 'Schichtn und Rolln wern mit de Verantwortlichn kopiert.', ccSaved: 'Gspeichert', ccCopied: 'Kopiert', ccDeleted: 'Glöscht', ccNotInApp: '{name} is no ned in da App. Mit da Handynummer konnst de Person ois Gast dazuadoa.', ccAsGuest: 'Ois Gast dazuadoa', ccNeedName: 'Gib an Nama ei.', ccSetup: 'Für C&C muass s Datenbank-Schema aktualisiert wern (supabase/schema.sql).', grpCandidate: 'Kandidaten', candidateTitle: 'Vergejt\'s Good fia dei Interesse', candidateMsg: 'Dei Åfroog werd vo unsane Administratorn gschaugt.', mGroupActive: 'Zum Aktivmitglied mocha', mGroupPassive: 'Zum Passivmitglied mocha', mGroupGuest: 'Zum Gost mocha', mGroupOther: 'Zu Friends & Family mocha', mGroupCandidate: 'Zum Kandidat mocha', groupChanged: 'Gruppn gändat', jsEternal: 'Ewige Rangliste', jsEternalHint: 'Übas de letztn {n} fertign Rundn', jsEternalRounds: '{n} Rundn', jsEternalRound: '1 Rund', jsVisibleHint: 'Ohne\'s Häkerl siehgt des nur da Admin und da Jass Manager', evEdit: 'Event ändan', evManagePeople: 'Teilnehma vawoitn', grpSupporter: 'Friends & Family', mMakeSupporter: 'Zu Friends & Family mocha', supporterSet: 'Als Friends & Family eigordnet', pinLampOk: 'Hod sein PIN scho gändat', pinLampNo: 'Nutzt no den Standard-PIN', pinBannerMsg: 'Bitte setz deinen persönlichn PIN-Code, um olle Funktionen freizschoitn.', pinBannerBtn: 'PIN jetzt setzn', ccPublicLabel: 'Sichtbar fia ale Aktiv- und Passivmitglieda', ccPublicOn: 'C&C is jetzt fia ale sichtbar (nur zum Lesn)', ccPublicOff: 'C&C is jetzt wieda nur fia Admin, Chilbi Manager und Chränzli Manager sichtbar', ccCopySuffix: 'Kopie', ccLegendMe: 'I', ccPrint: 'PDF teiln', jsPrint: 'Jassmasters-Überblick als PDF', ccPdfBuilding: 'PDF werd erstejt…', ccPdfFailed: 'PDF håt ned erstejt wean kinna.',
       mMakeAdmin: 'Zum Admin macha', mRevokeAdmin: 'Admin-Rechte entziehn', mMakeEm: 'Zum Event Manager macha', mRevokeEm: 'Event Manager-Rechte entziehn', mMakeGuest: 'Zum Gast macha', mMakeMember: 'Zum Mitglied macha', mEdit: 'Nama und Handynummer ändern', mEditNote: 'Mit ana neia Handynummer gilt wieda da Standard-PIN: de letztn 6 Ziffern vo da neia Nummer.', mSaved: 'Gspeichert', mDelete: 'Mitglied löschn', mPhoneTaken: 'De Handynummer ghört scho wem andern.',
       navJass: 'Jass', jsParticipants: 'Teilnehmer', jsSchedule: 'Spuiplan', jsRanking: 'Tagesranglistn', jsRound: 'Rundn {n}', jsTable: 'Tisch {t}', jsTeam1: 'Team I', jsTeam2: 'Team II', jsPlayer: 'Spuier {n}', jsFree: 'frei', jsEmpty: 'No koa Jassmasters.', jsNoDays: 'No koa Datum.', jsAddSeries: 'Jassmasters dazuadoa', jsAddDay: 'Datum dazuadoa', jsLvlSeries: 'Jassmasters', jsLvlDay: 'Jasstog', jsPick: 'Spuier {n} aussuacha', jsClear: 'Platz freigebn', jsAlready: 'scho Spuier {n}', jsPoints: 'Punkt', jsGames: '{n} Spuie', jsPtsAbbr: 'Pkt.', jsGame: '{n} Spui', jsNoPoints: 'No koane Punkt.', jsHint: 'Trag de Punkt beim Siegerteam ei. Des andere Team kriagt s automatisch negativ.', jsSetup: 'Für Jass muass s Datenbank-Schema aktualisiert wern (supabase/schema.sql).', jsFinish: 'Jassmaster åbschliassn', jsConfirmFinish: '«{name}» åbschliassn? Kummt unta Vergangene Jassmasters und is nacha nur no as Rangliste z\'sehgn. Weitamacha?', jsFinished: 'Als åbgschlossn markiat', jsEditRanking: 'Rangliste bearbeitn', jsRankName: 'Nam', jsRankPoints: 'Punkt', jsAddRow: 'Zein dazuafügn', jsNoRows: 'No niemand eigem.',
+      shPlay: 'Do oschpuin', shPlayStop: 'Player zuamocha',
       shVideo: 'Video', shYoutube: 'YouTube-Link', shOpenYoutube: 'Af YouTube aufmacha', shVideoBad: 'Bittschön an YouTube-Link angebn (https://www.youtube.com/… oder https://youtu.be/…).',
       shMusic: 'Musi', shSpotify: 'Spotify-Link', shOpenSpotify: 'In Spotify aufmacha', shMusicBad: 'Bittschön an Spotify-Link angebn (https://open.spotify.com/…).',
       navShow: 'Show', titleShow: 'Bühnen-Einsatz', dirTag: 'Regisseur', actTag: 'Schauspuia', mMakeDir: 'Zum Regisseur macha', mRevokeDir: 'Regisseur-Rechte wegnehma', mMakeActor: 'Zum Schauspuia macha', mRevokeActor: 'Schauspuia-Roin wegnehma', dirGranted: 'Als Regisseur festgsetzt', dirRevoked: 'Regisseur-Rechte wegnumma', actorGranted: 'Als Schauspuia festgsetzt', actorRevoked: 'Schauspuia-Roin wegnumma', shEmpty: 'No koan Akt erfasst.', shSetup: 'De Show-Tabellen fehln. Bittschön PRD_v97_show.sql im SQL Editor ausführn.', shAddAct: 'Akt dazuadoa', shAddScene: 'Szene dazuadoa', shAddPart: 'Roin dazuadoa', shLvlAll: 'Show', shLvlAct: 'Akt', shLvlScene: 'Szene', shLvlPart: 'Roin', shDesc: 'Beschreibung', shNoScenes: 'No koane Szenen erfasst.', shSummary: '{r} Roin', shVisible: 'Planung für Schauspuia sichtbar',
@@ -730,7 +737,7 @@
       step: 'loading', mode: 'login', tab: 'trainings', phone: '', err: '', info: '',
       session: null, me: null, members: [],
       rules: [], extras: [], overrides: {}, cancelled: {}, events: [],
-      tr: {}, ev: {}, open: {}, edit: null, busy: false, sec: {}, add: {}, info: {}, showMore: false,
+      tr: {}, ev: {}, open: {}, edit: null, busy: false, sec: {}, add: {}, info: {}, play: {}, showMore: false,
       cc: { events: [], days: [], shifts: [], roles: [] }, ccErr: false, ccFold: {}, ccLegend: false,
       js: { series: [], days: [] }, jsErr: false, jsFold: {}
     };
@@ -1481,10 +1488,10 @@
   function ccKindLabel(k) { return k === 'a' ? L('grpActive') : k === 'p' ? L('grpPassive') : k === 'f' ? L('grpSupporter') : k === 'g' ? L('ccGuests') : L('ccOthers'); }
   // Legende der Farben (Gruppen) und «ich»
   // Seitentitel mit Info-Icon rechts; der Klick blendet die Farblegende darunter ein/aus
-  function pageTopLegend(titleKey, id) {
+  function pageTopLegend(titleKey, id, extra) {
     var on = !!S.info[id];
     return '<div class="top" style="align-items:center"><div><h1 class="pagetitle">' + L(titleKey) + '</h1></div>' +
-      hico('info-toggle', ICON.info, on ? L('infoHide') : L('infoShow'), { on: on, data: { id: id } }) + '</div>' +
+      hico('info-toggle', ICON.info, on ? L('infoHide') : L('infoShow'), { on: on, data: { id: id } }) + (extra || '') + '</div>' +
       (on ? '<div class="infobar">' + ccLegend() + '</div>' : '');
   }
   function ccLegend() {
@@ -1756,6 +1763,146 @@
     return html;
   }
 
+  /* ---------- Show: Einsatzplan als PDF (alle Akte, nur Regisseur) ---------- */
+  async function showExportPdf() {
+    if (!window.jspdf) { toast(L('ccPdfFailed')); return; }
+    toast(L('ccPdfBuilding'));
+    var tree = shTree(), map = ccMap();
+    var dirs = S.members.filter(function (m) { return m.isDirector; }).map(function (m) { return m.name; });
+    var dirLabel = L('dirTag') + ': ' + (dirs.length ? dirs.join(', ') : '–');
+
+    var doc = new window.jspdf.jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+    var PAGE_W = doc.internal.pageSize.getWidth(), PAGE_H = doc.internal.pageSize.getHeight();
+    var MARGIN = 12, GAP = 8, COLW = (PAGE_W - 2 * MARGIN - GAP) / 2, TOP = 30, BOTTOM = PAGE_H - 12;
+    var BLUE = [48, 124, 192], BLUE_DARK = [11, 47, 94], BLUE_SOFT = [227, 239, 249], GREY = [93, 103, 122], INK = [22, 35, 59], LINE = [218, 222, 214];
+    var logo = await ensureLogoDataUrl();
+
+    function wrap(text, size, maxW, style) {
+      doc.setFont('helvetica', style || 'normal'); doc.setFontSize(size);
+      return doc.splitTextToSize(String(text), maxW);
+    }
+    function drawHeader() {
+      doc.setFillColor(BLUE_DARK[0], BLUE_DARK[1], BLUE_DARK[2]);
+      doc.rect(0, 0, PAGE_W, 24, 'F');
+      if (logo) { try { doc.addImage(logo, 'PNG', MARGIN, 4, 13.5, 15.5); } catch (e) { /* Logo optional */ } }
+      doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold'); doc.setFontSize(17);
+      doc.text('Einsatzplan · ' + L('titleShow'), MARGIN + 18, 11.5);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(207, 224, 242);
+      doc.text(dirLabel, MARGIN + 18, 17);
+      doc.text('Version', PAGE_W - MARGIN, 9.5, { align: 'right' });
+      doc.text(fullDate(new Date()).split(', ')[1] || '', PAGE_W - MARGIN, 14, { align: 'right' });
+    }
+    var colY = [TOP, TOP];
+    function newPage() { doc.addPage(); drawHeader(); colY = [TOP, TOP]; }
+
+    // Zeilen einer Szene: Beschreibung, Musik, Video, Rollen mit Personen
+    function sceneLines(Sc, w) {
+      var sc = Sc.s, items = [], valueW = w - 44;
+      if (sc.description) items.push({ t: 'desc', lines: wrap(sc.description, 8.8, w - 10, 'normal') });
+      if (sc.music_name || sc.music_url) items.push({ t: 'media', label: L('shMusic'), text: sc.music_name || '', url: shSpotifyOk(sc.music_url) ? sc.music_url : '', lines: wrap(sc.music_name || '–', 9.3, valueW, 'normal') });
+      if (sc.video_desc || sc.video_url) items.push({ t: 'media', label: L('shVideo'), text: sc.video_desc || '', url: shYoutubeOk(sc.video_url) ? sc.video_url : '', lines: wrap(sc.video_desc || '–', 9.3, valueW, 'normal') });
+      Sc.parts.forEach(function (r) {
+        var nm = (Array.isArray(r.persons) ? r.persons : []).map(function (pe) { return ccResolve(pe, map).name; }).join(', ') || '–';
+        items.push({ t: 'part', label: String(r.name), lines: wrap(nm, 9.3, valueW, 'normal') });
+      });
+      return items;
+    }
+    function sceneHeight(Sc, w) {
+      var titleLines = wrap(Sc.s.name, 11.5, w - 10, 'bold');
+      var h = 9 + (titleLines.length - 1) * 4.8 + 3;
+      sceneLines(Sc, w).forEach(function (it) { h += Math.max(it.lines.length, 1) * (it.t === 'desc' ? 4 : 4.3) + (it.t === 'desc' ? 1.5 : 0); });
+      return h + 3;
+    }
+    function drawScene(Sc, x, yTop, w) {
+      var h = sceneHeight(Sc, w), valueW = w - 44;
+      doc.setFillColor(255, 255, 255); doc.setDrawColor(LINE[0], LINE[1], LINE[2]); doc.setLineWidth(0.3);
+      doc.roundedRect(x, yTop, w, h, 3, 3, 'FD');
+      var titleLines = wrap(Sc.s.name, 11.5, w - 10, 'bold');
+      var headH = 9 + (titleLines.length - 1) * 4.8;
+      doc.setFillColor(BLUE_SOFT[0], BLUE_SOFT[1], BLUE_SOFT[2]);
+      doc.roundedRect(x, yTop, w, headH, 3, 3, 'F'); doc.rect(x, yTop + headH / 2, w, headH / 2, 'F');
+      doc.setTextColor(BLUE[0], BLUE[1], BLUE[2]); doc.setFont('helvetica', 'bold'); doc.setFontSize(11.5);
+      var ty = yTop + 5.8;
+      titleLines.forEach(function (ln) { doc.text(ln, x + 5, ty); ty += 4.8; });
+      var cy = yTop + headH + 5;
+      sceneLines(Sc, w).forEach(function (it) {
+        if (it.t === 'desc') {
+          doc.setTextColor(GREY[0], GREY[1], GREY[2]); doc.setFont('helvetica', 'normal'); doc.setFontSize(8.8);
+          it.lines.forEach(function (ln) { doc.text(ln, x + 5, cy); cy += 4; });
+          cy += 1.5; return;
+        }
+        doc.setTextColor(GREY[0], GREY[1], GREY[2]); doc.setFont('helvetica', 'bold'); doc.setFontSize(8.6);
+        doc.text(it.label + ':', x + 5, cy);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(9.3);
+        var ly = cy;
+        it.lines.forEach(function (ln) {
+          if (it.t === 'media' && it.url) { doc.setTextColor(BLUE[0], BLUE[1], BLUE[2]); try { doc.textWithLink(ln, x + 31, ly, { url: it.url }); } catch (e) { doc.text(ln, x + 31, ly); } }
+          else { doc.setTextColor(INK[0], INK[1], INK[2]); doc.text(ln, x + 31, ly); }
+          ly += 4.3;
+        });
+        cy = ly;
+      });
+      return yTop + h;
+    }
+
+    drawHeader();
+    if (!tree.length) {
+      doc.setTextColor(GREY[0], GREY[1], GREY[2]); doc.setFont('helvetica', 'normal'); doc.setFontSize(11);
+      doc.text(L('shEmpty'), MARGIN, PAGE_H / 2);
+    }
+    tree.forEach(function (A) {
+      var a = A.a, fullW = PAGE_W - 2 * MARGIN;
+      var title = a.name + (a.active ? '' : '   (nicht sichtbar)');
+      var dLines = a.description ? wrap(a.description, 9, fullW - 10, 'normal') : [];
+      var bandH = 9.5 + dLines.length * 4 + (dLines.length ? 1.5 : 0);
+      var firstH = A.scenes.length ? sceneHeight(A.scenes[0], COLW) : 0;
+      var y0 = Math.max(colY[0], colY[1]);
+      if (y0 + bandH + 4 + Math.min(firstH, 60) > BOTTOM) { newPage(); y0 = TOP; }
+      doc.setFillColor(BLUE_DARK[0], BLUE_DARK[1], BLUE_DARK[2]);
+      doc.roundedRect(MARGIN, y0, fullW, bandH, 3, 3, 'F');
+      doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold'); doc.setFontSize(13);
+      doc.text(title, MARGIN + 5, y0 + 6.3);
+      if (dLines.length) {
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(207, 224, 242);
+        dLines.forEach(function (ln, i) { doc.text(ln, MARGIN + 5, y0 + 11.2 + i * 4); });
+      }
+      colY = [y0 + bandH + 4, y0 + bandH + 4];
+      A.scenes.forEach(function (Sc) {
+        var h = sceneHeight(Sc, COLW);
+        var c = colY[0] <= colY[1] ? 0 : 1;
+        if (colY[c] + h > BOTTOM) {
+          var o = 1 - c;
+          if (colY[o] + h <= BOTTOM) c = o; else { newPage(); c = 0; }
+        }
+        var x = c === 0 ? MARGIN : MARGIN + COLW + GAP;
+        colY[c] = drawScene(Sc, x, colY[c], COLW) + 5;
+      });
+      colY = [Math.max(colY[0], colY[1]) + 2, Math.max(colY[0], colY[1]) + 2];
+    });
+
+    var pages = doc.getNumberOfPages();
+    for (var pi = 1; pi <= pages; pi++) {
+      doc.setPage(pi);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(GREY[0], GREY[1], GREY[2]);
+      doc.text(L('titleShow'), MARGIN, PAGE_H - 6);
+      doc.text('Seite ' + pi + ' / ' + pages, PAGE_W - MARGIN, PAGE_H - 6, { align: 'right' });
+    }
+
+    var fname = 'Einsatzplan_Buehnen-Einsatz.pdf';
+    var blob = doc.output('blob');
+    try {
+      var file = new File([blob], fname, { type: 'application/pdf' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: 'Einsatzplan ' + L('titleShow') });
+        return;
+      }
+    } catch (e) { /* Teilen abgebrochen oder nicht verfügbar: als Download anbieten */ }
+    var url = URL.createObjectURL(blob);
+    var a2 = document.createElement('a'); a2.href = url; a2.download = fname;
+    document.body.appendChild(a2); a2.click(); document.body.removeChild(a2);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+  }
+
   /* ---------- Show: Bühnen-Einsatz (Akt > Szene > Rolle) ---------- */
   function shTree() {
     var C = S.cc;
@@ -1784,7 +1931,17 @@
     var ok = a.music_url && shSpotifyOk(a.music_url);
     var ic = ok ? '<a class="shsp" href="' + esc(a.music_url) + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(L('shOpenSpotify')) + '" title="' + esc(L('shOpenSpotify')) + '">' + '<img src="icons/spotify.png" alt="" width="21" height="21">' + '</a>'
                 : '<span class="shsp off" aria-hidden="true">' + '<img src="icons/spotify.png" alt="" width="21" height="21">' + '</span>';
-    return '<div class="shmusic"><span class="shml">' + L('shMusic') + '</span><span class="shmn">' + (a.music_name ? esc(a.music_name) : '') + '</span>' + ic + '</div>';
+    // Player (Spotify-Einbettung): ausbaubar, indem shEmbedUrl()/Play-Button/Player-Block entfernt werden
+    var emb = ok ? shEmbedUrl(a.music_url) : '', playing = !!(emb && a.id && S.play[a.id]);
+    var pb = emb && a.id ? '<button type="button" class="shplaybtn' + (playing ? ' on' : '') + '" data-act="sh-play" data-id="' + esc(a.id) + '" aria-pressed="' + playing + '" aria-label="' + esc(L(playing ? 'shPlayStop' : 'shPlay')) + '" title="' + esc(L(playing ? 'shPlayStop' : 'shPlay')) + '">' +
+      (playing ? '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/></svg>' : '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>') + '</button>' : '';
+    var pl = playing ? '<div class="shplayer"><iframe src="' + esc(emb) + '" width="100%" height="152" frameborder="0" loading="lazy" allow="encrypted-media" title="Spotify"></iframe></div>' : '';
+    return '<div class="shmusic"><span class="shml">' + L('shMusic') + '</span><span class="shmn">' + (a.music_name ? esc(a.music_name) : '') + '</span>' + pb + ic + pl + '</div>';
+  }
+  // Einbettungs-URL nur für Spotify-Inhalte (Track, Album, Playlist, Episode, Show, Artist); spotify.link lässt sich nicht einbetten
+  function shEmbedUrl(u) {
+    var m = String(u || '').trim().match(/^https:\/\/(?:open|play)\.spotify\.com\/(?:intl-[a-z-]+\/)?(track|album|playlist|episode|show|artist)\/([A-Za-z0-9]+)/);
+    return m ? 'https://open.spotify.com/embed/' + m[1] + '/' + m[2] : '';
   }
   // Video-Zeile (YouTube): Beschriftung links, Text, rechts das YouTube-Icon als Link
   function shYoutubeOk(u) { return /^https:\/\/((www|m|music)\.youtube\.com|youtu\.be)\/\S+$/i.test(String(u || '').trim()); }
@@ -1807,7 +1964,7 @@
   }
   function viewShow() {
     var map = ccMap(), ed = shEdit();
-    var html = pageTopLegend('titleShow', 'shlegend');
+    var html = pageTopLegend('titleShow', 'shlegend', ed ? hico('sh-print', ICON.print, L('ccPrint'), { aria: L('ccPrint') + ': ' + L('titleShow') }) : '');
     if (S.showErr) return html + '<div class="empty"><p>' + L('shSetup') + '</p></div>';
     var tree = shTree();
     if (!tree.length) return html + '<div class="empty"><p>' + L('shEmpty') + '</p>' + (ed ? '<button type="button" class="btn inline" data-act="sh-addact" style="margin-top:12px">' + L('shAddAct') + '</button>' : '') + '</div>';
@@ -1818,7 +1975,7 @@
         '<button type="button" class="cct" data-act="sh-fold" data-id="' + esc(a.id) + '" aria-expanded="' + !folded + '">' + esc(a.name) + '</button>' +
         (ed ? shDots('act', a.id, a.name) : '') +
         '<button type="button" class="ccfold' + (folded ? '' : ' open') + '" data-act="sh-fold" data-id="' + esc(a.id) + '" aria-expanded="' + !folded + '" aria-label="' + esc(a.name) + '">' + ICON.chev + '</button></div>' +
-        shMusicRow(a) + shVideoRow(a) + shDescText(a, !folded);
+        shDescText(a, !folded);
       if (!folded) {
         html += '<div class="ccbody">';
         if (!A.scenes.length) html += '<p class="ccsum" style="padding-top:10px">' + L('shNoScenes') + '</p>';
@@ -1828,7 +1985,7 @@
             '<button type="button" class="ccdt" data-act="sh-fold" data-id="' + esc(sc.id) + '" aria-expanded="' + !sf + '"><b>' + esc(sc.name) + '</b></button>' +
             (ed ? shDots('scene', sc.id, sc.name) : '') +
             '<button type="button" class="ccfold ccfold-day' + (sf ? '' : ' open') + '" data-act="sh-fold" data-id="' + esc(sc.id) + '" aria-expanded="' + !sf + '" aria-label="' + esc(sc.name) + '">' + ICON.chev + '</button></div>' +
-            shDescText(sc, !sf);
+            (sf ? '' : shMusicRow(sc) + shVideoRow(sc)) + shDescText(sc, !sf);
           if (sf) html += '<div class="ccsum">' + L('shSummary', { r: Sc.parts.length }) + '</div>';
           else {
             html += '<div class="ccsh">';
@@ -1908,7 +2065,7 @@
         fld(L('ccNameOpt'), '<input class="input" name="name" value="' + esc(o && o.name ? o.name : '') + '" placeholder="Abendschicht">');
     } else if (kind === 'act' || kind === 'scene') {
       h += fld(L('nameLabel'), '<input class="input" name="name" value="' + esc(o ? o.name : shDefaultName(kind)) + '" required>') +
-        (kind === 'act' ? fld(L('shMusic'), '<input class="input" name="music_name" value="' + esc(o && o.music_name ? o.music_name : '') + '" placeholder="Titel / Interpret">') +
+        (kind === 'scene' ? fld(L('shMusic'), '<input class="input" name="music_name" value="' + esc(o && o.music_name ? o.music_name : '') + '" placeholder="Titel / Interpret">') +
           fld(L('shSpotify'), '<input class="input" type="url" name="music_url" inputmode="url" value="' + esc(o && o.music_url ? o.music_url : '') + '" placeholder="https://open.spotify.com/…">') +
           fld(L('shVideo'), '<input class="input" name="video_desc" value="' + esc(o && o.video_desc ? o.video_desc : '') + '" placeholder="Beschreibung">') +
           fld(L('shYoutube'), '<input class="input" type="url" name="video_url" inputmode="url" value="' + esc(o && o.video_url ? o.video_url : '') + '" placeholder="https://www.youtube.com/watch?v=…">') : '') +
@@ -2157,8 +2314,8 @@
     if ((kind === 'event' || kind === 'role' || kind === 'act' || kind === 'scene' || kind === 'part' || kind === 'copy-event') && !g('name')) { ccErr(L('ccNeedName')); return; }
     if ((kind === 'day' || kind === 'copy-day') && !g('date')) { ccErr(L('date') + '?'); return; }
     if (kind === 'shift' && (!g('start') || !g('end'))) { ccErr(L('time') + '?'); return; }
-    if (kind === 'act' && g('music_url') && !shSpotifyOk(g('music_url'))) { ccErr(L('shMusicBad')); return; }
-    if (kind === 'act' && g('video_url') && !shYoutubeOk(g('video_url'))) { ccErr(L('shVideoBad')); return; }
+    if (kind === 'scene' && g('music_url') && !shSpotifyOk(g('music_url'))) { ccErr(L('shMusicBad')); return; }
+    if (kind === 'scene' && g('video_url') && !shYoutubeOk(g('video_url'))) { ccErr(L('shVideoBad')); return; }
     ccCloseSheet();
 
     if (kind === 'event') {
@@ -2177,10 +2334,10 @@
       if (isNew) { ro.shift_id = st.id; ro.sort = ccNextSort(st.id); }
       ok = await act(function () { return isNew ? sb.from('cc_roles').insert(ro) : sb.from('cc_roles').update(ro).eq('id', o.id); }, L('ccSaved'));
     } else if (kind === 'act') {
-      var ac = { name: g('name'), description: g('desc') || null, music_name: g('music_name') || null, music_url: g('music_url') || null, video_desc: g('video_desc') || null, video_url: g('video_url') || null, active: !!fd.get('active') };
+      var ac = { name: g('name'), description: g('desc') || null, active: !!fd.get('active') };
       ok = await act(function () { return isNew ? sb.from('show_acts').insert(ac) : sb.from('show_acts').update(ac).eq('id', o.id); }, L('ccSaved'));
     } else if (kind === 'scene') {
-      var sc = { name: g('name'), description: g('desc') || null };
+      var sc = { name: g('name'), description: g('desc') || null, music_name: g('music_name') || null, music_url: g('music_url') || null, video_desc: g('video_desc') || null, video_url: g('video_url') || null };
       if (isNew) sc.act_id = st.id;
       ok = await act(function () { return isNew ? sb.from('show_scenes').insert(sc) : sb.from('show_scenes').update(sc).eq('id', o.id); }, L('ccSaved'));
     } else if (kind === 'part') {
@@ -3349,6 +3506,8 @@
     if (act_ === 'mb-grp') { S.sec[D.id] = S.sec[D.id] !== true; render(); return; }
     if (act_ === 'cc-addevent') { if (canCC()) ccOpen('root', null, 'add'); return; }
     if (act_ === 'sh-fold') { S.ccFold[D.id] = !shIsFolded(D.id); render(); return; }
+    if (act_ === 'sh-play') { S.play[D.id] = !S.play[D.id]; render(); return; }
+    if (act_ === 'sh-print') { if (shEdit()) { try { await showExportPdf(); } catch (err) { console.error(err); toast(L('ccPdfFailed')); } } return; }
     if (act_ === 'sh-addact') { if (shEdit()) ccOpen('shroot', null, 'add'); return; }
     if (act_ === 'sh-menu') { if (shEdit()) ccOpen(D.lvl, D.id || null, 'menu'); return; }
     if (act_ === 'cc-fold') { S.ccFold[D.id] = !ccIsFolded(D.id); render(); return; }
