@@ -3517,26 +3517,14 @@
     if (!phone) { toast(L('phoneInvalid')); return false; }
     if (S.members.some(function (m) { return m.phone === phone; })) { toast(L('alreadyReg')); return false; }
     try {
-      var code = await sb.rpc('get_club_code');
-      if (code.error) throw code.error;
-      // Eigener, kurzlebiger Client: die Sitzung des Admins bleibt unverändert
-      var tmp = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, {
-        auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
-      });
-      var r = await tmp.auth.signUp({
-        email: phoneToEmail(phone), password: defaultPin(phone),
-        options: { data: { name: name, phone: phone, club_code: code.data || '', created_by_admin: 'true' } }
-      });
+      // Login wird serverseitig angelegt (kein E-Mail-Versand => kein «email rate limit exceeded»)
+      var r = await sb.rpc('admin_create_member', { p_name: name, p_phone: phone, p_guest: !!asGuest });
       if (r.error) throw r.error;
-      if (asGuest && r.data && r.data.user) {
-        var gr = await sb.rpc('set_guest', { target: r.data.user.id, make_guest: true });
-        if (gr.error) throw gr.error;
-      }
       toast(L('memberAdded', { name: name }));
       return true;
     } catch (e) {
       console.error(e);
-      toast(L('addFailed', { reason: /already/i.test(String(e.message)) ? L('alreadyReg') : String(e.message || L('unknownError')).slice(0, 100) }));
+      toast(L('addFailed', { reason: /already|PHONE_TAKEN/i.test(String(e.message)) ? L('alreadyReg') : String(e.message || L('unknownError')).slice(0, 100) }));
       return false;
     } finally {
       try { await loadAll(); render(); } catch (e2) { console.error(e2); }
