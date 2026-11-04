@@ -686,3 +686,116 @@ textarea.shgrow { resize: none; overflow: hidden; min-height: 44px; }
 @media (prefers-color-scheme: dark) { :root[data-design="petrol"]:not([data-theme="light"]) { --bg: #061519; --surface: #0C262D; --ink: #E2F3F6; --muted: #8FB6BF; --line: #17404A; --crown: #5CCADB; --crown-soft: #0E2F37; --yes: #5CD08A; --yes-soft: #17382A; --no: #FF8A80; --no-soft: #43211F; --focus: #5CCADB; } }
 :root[data-design="petrol"][data-theme="dark"] { --bg: #061519; --surface: #0C262D; --ink: #E2F3F6; --muted: #8FB6BF; --line: #17404A; --crown: #5CCADB; --crown-soft: #0E2F37; --yes: #5CD08A; --yes-soft: #17382A; --no: #FF8A80; --no-soft: #43211F; --focus: #5CCADB; }
 :root[data-design="petrol"] body::before { content: ""; display: block; height: 6px; background: linear-gradient(90deg, #0E5F6F, #2BAFC4); }
+
+/* ===== GV: Generalversammlung (Tab «GV») ===== */
+.gvhero { background: var(--crown); color: var(--onink); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
+.gvhero .gvk { font-size: .78rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; opacity: .85; }
+.gvhero h2 { font-family: var(--font-head); font-size: 1.9rem; margin: 2px 0 12px; line-height: 1.1; }
+.gvfacts { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
+.gvfact { background: color-mix(in srgb, var(--onink) 18%, transparent); border-radius: 10px; padding: 8px 10px; min-width: 0; }
+.gvfact b { display: block; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 600; opacity: .85; }
+.gvfact span { display: block; font-weight: 600; line-height: 1.25; }
+.gvdraft { margin-bottom: 12px; }
+.gvnote { background: var(--warn-bg); color: var(--warn-ink); border-radius: 10px; padding: 9px 12px; font-size: .92rem; }
+.gvnr { display: inline-grid; place-items: center; min-width: 26px; height: 26px; margin-right: 8px; border-radius: 8px; background: var(--surface); color: var(--crown); font-size: .95rem; vertical-align: 2px; font-family: var(--font-head); }
+.gvsum { padding: 6px 12px 10px; margin: 0; }
+.gvbody { padding: 12px 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.gvbody p { margin: 0; }
+.gvh { margin: 6px 0 0; font-family: var(--font-head); font-size: 1.1rem; }
+.gvby { color: var(--muted); font-size: .88rem; }
+.gvhint { margin: 0; }
+.gvrows .gvrow { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 7px 0; border-top: 1px dashed var(--line); font-size: .95rem; }
+.gvrows .gvrow:first-child { border-top: 0; }
+.gvrow b { font-weight: 600; }
+.gvrow span { color: var(--muted); text-align: right; }
+.gvkpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.gvkpi { background: var(--crown-soft); border-radius: 10px; padding: 8px; min-width: 0; }
+.gvkpi.neg { background: var(--no-soft); }
+.gvkpi small { display: block; font-size: .72rem; color: var(--muted); line-height: 1.2; }
+.gvkpi b { font-family: var(--font-head); font-size: 1.3rem; font-variant-numeric: tabular-nums; }
+.gvtable { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+.gvtable table { border-collapse: collapse; width: 100%; font-size: .85rem; font-variant-numeric: tabular-nums; }
+.gvtable th, .gvtable td { padding: 6px 8px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--line); }
+.gvtable th:first-child, .gvtable td:first-child { text-align: left; white-space: normal; min-width: 140px; }
+.gvtable th { font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 600; }
+.gvtable tr.sub td { font-weight: 600; background: var(--crown-soft); }
+.gvtable tr:last-child td { border-bottom: 0; }
+.gvweek { margin: 14px 0 -2px; font-size: 1rem; }
+.gvev { background: none; border: 0; padding: 4px 0; text-align: left; font: inherit; font-weight: 700; color: inherit; flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.gvev::after { content: " \203A"; color: var(--crown); }
+.gvgo { align-self: flex-start; text-decoration: none; padding: 0 14px; }
+.gvpost { margin: 0; }
+.gvpbody { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.gvauth { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.gvgal { position: relative; }
+.gvstrip { display: flex; gap: 6px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.gvstrip::-webkit-scrollbar { display: none; }
+.gvstrip img { flex: 0 0 78%; width: 78%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; scroll-snap-align: start; cursor: zoom-in; background: var(--crown-soft); display: block; }
+.gvstrip img:only-child { flex-basis: 100%; width: 100%; }
+.gvgb { position: absolute; top: 50%; transform: translateY(-50%); width: 34px; height: 34px; border: 0; border-radius: 50%; background: rgba(0, 0, 0, .6); color: #fff; font-size: 1.3rem; line-height: 1; display: grid; place-items: center; }
+.gvgb.p { left: 6px; }
+.gvgb.n { right: 6px; }
+.gvgb[disabled] { display: none; }
+.gvgn { position: absolute; right: 8px; top: 8px; background: rgba(0, 0, 0, .6); color: #fff; font-size: .75rem; font-weight: 600; padding: 2px 9px; border-radius: 999px; pointer-events: none; font-variant-numeric: tabular-nums; }
+.gvtext { position: relative; }
+.gvtext p { margin: 0 0 10px; }
+.gvtext p:last-child { margin-bottom: 0; }
+.gvtext.clamp { max-height: 11.5em; overflow: hidden; }
+.gvtext.clamp::after { content: ""; position: absolute; inset: auto 0 0; height: 4em; background: linear-gradient(to bottom, transparent, var(--surface)); }
+.gvmore { align-self: flex-start; padding: 2px 0; }
+.gvsoc { display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--line); padding-top: 10px; margin-top: 2px; }
+.gvreacts { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.gvrb { display: inline-flex; align-items: center; gap: 5px; min-height: 36px; padding: 4px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); font-size: 1rem; font-variant-numeric: tabular-nums; }
+.gvrb span { font-size: .85rem; }
+.gvrb[aria-pressed="true"] { background: var(--crown-soft); border-color: var(--crown); color: var(--crown); font-weight: 600; }
+.gvcb { margin-left: auto; border: 0; background: none; color: var(--muted); font-size: .88rem; font-weight: 600; padding: 6px 4px; }
+.gvcwrap { display: flex; flex-direction: column; gap: 10px; }
+.gvcm { background: var(--bg); border-radius: 4px 14px 14px 14px; padding: 8px 12px; min-width: 0; }
+.gvcm.mine { background: var(--crown-soft); }
+.gvcn { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; font-size: .85rem; }
+.gvcn small { color: var(--muted); }
+.gvct { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .95rem; }
+.gvcx { border: 0; background: none; color: var(--muted); font-size: .78rem; text-decoration: underline; padding: 0; margin-left: auto; }
+.gvcform { display: flex; gap: 8px; align-items: center; }
+.gvcform .input { flex: 1; min-width: 0; margin: 0; }
+.gvlb { position: fixed; inset: 0; z-index: 80; background: rgba(0, 0, 0, .92); display: flex; align-items: center; justify-content: center; padding: env(safe-area-inset-top, 0px) 8px env(safe-area-inset-bottom, 0px); }
+.gvlb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.gvlb button { position: absolute; top: calc(10px + env(safe-area-inset-top, 0px)); right: 12px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255, 255, 255, .18); color: #fff; font-size: 1.3rem; }
+@media (max-width: 380px) { .gvkpis { grid-template-columns: 1fr; } }
+
+/* GV bearbeiten (Rolle Vorstand) */
+.gvx { outline: 1.5px dashed var(--crown); outline-offset: 3px; border-radius: 8px; cursor: pointer; }
+.gvhero.gvx { outline-offset: -4px; }
+.gvx:hover { background: color-mix(in srgb, var(--crown) 8%, transparent); }
+.gvph { color: var(--muted); font-style: italic; margin: 0; }
+.cceh .gvx { flex: 1; min-width: 0; }
+.gvyears { display: flex; flex-wrap: wrap; gap: 6px; margin: -6px 0 12px; }
+.gvyr { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 4px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.gvyr[aria-pressed="true"] { background: var(--crown-soft); border-color: var(--crown); color: var(--crown); }
+.gvdot { width: 8px; height: 8px; border-radius: 50%; background: var(--warn-ink); }
+.gvta { min-height: 7em; line-height: 1.45; }
+.gvfmt { margin: -8px 0 14px; }
+
+/* GV Fotos verwalten */
+.gvphotos { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; margin-top: 6px; }
+.gvpt { position: relative; aspect-ratio: 4 / 3; border-radius: 8px; overflow: hidden; background: var(--crown-soft); }
+.gvpt img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gvptb { position: absolute; inset: auto 0 0; display: flex; justify-content: center; gap: 4px; padding: 4px; background: linear-gradient(transparent, rgba(0, 0, 0, .55)); }
+.gvptb button { width: 28px; height: 28px; border: 0; border-radius: 50%; background: rgba(0, 0, 0, .6); color: #fff; font-size: 1rem; line-height: 1; }
+.gvpadd { display: grid; place-items: center; aspect-ratio: 4 / 3; border: 1.5px dashed var(--line); border-radius: 8px; color: var(--crown); font-weight: 600; font-size: .85rem; text-align: center; padding: 4px; cursor: pointer; }
+.gvpadd.busy { opacity: .6; pointer-events: none; }
+/* GV: Protokoll abgedunkelt, Kapitelname bearbeiten */
+.ccel.gvproto { background: color-mix(in srgb, var(--ink) 7%, var(--bg)); border-color: color-mix(in srgb, var(--ink) 18%, var(--bg)); }
+.ccel.gvproto .cceh { background: transparent; }
+.ccel.gvproto .cct, .ccel.gvproto .gvnr { color: var(--muted); }
+.ccel.gvproto .gvnr { background: color-mix(in srgb, var(--ink) 8%, var(--bg)); }
+.ccel.gvproto .gvbody { color: var(--muted); }
+.ccel.gvproto .gvbody .gvh { color: var(--muted); }
+.gvtag { flex: 0 0 auto; font-size: .72rem; font-weight: 600; letter-spacing: .02em; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
+.gvtedit { color: var(--crown); outline: 1.5px dashed var(--crown); outline-offset: -4px; }.gvplain { margin: 0; padding: 10px 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; font: inherit; font-size: .9rem; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); user-select: text; }
+.gvvis { width: auto; max-width: 58%; flex: 0 1 auto; }
+
+.ccel.gvdrafts .cct { color: var(--no); }
+.ccel.gvdrafts .gvnr { color: var(--no); }
+
+.appver { font-size: .8rem; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; white-space: nowrap; font-variant-numeric: tabular-nums; }

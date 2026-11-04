@@ -1,10 +1,19 @@
 (function () {
   'use strict';
+  // Version dieser App: bei jeder Auslieferung zusammen mit sw.js (CACHE = 'training-vNNN') erhöhen; steht im Profil oben rechts
+  var APP_VERSION = 'v132';
 
   /* ---------- Konfiguration & Supabase ---------- */
   var cfg = window.APP_CONFIG || {};
   var configured = !!(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && cfg.SUPABASE_URL.indexOf('DEIN-PROJEKT') === -1);
   var sb = configured && window.supabase ? window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY) : null;
+  // Gemeinsames Supabase-Projekt (lata-lab): Tabellen und Funktionen dieser App tragen den Präfix aus config.js (fbro_)
+  var TP = cfg.TABLE_PREFIX || '', FP = cfg.FUNCTION_PREFIX || '';
+  if (sb && (TP || FP)) {
+    var rawFrom = sb.from.bind(sb), rawRpc = sb.rpc.bind(sb);
+    sb.from = function (t) { return rawFrom(TP + t); };
+    sb.rpc = function (f, args, opts) { return rawRpc(FP + f, args, opts); };
+  }
 
   /* ---------- Hilfsfunktionen ---------- */
   var esc = function (s) {
@@ -27,6 +36,9 @@
 
   var DICT = {
     de: {
+      gvPdf: 'Als PDF (A4)', gvEditOn: 'Inhalte bearbeiten', gvEditOff: 'Bearbeiten beenden', gvVisSec: 'Generalversammlung', gvVisInfo: 'Legt fest, wer die GV sieht: niemand (auch Admins nicht), nur Admins, Vorstand (und Admins) oder alle Aktiv- und Passivmitglieder. Gäste, Kandidaten und Supporter sehen die GV nie.', appVersion: 'Version der App', gvStateF: 'Zustand', gvStateFinal: 'Final', gvStateDraft: 'Draft (in Arbeit)', gvStateProtocol: 'Protokoll (grau hinterlegt)', gvStateDraftSfx: ' (in Arbeit)', gvStateHint: 'Final: normal. Draft: Titel rot mit dem Zusatz «(in Arbeit)». Protokoll: abgedunkelt dargestellt.', gvVisAdmin: 'sichtbar für Admin', gvVisAdminNote: 'Nur für Admins sichtbar.', gvVisNone: 'sichtbar für niemanden', gvVisBoard: 'sichtbar für Vorstand', gvVisMembers: 'sichtbar für alle (Aktiv & Passiv)', gvVisNoneNote: 'Für niemanden sichtbar, nur Admins sehen diese GV.', gvVisEmpty: 'Es gibt noch keine GV.', gvVisHint: 'Aktuell: {v}. Das ändert nur der Admin in der Admin-Konsole.', gvTextTitle: 'Als Text: 52 Wochen ab {from} bis {to}', gvTextCopy: 'Text kopieren', gvTextCopied: 'Text kopiert', gvTextNone: 'Keine Termine in diesen 52 Wochen.', gvChapterF: 'Traktandum', gvChapterEdit: 'Traktandum bearbeiten', gvProtocol: 'Als Protokoll kennzeichnen', gvProtocolHint: 'Das Protokoll wird leicht abgedunkelt dargestellt und hebt sich so von den übrigen Unterlagen ab.', gvProtoTag: 'Protokoll', gvPhotoAdd: 'Foto hinzufügen', gvPhotoDel: 'Foto entfernen', gvPhotoMoveL: 'Nach vorne', gvPhotoMoveR: 'Nach hinten', gvUploading: 'Wird hochgeladen …', gvUploadFail: 'Das Foto konnte nicht hochgeladen werden.', gvMigrate: 'Fotos in den geschützten Speicher übernehmen', gvMigrateAsk: '{n} Fotos dieser GV werden aus dem App-Ordner in den geschützten Speicher kopiert. Danach kannst du die Dateien gv26-….jpg im Repo löschen. Fortfahren?', gvMigrated: 'Fotos übernommen: {n}', gvPhotosHint: 'Fotos werden verkleinert und geschützt gespeichert. Nur angemeldete Mitglieder sehen sie.',
+      boTag: 'Vorstand', mMakeBo: 'Zum Vorstand machen', mRevokeBo: 'Vorstand-Rechte entziehen', boGranted: 'Als Vorstand festgelegt', boRevoked: 'Vorstand-Rechte entzogen', gvEditMode: 'Inhalte bearbeiten', gvEditHint: 'Bearbeiten ist aktiv: Tippe auf einen Inhalt, um ihn zu ändern.', gvCopy: 'GV kopieren', gvCopyAsk: 'Die GV {y} wird als GV {n} kopiert, mit allen Traktanden, Berichten und Fotos, aber ohne Reaktionen und Kommentare. Das Datum verschiebt sich um 52 Wochen. Die Kopie ist ein Entwurf.', gvCopied: 'Kopiert. Die neue GV ist ein Entwurf.', gvExists: 'Für das nächste Jahr gibt es schon eine GV.', gvDelete: 'GV löschen', gvDeleteAsk: 'Die GV {y} mit allen Berichten, Reaktionen und Kommentaren endgültig löschen?', gvDeleteRep: 'Diesen Bericht endgültig löschen?', gvAddReport: 'Bericht hinzufügen', gvMetaEdit: 'Titel, Datum und Ort', gvTitleF: 'Titel', gvSubtitle: 'Untertitel', gvSummary: 'Kurzinfo (sichtbar, wenn zugeklappt)', gvBody: 'Text', gvIntro: 'Einladungstext', gvPublished: 'Veröffentlicht (für alle Mitglieder sichtbar)', gvProgUntil: 'Jahresprogramm bis', gvAuthor: 'Autor (Aktivmitglied)', gvNoAuthor: 'Kein Mitglied', gvAuthorName: 'Autor als Text (nur wenn kein Mitglied)', gvPhotos: 'Fotos', gvPhotoBad: 'Fotos: nur Dateinamen wie gv26-jass-1.jpg (Buchstaben, Ziffern, - _ .)', gvFormat: 'Format: «## Zwischentitel», «> Zeile unter dem Titel», «! Hinweis», «Name | Wert». Eine Leerzeile beginnt einen neuen Absatz.', gvFinKpi: 'Kennzahlen (Name | Wert, am Ende | - für negativ)', gvFinCols: 'Spalten (mit | getrennt)', gvFinRows: 'Tabelle («## Abschnitt» oder Name | Zahl | Zahl | Zahl, am Ende | * für Zwischensumme)', gvNeedTitle: 'Bitte Titel (und bei Berichten den Text) ausfüllen.',
+      navGv: 'GV', gvTitle: 'GV {y}', gvDraft: 'Entwurf, nur für den Vorstand sichtbar', gvInvite: 'Einladung', gvRsvp: 'An- oder abmelden im Dialog «Events», bis eine Woche im Voraus ({date}). Das gilt für alle Teilnehmer, auch für das Znacht.', gvToEvents: 'Zu den Events', gvToJass: 'Zum Dialog «Jass»', gvProgramHint: 'Die Termine stammen aus dem Dialog «Events», dort meldest du dich an. Das Kalendersymbol speichert den Termin in deinem Kalender.', gvNoProgram: 'Im Zeitraum sind keine Events eingetragen.', gvMore: 'Weiterlesen', gvLess: 'Weniger anzeigen', gvPrev: 'Voriges Foto', gvNext: 'Nächstes Foto', gvClose: 'Schliessen', gvPhotoAlt: 'Foto {i} von {n}: {t}', gvComment: 'Kommentieren', gvComments1: '1 Kommentar', gvCommentsN: '{n} Kommentare', gvWrite: 'Kommentar schreiben …', gvSend: 'Senden', gvNoComments: 'Noch keine Kommentare.', gvReactAria: 'Reaktion {e}',
       wd0: 'Sonntag', wd1: 'Montag', wd2: 'Dienstag', wd3: 'Mittwoch', wd4: 'Donnerstag', wd5: 'Freitag', wd6: 'Samstag',
       navTrainings: 'Trainings', navEvents: 'Events', navAdmin: 'Admin', navProfile: 'Profil',
       titleTrainings: 'Trainingsplan', titleEvents: 'Vereinsanlässe',
@@ -108,6 +120,9 @@
     },
 
     fr: {
+      gvPdf: 'En PDF (A4)', gvEditOn: 'Modifier les contenus', gvEditOff: 'Terminer la modification', gvVisSec: 'Assemblée générale', gvVisInfo: 'Définit qui voit l’AG : personne (pas même les admins), seulement les admins, le comité (et les admins) ou tous les membres actifs et passifs. Les invités, candidats et supporters ne la voient jamais.', appVersion: 'Version de l’app', gvStateF: 'État', gvStateFinal: 'Final', gvStateDraft: 'Brouillon (en cours)', gvStateProtocol: 'Procès-verbal (fond gris)', gvStateDraftSfx: ' (en cours)', gvStateHint: 'Final : normal. Brouillon : titre en rouge avec « (en cours) ». Procès-verbal : affiché assombri.', gvVisAdmin: 'visible par l’admin', gvVisAdminNote: 'Visible uniquement par les admins.', gvVisNone: 'visible par personne', gvVisBoard: 'visible par le comité', gvVisMembers: 'visible par tous (actifs & passifs)', gvVisNoneNote: 'Visible par personne, seuls les admins voient cette AG.', gvVisEmpty: 'Il n’y a pas encore d’AG.', gvVisHint: 'Actuellement : {v}. Seul l’admin le modifie dans la console d’administration.', gvTextTitle: 'En texte : 52 semaines du {from} au {to}', gvTextCopy: 'Copier le texte', gvTextCopied: 'Texte copié', gvTextNone: 'Aucune date durant ces 52 semaines.', gvChapterF: 'Point de l’ordre du jour', gvChapterEdit: 'Modifier le point', gvProtocol: 'Marquer comme procès-verbal', gvProtocolHint: 'Le procès-verbal s’affiche légèrement assombri et se distingue ainsi des autres documents.', gvProtoTag: 'Procès-verbal', gvPhotoAdd: 'Ajouter une photo', gvPhotoDel: 'Retirer la photo', gvPhotoMoveL: 'Vers l’avant', gvPhotoMoveR: 'Vers l’arrière', gvUploading: 'Téléversement …', gvUploadFail: 'La photo n’a pas pu être téléversée.', gvMigrate: 'Transférer les photos dans le stockage protégé', gvMigrateAsk: '{n} photos de cette AG sont copiées du dossier de l’app vers le stockage protégé. Ensuite, tu peux supprimer les fichiers gv26-….jpg du dépôt. Continuer ?', gvMigrated: 'Photos transférées : {n}', gvPhotosHint: 'Les photos sont réduites et stockées de façon protégée. Seuls les membres connectés les voient.',
+      boTag: 'Comité', mMakeBo: 'Nommer membre du comité', mRevokeBo: 'Retirer les droits du comité', boGranted: 'Défini comme membre du comité', boRevoked: 'Droits du comité retirés', gvEditMode: 'Modifier les contenus', gvEditHint: 'Mode édition actif : touche un contenu pour le modifier.', gvCopy: 'Copier l’AG', gvCopyAsk: 'L’AG {y} sera copiée en AG {n}, avec tous les points, rapports et photos, mais sans réactions ni commentaires. La date est décalée de 52 semaines. La copie est un brouillon.', gvCopied: 'Copié. La nouvelle AG est un brouillon.', gvExists: 'Il existe déjà une AG pour l’année suivante.', gvDelete: 'Supprimer l’AG', gvDeleteAsk: 'Supprimer définitivement l’AG {y} avec tous les rapports, réactions et commentaires ?', gvDeleteRep: 'Supprimer définitivement ce rapport ?', gvAddReport: 'Ajouter un rapport', gvMetaEdit: 'Titre, date et lieu', gvTitleF: 'Titre', gvSubtitle: 'Sous-titre', gvSummary: 'Résumé (visible quand c’est replié)', gvBody: 'Texte', gvIntro: 'Texte d’invitation', gvPublished: 'Publié (visible pour tous les membres)', gvProgUntil: 'Programme annuel jusqu’au', gvAuthor: 'Auteur (membre actif)', gvNoAuthor: 'Aucun membre', gvAuthorName: 'Auteur en texte (seulement si pas membre)', gvPhotos: 'Photos', gvPhotoBad: 'Photos : uniquement des noms de fichier comme gv26-jass-1.jpg (lettres, chiffres, - _ .)', gvFormat: 'Format : « ## Intertitre », « > Ligne sous le titre », « ! Remarque », « Nom | Valeur ». Une ligne vide commence un nouveau paragraphe.', gvFinKpi: 'Chiffres clés (Nom | Valeur, à la fin | - pour négatif)', gvFinCols: 'Colonnes (séparées par |)', gvFinRows: 'Tableau (« ## Section » ou Nom | nombre | nombre | nombre, à la fin | * pour sous-total)', gvNeedTitle: 'Merci de remplir le titre (et le texte pour les rapports).',
+      navGv: 'AG', gvTitle: 'AG {y}', gvDraft: 'Brouillon, visible uniquement pour le comité', gvInvite: 'Invitation', gvRsvp: 'S’inscrire ou se désinscrire dans l’onglet « Events », au plus tard une semaine avant ({date}). Cela vaut pour tous les participants, y compris pour le souper.', gvToEvents: 'Vers les événements', gvToJass: 'Vers l’onglet « Jass »', gvProgramHint: 'Les dates proviennent de l’onglet « Events », c’est là que tu t’inscris. L’icône de calendrier enregistre la date dans ton calendrier.', gvNoProgram: 'Aucun événement n’est enregistré pour cette période.', gvMore: 'Lire la suite', gvLess: 'Afficher moins', gvPrev: 'Photo précédente', gvNext: 'Photo suivante', gvClose: 'Fermer', gvPhotoAlt: 'Photo {i} sur {n} : {t}', gvComment: 'Commenter', gvComments1: '1 commentaire', gvCommentsN: '{n} commentaires', gvWrite: 'Écrire un commentaire …', gvSend: 'Envoyer', gvNoComments: 'Pas encore de commentaires.', gvReactAria: 'Réaction {e}',
       wd0: 'Dimanche', wd1: 'Lundi', wd2: 'Mardi', wd3: 'Mercredi', wd4: 'Jeudi', wd5: 'Vendredi', wd6: 'Samedi',
       navTrainings: 'Entraînements', navEvents: 'Événements', navAdmin: 'Admin', navProfile: 'Profil',
       titleTrainings: 'Trainingsplan', titleEvents: 'Vereinsanlässe',
@@ -189,6 +204,9 @@
     },
 
     en: {
+      gvPdf: 'As PDF (A4)', gvEditOn: 'Edit content', gvEditOff: 'Stop editing', gvVisSec: 'General meeting', gvVisInfo: 'Sets who sees the AGM: nobody (not even admins), admins only, the board (and admins) or all active and passive members. Guests, candidates and supporters never see it.', appVersion: 'App version', gvStateF: 'Status', gvStateFinal: 'Final', gvStateDraft: 'Draft (in progress)', gvStateProtocol: 'Minutes (grey background)', gvStateDraftSfx: ' (in progress)', gvStateHint: 'Final: normal. Draft: title in red with “(in progress)”. Minutes: shown dimmed.', gvVisAdmin: 'visible to admin', gvVisAdminNote: 'Visible to admins only.', gvVisNone: 'visible to nobody', gvVisBoard: 'visible to board', gvVisMembers: 'visible to all (active & passive)', gvVisNoneNote: 'Visible to nobody, only admins see this AGM.', gvVisEmpty: 'There is no AGM yet.', gvVisHint: 'Currently: {v}. Only the admin changes this in the admin console.', gvTextTitle: 'As text: 52 weeks from {from} to {to}', gvTextCopy: 'Copy text', gvTextCopied: 'Text copied', gvTextNone: 'No dates in these 52 weeks.', gvChapterF: 'Agenda item', gvChapterEdit: 'Edit agenda item', gvProtocol: 'Mark as minutes', gvProtocolHint: 'The minutes are shown slightly dimmed so they stand out from the rest of the documents.', gvProtoTag: 'Minutes', gvPhotoAdd: 'Add photo', gvPhotoDel: 'Remove photo', gvPhotoMoveL: 'Move forward', gvPhotoMoveR: 'Move back', gvUploading: 'Uploading …', gvUploadFail: 'The photo could not be uploaded.', gvMigrate: 'Move photos to protected storage', gvMigrateAsk: '{n} photos of this AGM will be copied from the app folder to protected storage. Afterwards you can delete the gv26-….jpg files from the repository. Continue?', gvMigrated: 'Photos moved: {n}', gvPhotosHint: 'Photos are resized and stored protected. Only signed-in members can see them.',
+      boTag: 'Board', mMakeBo: 'Make board member', mRevokeBo: 'Remove board rights', boGranted: 'Set as board member', boRevoked: 'Board rights removed', gvEditMode: 'Edit content', gvEditHint: 'Editing is on: tap any content to change it.', gvCopy: 'Copy AGM', gvCopyAsk: 'The AGM {y} will be copied as AGM {n}, with all agenda items, reports and photos, but without reactions and comments. The date moves by 52 weeks. The copy is a draft.', gvCopied: 'Copied. The new AGM is a draft.', gvExists: 'There is already an AGM for the next year.', gvDelete: 'Delete AGM', gvDeleteAsk: 'Permanently delete the AGM {y} with all reports, reactions and comments?', gvDeleteRep: 'Permanently delete this report?', gvAddReport: 'Add report', gvMetaEdit: 'Title, date and place', gvTitleF: 'Title', gvSubtitle: 'Subtitle', gvSummary: 'Short info (shown when collapsed)', gvBody: 'Text', gvIntro: 'Invitation text', gvPublished: 'Published (visible to all members)', gvProgUntil: 'Annual programme until', gvAuthor: 'Author (active member)', gvNoAuthor: 'No member', gvAuthorName: 'Author as text (only if not a member)', gvPhotos: 'Photos', gvPhotoBad: 'Photos: file names only, like gv26-jass-1.jpg (letters, digits, - _ .)', gvFormat: 'Format: “## Subheading”, “> Line below the title”, “! Note”, “Name | Value”. A blank line starts a new paragraph.', gvFinKpi: 'Key figures (Name | Value, add | - for negative)', gvFinCols: 'Columns (separated by |)', gvFinRows: 'Table (“## Section” or Name | number | number | number, add | * for subtotal)', gvNeedTitle: 'Please fill in the title (and the text for reports).',
+      navGv: 'AGM', gvTitle: 'AGM {y}', gvDraft: 'Draft, visible to the board only', gvInvite: 'Invitation', gvRsvp: 'Sign up or cancel in the “Events” tab, one week in advance at the latest ({date}). This applies to all participants, including the dinner.', gvToEvents: 'Go to Events', gvToJass: 'Go to “Jass”', gvProgramHint: 'The dates come from the “Events” tab, where you sign up. The calendar icon saves the date to your calendar.', gvNoProgram: 'No events are entered for this period.', gvMore: 'Read more', gvLess: 'Show less', gvPrev: 'Previous photo', gvNext: 'Next photo', gvClose: 'Close', gvPhotoAlt: 'Photo {i} of {n}: {t}', gvComment: 'Comment', gvComments1: '1 comment', gvCommentsN: '{n} comments', gvWrite: 'Write a comment …', gvSend: 'Send', gvNoComments: 'No comments yet.', gvReactAria: 'Reaction {e}',
       wd0: 'Sunday', wd1: 'Monday', wd2: 'Tuesday', wd3: 'Wednesday', wd4: 'Thursday', wd5: 'Friday', wd6: 'Saturday',
       navTrainings: 'Trainings', navEvents: 'Events', navAdmin: 'Admin', navProfile: 'Profile',
       titleTrainings: 'Trainingsplan', titleEvents: 'Vereinsanlässe',
@@ -270,6 +288,9 @@
     },
 
     it: {
+      gvPdf: 'Come PDF (A4)', gvEditOn: 'Modifica i contenuti', gvEditOff: 'Termina la modifica', gvVisSec: 'Assemblea generale', gvVisInfo: 'Stabilisce chi vede l’AG: nessuno (nemmeno gli admin), solo gli admin, il comitato (e gli admin) o tutti i membri attivi e passivi. Ospiti, candidati e sostenitori non la vedono mai.', appVersion: 'Versione dell’app', gvStateF: 'Stato', gvStateFinal: 'Finale', gvStateDraft: 'Bozza (in lavorazione)', gvStateProtocol: 'Verbale (sfondo grigio)', gvStateDraftSfx: ' (in lavorazione)', gvStateHint: 'Finale: normale. Bozza: titolo in rosso con «(in lavorazione)». Verbale: mostrato attenuato.', gvVisAdmin: 'visibile all’admin', gvVisAdminNote: 'Visibile solo agli admin.', gvVisNone: 'visibile a nessuno', gvVisBoard: 'visibile al comitato', gvVisMembers: 'visibile a tutti (attivi & passivi)', gvVisNoneNote: 'Visibile a nessuno, solo gli admin vedono questa AG.', gvVisEmpty: 'Non c’è ancora nessuna AG.', gvVisHint: 'Attualmente: {v}. Solo l’admin lo modifica nella console di amministrazione.', gvTextTitle: 'Come testo: 52 settimane dal {from} al {to}', gvTextCopy: 'Copia il testo', gvTextCopied: 'Testo copiato', gvTextNone: 'Nessun appuntamento in queste 52 settimane.', gvChapterF: 'Punto all’ordine del giorno', gvChapterEdit: 'Modifica il punto', gvProtocol: 'Contrassegna come verbale', gvProtocolHint: 'Il verbale viene mostrato leggermente attenuato e si distingue così dagli altri documenti.', gvProtoTag: 'Verbale', gvPhotoAdd: 'Aggiungi foto', gvPhotoDel: 'Rimuovi foto', gvPhotoMoveL: 'Più avanti', gvPhotoMoveR: 'Più indietro', gvUploading: 'Caricamento …', gvUploadFail: 'Impossibile caricare la foto.', gvMigrate: 'Sposta le foto nell’archivio protetto', gvMigrateAsk: '{n} foto di questa AG vengono copiate dalla cartella dell’app nell’archivio protetto. Poi puoi eliminare i file gv26-….jpg dal repository. Continuare?', gvMigrated: 'Foto spostate: {n}', gvPhotosHint: 'Le foto vengono ridotte e salvate in modo protetto. Solo i membri registrati le vedono.',
+      boTag: 'Comitato', mMakeBo: 'Nomina membro del comitato', mRevokeBo: 'Revoca i diritti del comitato', boGranted: 'Impostato come membro del comitato', boRevoked: 'Diritti del comitato revocati', gvEditMode: 'Modifica i contenuti', gvEditHint: 'Modifica attiva: tocca un contenuto per cambiarlo.', gvCopy: 'Copia l’AG', gvCopyAsk: 'L’AG {y} viene copiata come AG {n}, con tutti i punti, i rapporti e le foto, ma senza reazioni e commenti. La data si sposta di 52 settimane. La copia è una bozza.', gvCopied: 'Copiata. La nuova AG è una bozza.', gvExists: 'Esiste già un’AG per l’anno successivo.', gvDelete: 'Elimina l’AG', gvDeleteAsk: 'Eliminare definitivamente l’AG {y} con tutti i rapporti, le reazioni e i commenti?', gvDeleteRep: 'Eliminare definitivamente questo rapporto?', gvAddReport: 'Aggiungi rapporto', gvMetaEdit: 'Titolo, data e luogo', gvTitleF: 'Titolo', gvSubtitle: 'Sottotitolo', gvSummary: 'Breve info (visibile quando è chiuso)', gvBody: 'Testo', gvIntro: 'Testo dell’invito', gvPublished: 'Pubblicata (visibile a tutti i membri)', gvProgUntil: 'Programma annuale fino al', gvAuthor: 'Autore (membro attivo)', gvNoAuthor: 'Nessun membro', gvAuthorName: 'Autore come testo (solo se non è un membro)', gvPhotos: 'Foto', gvPhotoBad: 'Foto: solo nomi di file come gv26-jass-1.jpg (lettere, cifre, - _ .)', gvFormat: 'Formato: «## Sottotitolo», «> Riga sotto il titolo», «! Avviso», «Nome | Valore». Una riga vuota inizia un nuovo paragrafo.', gvFinKpi: 'Cifre chiave (Nome | Valore, in fondo | - per negativo)', gvFinCols: 'Colonne (separate da |)', gvFinRows: 'Tabella («## Sezione» oppure Nome | numero | numero | numero, in fondo | * per subtotale)', gvNeedTitle: 'Compila il titolo (e il testo per i rapporti).',
+      navGv: 'AG', gvTitle: 'AG {y}', gvDraft: 'Bozza, visibile solo al comitato', gvInvite: 'Invito', gvRsvp: 'Iscriversi o disdire nella scheda «Events», al più tardi una settimana prima ({date}). Vale per tutti i partecipanti, anche per la cena.', gvToEvents: 'Vai agli eventi', gvToJass: 'Vai a «Jass»', gvProgramHint: 'Le date provengono dalla scheda «Events», dove ti iscrivi. L’icona del calendario salva la data nel tuo calendario.', gvNoProgram: 'Nessun evento registrato per questo periodo.', gvMore: 'Leggi tutto', gvLess: 'Mostra meno', gvPrev: 'Foto precedente', gvNext: 'Foto successiva', gvClose: 'Chiudi', gvPhotoAlt: 'Foto {i} di {n}: {t}', gvComment: 'Commenta', gvComments1: '1 commento', gvCommentsN: '{n} commenti', gvWrite: 'Scrivi un commento …', gvSend: 'Invia', gvNoComments: 'Ancora nessun commento.', gvReactAria: 'Reazione {e}',
       wd0: 'Domenica', wd1: 'Lunedì', wd2: 'Martedì', wd3: 'Mercoledì', wd4: 'Giovedì', wd5: 'Venerdì', wd6: 'Sabato',
       navTrainings: 'Allenamenti', navEvents: 'Eventi', navAdmin: 'Admin', navProfile: 'Profilo',
       titleTrainings: 'Trainingsplan', titleEvents: 'Vereinsanlässe',
@@ -351,6 +372,9 @@
     },
 
     gsw: {
+      gvPdf: 'As PDF (A4)', gvEditOn: 'Inhalt bearbeite', gvEditOff: 'Bearbeite beände', gvVisSec: 'Generalversammlig', gvVisInfo: 'Leit fescht, wär d GV gseht: niemer (au d Admins nöd), nume d Admins, de Vorstand (und d Admins) oder alli Aktiv- und Passivmitglieder. Gäscht, Kandidate und Supporter gsehnd d GV nie.', appVersion: 'Version vo de App', gvStateF: 'Zuestand', gvStateFinal: 'Final', gvStateDraft: 'Draft (i Arbeit)', gvStateProtocol: 'Protokoll (grau hinterlegt)', gvStateDraftSfx: ' (i Arbeit)', gvStateHint: 'Final: normal. Draft: Titel rot mit «(i Arbeit)». Protokoll: abdunklet azeigt.', gvVisAdmin: 'sichtbar für Admin', gvVisAdminNote: 'Nume für Admins sichtbar.', gvVisNone: 'sichtbar für niemer', gvVisBoard: 'sichtbar für de Vorstand', gvVisMembers: 'sichtbar für alli (Aktiv & Passiv)', gvVisNoneNote: 'Für niemer sichtbar, nume Admins gsehnd die GV.', gvVisEmpty: 'Es gits no kei GV.', gvVisHint: 'Jetzt: {v}. Das ändered nume d Admins i de Admin-Konsole.', gvTextTitle: 'Als Text: 52 Wuche ab {from} bis {to}', gvTextCopy: 'Text kopiere', gvTextCopied: 'Text kopiert', gvTextNone: 'Kei Termin i dene 52 Wuche.', gvChapterF: 'Traktandum', gvChapterEdit: 'Traktandum bearbeite', gvProtocol: 'Als Protokoll kennzeichne', gvProtocolHint: 'S Protokoll wird liecht abdunklet azeigt und hebt sich so vo de andere Underlage ab.', gvProtoTag: 'Protokoll', gvPhotoAdd: 'Foti hinzuefüege', gvPhotoDel: 'Foti entfärne', gvPhotoMoveL: 'Nach vorne', gvPhotoMoveR: 'Nach hinde', gvUploading: 'Wird ufeglade …', gvUploadFail: 'S Foti het nöd chöne ufeglade wärde.', gvMigrate: 'Foti is gschützt Spychere übernäh', gvMigrateAsk: '{n} Foti vo dere GV werded us em App-Ordner is gschützt Spychere kopiert. Nachhär chasch d Dateie gv26-….jpg im Repo lösche. Wiiter?', gvMigrated: 'Foti übernoo: {n}', gvPhotosHint: 'D Foti werded verchleineret und gschützt gspycheret. Nume aagmäldeti Mitglieder gsehnd si.',
+      boTag: 'Vorstand', mMakeBo: 'Zum Vorstand mache', mRevokeBo: 'Vorstand-Rächt entzieh', boGranted: 'Als Vorstand festgleit', boRevoked: 'Vorstand-Rächt entzoge', gvEditMode: 'Inhält bearbeite', gvEditHint: 'Bearbeite isch aktiv: Tipp uf en Inhalt, zum en ändere.', gvCopy: 'GV kopiere', gvCopyAsk: 'D GV {y} wird als GV {n} kopiert, mit allne Traktande, Bricht und Foti, aber ohni Reaktione und Kommentär. S Datum rutscht um 52 Wuche wiiter. D Kopie isch en Entwurf.', gvCopied: 'Kopiert. D neu GV isch en Entwurf.', gvExists: 'Fürs nächscht Jahr gits scho e GV.', gvDelete: 'GV lösche', gvDeleteAsk: 'D GV {y} mit allne Bricht, Reaktione und Kommentär ändgültig lösche?', gvDeleteRep: 'Dä Bricht ändgültig lösche?', gvAddReport: 'Bricht hinzuefüege', gvMetaEdit: 'Titel, Datum und Ort', gvTitleF: 'Titel', gvSubtitle: 'Untertitel', gvSummary: 'Churzinfo (gsehsch, wänn zuegchlappt)', gvBody: 'Text', gvIntro: 'Iladigstext', gvPublished: 'Veröffentlicht (für alli Mitglieder sichtbar)', gvProgUntil: 'Jahresprogramm bis', gvAuthor: 'Autor (Aktivmitglied)', gvNoAuthor: 'Kei Mitglied', gvAuthorName: 'Autor als Text (nume wänn kei Mitglied)', gvPhotos: 'Foti', gvPhotoBad: 'Foti: nume Dateinäme wie gv26-jass-1.jpg (Buechstabe, Ziffere, - _ .)', gvFormat: 'Format: «## Zwüschetitel», «> Zile under em Titel», «! Hiwiis», «Name | Wert». E Leerzile fangt en neue Abschnitt aa.', gvFinKpi: 'Kennzahle (Name | Wert, am Schluss | - für negativ)', gvFinCols: 'Spalte (mit | trennt)', gvFinRows: 'Tabälle («## Abschnitt» oder Name | Zahl | Zahl | Zahl, am Schluss | * für Zwüschesumme)', gvNeedTitle: 'Bitte Titel (und bi Bricht de Text) usfülle.',
+      navGv: 'GV', gvTitle: 'GV {y}', gvDraft: 'Entwurf, nume für de Vorstand sichtbar', gvInvite: 'Iladig', gvRsvp: 'Aa- oder abmälde im Dialog «Events», bis ei Wuche vorher ({date}). Das gilt für alli Teilnähmer, au fürs Znacht.', gvToEvents: 'Zu de Events', gvToJass: 'Zum Dialog «Jass»', gvProgramHint: 'D Termin chömed us em Dialog «Events», det mäldisch dich aa. S Kaländer-Symbol speicheret de Termin i dim Kaländer.', gvNoProgram: 'Im Ziitruum sind kei Events igtrait.', gvMore: 'Wiiterlääse', gvLess: 'Weniger aazeige', gvPrev: 'Vorigs Foti', gvNext: 'Nächschts Foti', gvClose: 'Zuemache', gvPhotoAlt: 'Foti {i} vo {n}: {t}', gvComment: 'Kommentiere', gvComments1: '1 Kommentar', gvCommentsN: '{n} Kommentär', gvWrite: 'Kommentar schriibe …', gvSend: 'Sände', gvNoComments: 'Na kei Kommentär.', gvReactAria: 'Reaktion {e}',
       wd0: 'Sunntig', wd1: 'Mäntig', wd2: 'Ziischtig', wd3: 'Mittwuch', wd4: 'Dunnschtig', wd5: 'Fritig', wd6: 'Samschtig',
       navTrainings: 'Trainings', navEvents: 'Events', navAdmin: 'Admin', navProfile: 'Profil',
       titleTrainings: 'Trainingsplan', titleEvents: 'Vereinsanlässe',
@@ -433,6 +457,9 @@
 
 
     uk: {
+      gvPdf: 'У форматі PDF (A4)', gvEditOn: 'Редагувати вміст', gvEditOff: 'Завершити редагування', gvVisSec: 'Загальні збори', gvVisInfo: 'Визначає, хто бачить збори: ніхто (навіть адміністратори), лише адміністратори, правління (й адміністратори) або всі активні та пасивні члени. Гості, кандидати й прихильники ніколи їх не бачать.', appVersion: 'Версія застосунку', gvStateF: 'Стан', gvStateFinal: 'Остаточний', gvStateDraft: 'Чернетка (у роботі)', gvStateProtocol: 'Протокол (сірий фон)', gvStateDraftSfx: ' (у роботі)', gvStateHint: 'Остаточний: звичайно. Чернетка: заголовок червоним із «(у роботі)». Протокол: показано затемненим.', gvVisAdmin: 'видно адміністратору', gvVisAdminNote: 'Видно лише адміністраторам.', gvVisNone: 'нікому не видно', gvVisBoard: 'видно правлінню', gvVisMembers: 'видно всім (активним і пасивним)', gvVisNoneNote: 'Нікому не видно, ці збори бачать лише адміністратори.', gvVisEmpty: 'Загальних зборів ще немає.', gvVisHint: 'Зараз: {v}. Змінює це лише адміністратор у консолі адміністратора.', gvTextTitle: 'Текстом: 52 тижні з {from} до {to}', gvTextCopy: 'Копіювати текст', gvTextCopied: 'Текст скопійовано', gvTextNone: 'У ці 52 тижні подій немає.', gvChapterF: 'Пункт порядку денного', gvChapterEdit: 'Редагувати пункт', gvProtocol: 'Позначити як протокол', gvProtocolHint: 'Протокол відображається трохи затемненим і відрізняється від решти документів.', gvProtoTag: 'Протокол', gvPhotoAdd: 'Додати фото', gvPhotoDel: 'Видалити фото', gvPhotoMoveL: 'Ближче до початку', gvPhotoMoveR: 'Ближче до кінця', gvUploading: 'Завантаження …', gvUploadFail: 'Не вдалося завантажити фото.', gvMigrate: 'Перенести фото в захищене сховище', gvMigrateAsk: '{n} фото цих ЗЗ буде скопійовано з теки застосунку в захищене сховище. Після цього можна видалити файли gv26-….jpg з репозиторію. Продовжити?', gvMigrated: 'Фото перенесено: {n}', gvPhotosHint: 'Фото зменшуються й зберігаються захищено. Їх бачать лише авторизовані члени.',
+      boTag: 'Правління', mMakeBo: 'Призначити членом правління', mRevokeBo: 'Забрати права правління', boGranted: 'Призначено членом правління', boRevoked: 'Права правління забрано', gvEditMode: 'Редагувати вміст', gvEditHint: 'Редагування активне: торкнись вмісту, щоб змінити його.', gvCopy: 'Копіювати ЗЗ', gvCopyAsk: 'ЗЗ {y} буде скопійовано як ЗЗ {n}, з усіма пунктами, звітами та фото, але без реакцій і коментарів. Дата зміститься на 52 тижні. Копія є чернеткою.', gvCopied: 'Скопійовано. Нові ЗЗ є чернеткою.', gvExists: 'На наступний рік уже є ЗЗ.', gvDelete: 'Видалити ЗЗ', gvDeleteAsk: 'Остаточно видалити ЗЗ {y} з усіма звітами, реакціями та коментарями?', gvDeleteRep: 'Остаточно видалити цей звіт?', gvAddReport: 'Додати звіт', gvMetaEdit: 'Назва, дата й місце', gvTitleF: 'Назва', gvSubtitle: 'Підзаголовок', gvSummary: 'Коротко (видно у згорнутому вигляді)', gvBody: 'Текст', gvIntro: 'Текст запрошення', gvPublished: 'Опубліковано (видно всім членам)', gvProgUntil: 'Річна програма до', gvAuthor: 'Автор (активний член)', gvNoAuthor: 'Не член клубу', gvAuthorName: 'Автор текстом (лише якщо не член)', gvPhotos: 'Фото', gvPhotoBad: 'Фото: лише імена файлів, як gv26-jass-1.jpg (літери, цифри, - _ .)', gvFormat: 'Формат: «## Підзаголовок», «> Рядок під заголовком», «! Примітка», «Ім’я | Значення». Порожній рядок починає новий абзац.', gvFinKpi: 'Ключові показники (Назва | Значення, в кінці | - для від’ємного)', gvFinCols: 'Стовпці (розділені |)', gvFinRows: 'Таблиця («## Розділ» або Назва | число | число | число, в кінці | * для проміжної суми)', gvNeedTitle: 'Заповни назву (і текст для звітів).',
+      navGv: 'ЗЗ', gvTitle: 'ЗЗ {y}', gvDraft: 'Чернетка, видима лише правлінню', gvInvite: 'Запрошення', gvRsvp: 'Записатися або відмовитися можна в розділі «Events» не пізніше ніж за тиждень ({date}). Це стосується всіх учасників, також вечері.', gvToEvents: 'До подій', gvToJass: 'До розділу «Jass»', gvProgramHint: 'Дати беруться з розділу «Events», там ти й записуєшся. Значок календаря зберігає подію у твоєму календарі.', gvNoProgram: 'На цей період подій немає.', gvMore: 'Читати далі', gvLess: 'Показати менше', gvPrev: 'Попереднє фото', gvNext: 'Наступне фото', gvClose: 'Закрити', gvPhotoAlt: 'Фото {i} з {n}: {t}', gvComment: 'Коментувати', gvComments1: '1 коментар', gvCommentsN: '{n} коментарів', gvWrite: 'Написати коментар …', gvSend: 'Надіслати', gvNoComments: 'Коментарів ще немає.', gvReactAria: 'Реакція {e}',
       wd0: 'Неділя', wd1: 'Понеділок', wd2: 'Вівторок', wd3: 'Середа', wd4: 'Четвер', wd5: 'П’ятниця', wd6: 'Субота',
       navTrainings: 'Тренування', navEvents: 'Події', navAdmin: 'Admin', navProfile: 'Профіль',
       titleTrainings: 'Trainingsplan', titleEvents: 'Vereinsanlässe',
@@ -514,6 +541,9 @@
     },
 
     bar: {
+      gvPdf: 'Ois PDF (A4)', gvEditOn: 'Inhalt bearbeitn', gvEditOff: 'Bearbeitn beendn', gvVisSec: 'Generalversammlung', gvVisInfo: 'Legt fest, wer de GV sieht: niemand (aa Admins need), bloß Admins, da Vorstand (und Admins) oder älle Aktiv- und Passivmitglieder. Gäst, Kandidaten und Supporter segn de GV nia.', appVersion: 'Version va da App', gvStateF: 'Zuastand', gvStateFinal: 'Final', gvStateDraft: 'Draft (in Arbeit)', gvStateProtocol: 'Protokoll (grau hinterlegt)', gvStateDraftSfx: ' (in Arbeit)', gvStateHint: 'Final: normal. Draft: Titel rot mit «(in Arbeit)». Protokoll: abgedunkelt dargstellt.', gvVisAdmin: 'sichtbar für Admin', gvVisAdminNote: 'Bloß für Admins sichtbar.', gvVisNone: 'sichtbar für niemand', gvVisBoard: 'sichtbar für Vorstand', gvVisMembers: 'sichtbar für älle (Aktiv & Passiv)', gvVisNoneNote: 'Für niemand sichtbar, bloß Admins segn de GV.', gvVisEmpty: 'S gibt no koa GV.', gvVisHint: 'Jetzt: {v}. Des ändert bloß da Admin in da Admin-Konsole.', gvTextTitle: 'Als Text: 52 Wochn ab {from} bis {to}', gvTextCopy: 'Text kopiern', gvTextCopied: 'Text kopiert', gvTextNone: 'Koane Termine in dene 52 Wochn.', gvChapterF: 'Traktandum', gvChapterEdit: 'Traktandum bearbeitn', gvProtocol: 'Als Protokoll kennzeichnen', gvProtocolHint: 'Des Protokoll werd leicht abgedunkelt dargstellt und hebt si so vo de andern Unterlagn ab.', gvProtoTag: 'Protokoll', gvPhotoAdd: 'Foto dazuadoa', gvPhotoDel: 'Foto entfernen', gvPhotoMoveL: 'Nach vorn', gvPhotoMoveR: 'Nach hinten', gvUploading: 'Werd hochgladn …', gvUploadFail: 'Des Foto hod ned hochgladn werdn kenna.', gvMigrate: 'Fotos ins gschützte Speicha übernehma', gvMigrateAsk: '{n} Fotos vo derer GV werdn aus dem App-Ordner ins gschützte Speicha kopiert. Danach kannst de Dateien gv26-….jpg im Repo löschn. Weiter?', gvMigrated: 'Fotos übernommen: {n}', gvPhotosHint: 'De Fotos werdn verkleinert und gschützt gspeichert. Nur angmeldete Mitglieder segn s.',
+      boTag: 'Vorstand', mMakeBo: 'Zum Vorstand macha', mRevokeBo: 'Vorstand-Rechte entziehn', boGranted: 'Als Vorstand festgsetzt', boRevoked: 'Vorstand-Rechte entzogn', gvEditMode: 'Inhalte bearbeitn', gvEditHint: 'Bearbeitn is aktiv: Tipp auf an Inhalt, damit ern ändern kannst.', gvCopy: 'GV kopiern', gvCopyAsk: 'De GV {y} werd ois GV {n} kopiert, mit alle Traktanden, Berichte und Fotos, aba ohne Reaktionen und Kommentare. Es Datum rutscht um 52 Wochn weida. De Kopie is a Entwurf.', gvCopied: 'Kopiert. De neie GV is a Entwurf.', gvExists: 'Fia des nächste Jahr gibts scho a GV.', gvDelete: 'GV löschn', gvDeleteAsk: 'De GV {y} mit alle Berichte, Reaktionen und Kommentare endgültig löschn?', gvDeleteRep: 'Den Bericht endgültig löschn?', gvAddReport: 'Bericht dazuadoa', gvMetaEdit: 'Titel, Datum und Ort', gvTitleF: 'Titel', gvSubtitle: 'Untertitel', gvSummary: 'Kurzinfo (sichtbar, wenns zuagklappt is)', gvBody: 'Text', gvIntro: 'Einladungstext', gvPublished: 'Veröffentlicht (fia alle Mitglieder sichtbar)', gvProgUntil: 'Jahresprogramm bis', gvAuthor: 'Autor (Aktivmitglied)', gvNoAuthor: 'Koa Mitglied', gvAuthorName: 'Autor ois Text (nur wenn koa Mitglied)', gvPhotos: 'Fotos', gvPhotoBad: 'Fotos: nur Dateinamen wia gv26-jass-1.jpg (Buachstabn, Ziffern, - _ .)', gvFormat: 'Format: «## Zwischentitel», «> Zeile unterm Titel», «! Hinweis», «Name | Wert». A Leerzeile fangt an neian Absatz o.', gvFinKpi: 'Kennzahlen (Name | Wert, am End | - fia negativ)', gvFinCols: 'Spaltn (mit | trennt)', gvFinRows: 'Tabelle («## Abschnitt» oder Name | Zahl | Zahl | Zahl, am End | * fia Zwischensumme)', gvNeedTitle: 'Bitte Titel (und bei Berichte den Text) ausfüllen.',
+      navGv: 'GV', gvTitle: 'GV {y}', gvDraft: 'Entwurf, nur fia den Vorstand sichtbar', gvInvite: 'Einladung', gvRsvp: 'An- oder obmeldn im Dialog «Events», bis a Woch vorher ({date}). Des gilt fia olle Teilnehmer, aa fias Znacht.', gvToEvents: 'Zu de Events', gvToJass: 'Zum Dialog «Jass»', gvProgramHint: 'De Termine kemman aus dem Dialog «Events», dort meldst di o. Des Kalender-Symbol speichert den Termin in deim Kalender.', gvNoProgram: 'Im Zeitraum san koane Events eigtrong.', gvMore: 'Weiterlesn', gvLess: 'Weniger zoang', gvPrev: 'Voriges Foto', gvNext: 'Nächstes Foto', gvClose: 'Zuamacha', gvPhotoAlt: 'Foto {i} von {n}: {t}', gvComment: 'Kommentiern', gvComments1: '1 Kommentar', gvCommentsN: '{n} Kommentare', gvWrite: 'Kommentar schreibn …', gvSend: 'Schicka', gvNoComments: 'Noch koane Kommentare.', gvReactAria: 'Reaktion {e}',
       wd0: 'Sunda', wd1: 'Mondog', wd2: 'Irda', wd3: 'Migga', wd4: 'Pfinzda', wd5: 'Freida', wd6: 'Samsda',
       navTrainings: 'Trainings', navEvents: 'Events', navAdmin: 'Admin', navProfile: 'Profil',
       titleTrainings: 'Trainingsplan', titleEvents: 'Vereinsanlässe',
@@ -776,7 +806,8 @@
       rules: [], extras: [], overrides: {}, cancelled: {}, events: [],
       tr: {}, ev: {}, open: {}, edit: null, busy: false, sec: {}, add: {}, info: {}, play: {}, showMore: false,
       cc: { events: [], days: [], shifts: [], roles: [] }, ccErr: false, ccFold: {}, ccLegend: false,
-      js: { series: [], days: [] }, jsErr: false, jsFold: {}, jsUnlock: {}
+      js: { series: [], days: [] }, jsErr: false, jsFold: {}, jsUnlock: {},
+      gv: { cur: null, all: [], items: [], reports: [], reactions: [], comments: [] }, gvOpen: {}, gvMore: {}, gvCom: {}, gvUrls: {}, gvSel: null, gvEdit: false
     };
   }
   var S = freshState();
@@ -790,7 +821,7 @@
     if (bad) throw bad.error;
     var d = res.map(function (r) { return r.data || []; });
 
-    S.members = d[0].map(function (r) { return { id: r.id, name: r.name, phone: r.phone, isAdmin: r.is_admin, isGuest: r.is_guest === true, isPassive: r.is_passive === true, isSupporter: r.is_supporter === true, isCandidate: r.is_candidate === true, isEventManager: r.is_event_manager === true, isChilbiManager: r.is_chilbi_manager === true, isChraenzliManager: r.is_chraenzli_manager === true, isJassMaster: r.is_jass_master === true, isDirector: r.is_director === true, isActor: r.is_actor === true, pinChanged: r.pin_changed === true, language: r.language || null, theme: r.theme || null, design: r.design || null }; })
+    S.members = d[0].map(function (r) { return { id: r.id, name: r.name, phone: r.phone, isAdmin: r.is_admin, isGuest: r.is_guest === true, isPassive: r.is_passive === true, isSupporter: r.is_supporter === true, isCandidate: r.is_candidate === true, isEventManager: r.is_event_manager === true, isChilbiManager: r.is_chilbi_manager === true, isChraenzliManager: r.is_chraenzli_manager === true, isJassMaster: r.is_jass_master === true, isDirector: r.is_director === true, isActor: r.is_actor === true, isBoard: r.is_board === true, pinChanged: r.pin_changed === true, language: r.language || null, theme: r.theme || null, design: r.design || null }; })
       .sort(function (a, b) { return a.name.localeCompare(b.name, 'de'); });
     S.rules = d[1].map(function (r) { return { id: r.id, wd: r.weekday, time: hhmm(r.start_time), place: r.place }; })
       .sort(function (a, b) { return ((a.wd + 6) % 7) - ((b.wd + 6) % 7) || (a.time < b.time ? -1 : 1); });
@@ -847,6 +878,7 @@
       }
     }
     await loadShow();
+    await loadGv();
   }
 
   /* ---------- Show: Akte, Szenen, Rollen laden (nur Regisseur und Schauspieler) ---------- */
@@ -947,6 +979,8 @@
     one: '<svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M5 21c0-4 3-6 7-6s7 2 7 6"/></svg>',
     two: '<svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="8" r="3.5"/><circle cx="17" cy="9" r="3"/><path d="M2 20c0-3.5 2.5-5.5 6-5.5s6 2 6 5.5M15 15c3.5 0 7 1.5 7 5"/></svg>',
     star: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>',
+    gv: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M8.5 12h7M8.5 16h5"/></svg>',
+    copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>',
     calplus: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/></svg>',
     cal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
     calcard: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><circle cx="12" cy="15.5" r="2" fill="currentColor" stroke="none"/></svg>',
@@ -1320,8 +1354,7 @@
     var series = all.filter(function (t) { return !t.extraId; });
     var extras = all.filter(function (t) { return !!t.extraId; });
     var isAdm = S.me.isAdmin;
-    var adminSubKey = isAdm ? 'adminSub' : S.me.isEventManager ? 'emSub' : 'ccManagerSub';
-    var html = '<div class="top"><div><h1 class="pagetitle">' + L('adminTitle') + '</h1><p>' + L(adminSubKey) + '</p></div></div>';
+    var html = '<div class="top"><div><h1 class="pagetitle">' + L('adminTitle') + '</h1></div></div>';
     var b;
 
     /* Montag Trainings */
@@ -1339,7 +1372,7 @@
         '<div class="btnrow"><button type="button" class="mini" data-act="edit" data-target="rule:' + r.id + '">' + L('edit') + '</button>' +
         '<button type="button" class="mini del" data-act="del-rule" data-id="' + r.id + '">' + L('remove') + '</button></div></li>';
     }).join('') + '</ul>' : '<p class="muted">' + L('rulesEmpty') + '</p>';
-    if (isAdm) html += accordion('rules', L('secRules'), S.rules.length, b, true, L('rulesIntro'));
+    if (isAdm) html += accordion('rules', L('secRules'), S.rules.length, b, true);
 
     /* Weitere Trainings (zusätzliche Termine) */
     b = '';
@@ -1348,7 +1381,7 @@
       grid(fld(L('date'), '<input class="input" type="date" name="date" required>'), fld(L('time'), inTime('18:00'))) +
       fld(L('place'), inPlace('', L('phPlaceExtra'))) +
       '<button class="btn" type="submit">' + L('addExtra') + '</button></form>';
-    if (isAdm) html += accordion('extra', L('secExtra'), extras.length, b, false, L('extraIntro'));
+    if (isAdm) html += accordion('extra', L('secExtra'), extras.length, b, false);
 
     /* Kommende Trainings (Termine der Serie) */
     b = series.length ? '<ul class="list scroll" data-sc="upcoming">' + series.map(trRow).join('') + '</ul>' : '<p class="muted">' + L('upcomingEmpty') + '</p>';
@@ -1363,7 +1396,19 @@
         '<button type="button" class="mini" data-act="cancel-ev" data-id="' + e.id + '">' + (e.cancelled ? L('reactivate') : L('cancel')) + '</button>' +
         '<button type="button" class="mini del" data-act="del-ev" data-id="' + e.id + '">' + L('del') + '</button></div></li>';
     }).join('') + '</ul>' : '<p class="muted">' + L('eventsEmpty') + '</p>';
-    if (S.me.isEventManager) html += accordion('events', L('secEvents'), evs.length, b, true, L('subEvents'));
+    if (S.me.isEventManager) html += accordion('events', L('secEvents'), evs.length, b, true);
+
+    /* Generalversammlung: Sichtbarkeit (nur Admin) */
+    var gvList = S.gvAdmin || (S.gv && S.gv.all);
+    if (isAdm && gvList) {
+      b = gvList.length ? '<ul class="list">' + gvList.map(function (g) {
+        return '<li><div class="l"><b>' + esc(g.title) + '</b><span>' + esc(g.year) + '</span></div>' +
+          '<select class="input gvvis" data-gvvis="' + esc(g.id) + '" aria-label="' + esc(L('gvVisSec') + ' ' + g.year) + '">' +
+          GV_VIS.map(function (v) { return '<option value="' + v + '"' + (g.visibility === v ? ' selected' : '') + '>' + esc(L(gvVisLabel(v))) + '</option>'; }).join('') +
+          '</select></li>';
+      }).join('') + '</ul>' : '<p class="muted">' + L('gvVisEmpty') + '</p>';
+      html += accordion('gvvis', L('gvVisSec'), null, b, false);
+    }
 
     /* Mitglieder */
     b = '';
@@ -1387,6 +1432,7 @@
           (m.isDirector ? '<span class="mbic em" title="' + esc(L('dirTag')) + '" aria-label="' + esc(L('dirTag')) + '">' + ICON.stage + '</span>' : '') +
           (m.isActor ? '<span class="mbic em" title="' + esc(L('actTag')) + '" aria-label="' + esc(L('actTag')) + '">' + ICON.stage + '</span>' : '') +
           (m.isJassMaster ? '<span class="mbic jm" title="' + esc(L('jmTag')) + '" aria-label="' + esc(L('jmTag')) + '">' + ICON.trophy + '</span>' : '') +
+          (m.isBoard ? '<span class="mbic em" title="' + esc(L('boTag')) + '" aria-label="' + esc(L('boTag')) + '">' + ICON.gv + '</span>' : '') +
         '</span>' +
         '<button type="button" class="hico" data-act="mb-menu" data-id="' + esc(m.id) + '" aria-label="' + esc(L('ccActions') + ': ' + m.name) + '" title="' + esc(L('ccActions')) + '">' + ICON.dots + '</button></li>';
     };
@@ -1424,7 +1470,7 @@
       if (installPrompt) install = '<section class="panel"><h2>' + L('installTitle') + '</h2><p>' + L('installHint') + '</p><button type="button" class="btn" data-act="install">' + L('installBtn') + '</button></section>';
       else if (iosHint) install = '<section class="panel"><h2>' + L('installTitle') + '</h2><p>' + L('installIos') + '</p></section>';
     }
-    return '<div class="top"><div><h1 class="pagetitle">' + L('profileTitle') + '</h1></div></div>' +
+    return '<div class="top" style="align-items:center"><div><h1 class="pagetitle">' + L('profileTitle') + '</h1></div><span class="appver" title="' + esc(L('appVersion')) + '">' + esc(APP_VERSION) + '</span></div>' +
       '<section class="panel"><div class="profile-row"><span class="muted">' + L('nameLabel') + '</span><b>' + esc(S.me.name) + '</b></div>' +
       '<div class="profile-row"><span class="muted">' + L('phone') + '</span><b>' + esc(fmtPhone(S.me.phone)) + '</b></div></section>' +
       '<section class="panel"><h2>' + L('rolesTitle') + '</h2>' +
@@ -1436,6 +1482,7 @@
         (S.me.isDirector ? '<div class="rolerow"><span class="rolebtn glass on">' + ICON.stage + '</span><span>' + L('dirTag') + '</span></div>' : '') +
         (S.me.isActor ? '<div class="rolerow"><span class="rolebtn glass on">' + ICON.stage + '</span><span>' + L('actTag') + '</span></div>' : '') +
         (S.me.isJassMaster ? '<div class="rolerow"><span class="rolebtn glass on">' + ICON.trophy + '</span><span>' + L('jmTag') + '</span></div>' : '') +
+        (S.me.isBoard ? '<div class="rolerow"><span class="rolebtn glass on">' + ICON.gv + '</span><span>' + L('boTag') + '</span></div>' : '') +
         (S.me.isGuest ? '<p class="small muted" style="margin:10px 0 0">' + L('guestInfo') + '</p>' : '') +
         (S.me.isSupporter ? '<p class="small muted" style="margin:10px 0 0">' + L('supporterInfo') + '</p>' : '') +
       '</section>' +
@@ -1465,6 +1512,7 @@
     if (!noJass) tabs.push({ id: 'jass', label: L('navJass'), icon: ICON.trophy });
     if ((canCC() || S.ccPublic) && !noJass) tabs.push({ id: 'cc', label: L('navCC'), icon: ICON.glass });
     if (canShow()) tabs.push({ id: 'show', label: L('navShow'), icon: ICON.stage });
+    if (gvVisible()) tabs.push({ id: 'gv', label: L('navGv'), icon: ICON.gv });
     if (S.me.isAdmin || canManageEvents()) tabs.push({ id: 'admin', label: L('navAdmin'), icon: ICON.gear });
     tabs.push({ id: 'profile', label: L('navProfile'), icon: ICON.user });
     nav.innerHTML = '<div class="in">' + tabs.map(function (t) {
@@ -1493,7 +1541,8 @@
       if (S.tab === 'jass' && S.me.isGuest && !S.me.isAdmin) S.tab = 'trainings';
       if (S.tab === 'cc' && !(canCC() || S.ccPublic)) S.tab = 'trainings';
       if (S.tab === 'show' && !canShow()) S.tab = 'trainings';
-      var pageHtml = S.tab === 'show' ? viewShow() : S.tab === 'jass' ? viewJass() : S.tab === 'cc' ? viewCC() : S.tab === 'admin' ? viewAdmin() : S.tab === 'events' ? viewEvents() : S.tab === 'profile' ? viewProfile() : viewTrainings();
+      if (S.tab === 'gv' && !gvVisible()) S.tab = 'trainings';
+      var pageHtml = S.tab === 'gv' ? viewGv() : S.tab === 'show' ? viewShow() : S.tab === 'jass' ? viewJass() : S.tab === 'cc' ? viewCC() : S.tab === 'admin' ? viewAdmin() : S.tab === 'events' ? viewEvents() : S.tab === 'profile' ? viewProfile() : viewTrainings();
       // PIN-Banner: nur für Aktiv-/Passivmitglieder (nicht Gast, Supporter, Kandidat, Admin) ohne gesetzten PIN
       var pinBanner = '';
       if (S.me && !S.me.pinChanged && !S.me.isAdmin && !S.me.isCandidate) {
@@ -3177,6 +3226,7 @@
         (member ? mbBtn('set-dir', m.id, m.isDirector ? '0' : '1', ICON.stage, L(m.isDirector ? 'mRevokeDir' : 'mMakeDir'), 'cat-manager') : '') +
         (member ? mbBtn('set-actor', m.id, m.isActor ? '0' : '1', ICON.stage, L(m.isActor ? 'mRevokeActor' : 'mMakeActor'), 'cat-manager') : '') +
         (member ? mbBtn('set-jm', m.id, m.isJassMaster ? '0' : '1', ICON.trophy, L(m.isJassMaster ? 'mRevokeJm' : 'mMakeJm'), 'cat-manager') : '') +
+        (member ? mbBtn('set-bo', m.id, m.isBoard ? '0' : '1', ICON.gv, L(m.isBoard ? 'mRevokeBo' : 'mMakeBo'), 'cat-manager') : '') +
         GROUPS.filter(function (g) { return g.key !== grp && !(g.noSelf && self); })
           .map(function (g) { return mbBtn('set-group', m.id, g.key, g.icon, L(g.label), 'cat-role'); }).join('') +
         (!self ? mbBtn('reset-pin', m.id, '', ICON.dialpad, L('resetPin'), 'cat-other') : '') +
@@ -3517,7 +3567,7 @@
     if (!phone) { toast(L('phoneInvalid')); return false; }
     if (S.members.some(function (m) { return m.phone === phone; })) { toast(L('alreadyReg')); return false; }
     try {
-      // Login wird serverseitig angelegt (kein E-Mail-Versand => kein «email rate limit exceeded»)
+      // Login wird serverseitig angelegt (kein E-Mail-Versand => kein Â«email rate limit exceededÂ»)
       var r = await sb.rpc('admin_create_member', { p_name: name, p_phone: phone, p_guest: !!asGuest });
       if (r.error) throw r.error;
       toast(L('memberAdded', { name: name }));
@@ -3637,6 +3687,1104 @@
     else render();
   });
 
+  /* ---------- GV: Generalversammlung (Traktanden, Jahresberichte, Reaktionen, Kommentare) ---------- */
+  // Inhalte stehen in den Tabellen gv, gv_items, gv_reports; Reaktionen und Kommentare in gv_reactions, gv_comments.
+  // Autoren der Jahresberichte sind Aktivmitglieder (author_id → Profil, der Name kommt immer aus dem Profil).
+  // Ändern darf nur die Rolle «Vorstand» (S.me.isBoard, serverseitig fbro_is_board()): Stift-Symbol, dann Inhalt antippen.
+  var GV_REACT = ['up', 'heart', 'laugh', 'clap'];
+  var GV_EMOJI = { up: '👍', heart: '❤️', laugh: '😂', clap: '👏' };
+  var gvSheet = null;   // { kind: 'menu' | 'meta' | 'intro' | 'item' | 'report' | 'newreport', id, photos, added, ... }
+  // Fotos: neue liegen im privaten Speicher «fbro-gv» (Pfad <gv-id>/<zufall>.jpg, Anzeige über signierte Adressen);
+  // ältere Einträge ohne «/» sind Dateien im App-Ordner und lassen sich im GV-Menü in den Speicher übernehmen.
+  var GV_BUCKET = 'fbro-gv';
+  var GV_PATH = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/[\w-]{8,64}\.(jpe?g|png|webp)$/i;
+  function gvIsStored(f) { return String(f).indexOf('/') > 0; }
+  function gvPhotoSrc(f) { if (!gvIsStored(f)) return f; var u = S.gvUrls[f]; return u && u.exp > Date.now() ? u.url : ''; }
+  function gvUuid() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) { var r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16); });
+  }
+
+  function gvAllowed() { return !!(S.me && !S.me.isCandidate && !((S.me.isGuest || S.me.isSupporter) && !S.me.isAdmin)); }
+  function canGvEdit() { return !!(S.me && S.me.isBoard && !S.me.isGuest && !S.me.isCandidate); }
+  function gvEditing() { return canGvEdit() && !!S.gvEdit; }
+  function gvVisible() { return !!(gvAllowed() && S.gv && S.gv.cur); }
+  // Sichtbarkeit der GV (setzt nur der Admin, Admin-Konsole): none = niemand (auch Admin nicht), admin = nur Admins,
+  // board = Vorstand (und Admins), members = alle (Aktiv- und Passivmitglieder)
+  var GV_VIS = ['none', 'admin', 'board', 'members'];
+  var GV_VIS_KEY = { none: 'gvVisNone', admin: 'gvVisAdmin', board: 'gvVisBoard', members: 'gvVisMembers' };
+  function gvVisLabel(v) { return GV_VIS_KEY[v] || 'gvVisBoard'; }
+  function gvVisNote(v) { return v === 'none' ? 'gvVisNoneNote' : v === 'admin' ? 'gvVisAdminNote' : 'gvDraft'; }
+  async function gvSetVisibility(id, v) {
+    if (!S.me || !S.me.isAdmin || GV_VIS.indexOf(v) < 0) return;
+    await act(function () { return sb.rpc('gv_set_visibility', { p_id: id, p_vis: v }); }, L('ccSaved'));
+  }
+  document.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t && t.dataset && t.dataset.gvvis) gvSetVisibility(t.dataset.gvvis, t.value);
+  });
+  function gvIsOpen(id) { var v = S.gvOpen[id]; return v == null ? (id === 'inv' || id === 'i4') : !!v; }
+
+  async function loadGv() {
+    S.gv = { cur: null, all: [], items: [], reports: [], reactions: [], comments: [] };
+    // Admin-Konsole: alle GVs mit Stufe (auch die auf «niemand» gestellten, die der Admin sonst nicht sieht)
+    S.gvAdmin = null;
+    if (S.me && S.me.isAdmin) {
+      try { var al = await sb.rpc('gv_admin_list'); if (!al.error) S.gvAdmin = al.data || []; } catch (e) { console.error(e); }
+    }
+    if (!gvAllowed()) return;
+    try {
+      var g = await sb.from('gv').select('*').order('year', { ascending: false });
+      if (g.error) throw g.error;
+      var all = g.data || [];
+      if (!all.length) return;
+      var keep = S.gvSel;
+      // Vorgabe: neueste für alle Mitglieder sichtbare GV; gewählt wird über die Jahreszahlen
+      var cur = all.filter(function (x) { return x.id === keep; })[0] || all.filter(function (x) { return x.visibility === 'members'; })[0] || all[0];
+      S.gvSel = cur.id;
+      var r = await Promise.all([
+        sb.from('gv_items').select('*').eq('gv_id', cur.id),
+        sb.from('gv_reports').select('*').eq('gv_id', cur.id),
+        sb.from('gv_reactions').select('*'),
+        sb.from('gv_comments').select('*').order('created_at', { ascending: true })
+      ]);
+      var bad = r.filter(function (x) { return x.error; })[0];
+      if (bad) throw bad.error;
+      S.gv = {
+        cur: cur, all: all,
+        items: (r[0].data || []).sort(function (a, b) { return a.nr - b.nr; }),
+        reports: (r[1].data || []).sort(function (a, b) { return a.sort - b.sort; }),
+        reactions: r[2].data || [],
+        comments: r[3].data || []
+      };
+      await gvSignUrls();
+    } catch (e) { console.error(e); }   // fehlendes Schema blockiert die App nicht: dann gibt es einfach keinen GV-Tab
+  }
+
+  // Signierte Adressen für die Fotos im Speicher (1 Stunde gültig, wiederverwendet bis kurz vor Ablauf)
+  async function gvSignUrls() {
+    var need = [];
+    S.gv.reports.forEach(function (r) {
+      (r.photos || []).forEach(function (f) {
+        var u = S.gvUrls[f];
+        if (gvIsStored(f) && GV_PATH.test(f) && (!u || u.exp < Date.now() + 600000) && need.indexOf(f) < 0) need.push(f);
+      });
+    });
+    if (!need.length) return;
+    try {
+      var r = await sb.storage.from(GV_BUCKET).createSignedUrls(need, 3600);
+      if (r.error) throw r.error;
+      (r.data || []).forEach(function (x) { if (x.signedUrl) S.gvUrls[x.path] = { url: x.signedUrl, exp: Date.now() + 3500 * 1000 }; });
+    } catch (e) { console.error(e); }
+  }
+
+  // Einfache Auszeichnung: «## Titel», «> Zeile unter dem Titel», «! Hinweis», «Name | Wert», sonst Absatz
+  function gvMarkup(t) {
+    var out = '';
+    String(t || '').split(/\n\s*\n/).forEach(function (blk) {
+      var rows = [], par = [];
+      var flush = function () {
+        if (rows.length) out += '<div class="gvrows">' + rows.join('') + '</div>';
+        if (par.length) out += '<p>' + par.join('<br>') + '</p>';
+        rows = []; par = [];
+      };
+      blk.split('\n').forEach(function (raw) {
+        var x = raw.trim();
+        if (!x) return;
+        if (x.indexOf('## ') === 0) { flush(); out += '<h4 class="gvh">' + esc(x.slice(3)) + '</h4>'; }
+        else if (x.indexOf('> ') === 0) { flush(); out += '<p class="gvby">' + esc(x.slice(2)) + '</p>'; }
+        else if (x.indexOf('! ') === 0) { flush(); out += '<div class="gvnote">' + esc(x.slice(2)) + '</div>'; }
+        else if (x.indexOf(' | ') > 0) {
+          if (par.length) flush();
+          var p = x.split(' | ');
+          rows.push('<div class="gvrow"><b>' + esc(p[0]) + '</b><span>' + esc(p.slice(1).join(' | ')) + '</span></div>');
+        } else { if (rows.length) flush(); par.push(esc(x)); }
+      });
+      flush();
+    });
+    return out;
+  }
+  // Im Bearbeiten-Modus wird ein Inhalt antippbar (gestrichelter Rahmen); leere Inhalte zeigen einen Platzhalter
+  function gvX(kind, id, inner, ph) {
+    if (!gvEditing()) return inner;
+    return '<div class="gvx" role="button" tabindex="0" data-act="gv-edit" data-k="' + kind + '" data-id="' + esc(id || '') + '">' + (inner || '<p class="gvph">' + esc(ph || L('gvBody')) + '</p>') + '</div>';
+  }
+
+  function gvNum(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '’'); }
+  function gvFinance(it) {
+    var d = it.data || {}, h = '';
+    if (d.kpis && d.kpis.length) {
+      h += '<div class="gvkpis">' + d.kpis.map(function (k) { return '<div class="gvkpi' + (k[2] ? ' neg' : '') + '"><small>' + esc(k[0]) + '</small><b>' + esc(k[1]) + '</b></div>'; }).join('') + '</div>';
+    }
+    if (d.rows && d.rows.length) {
+      h += '<div class="gvtable"><table><thead><tr>' + (d.cols || []).map(function (c) { return '<th>' + esc(c) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+        d.rows.map(function (r) {
+          if (r.length === 1) return '<tr class="sub"><td colspan="' + ((d.cols || []).length || 4) + '">' + esc(r[0]) + '</td></tr>';
+          return '<tr' + (r[4] ? ' class="sub"' : '') + '><td>' + esc(r[0]) + '</td>' + r.slice(1, 4).map(function (v) { return '<td>' + gvNum(v) + '</td>'; }).join('') + '</tr>';
+        }).join('') + '</tbody></table></div>';
+    }
+    return h + gvMarkup(it.body);
+  }
+  // Zahlen der Jahresrechnung als Text bearbeiten: Kennzahlen, Spalten, Zeilen («## Abschnitt», «Name | Zahl | Zahl | Zahl», am Ende « | *» = Zwischensumme)
+  function gvFinToText(d) {
+    d = d || {};
+    return {
+      kpis: (d.kpis || []).map(function (k) { return k[0] + ' | ' + k[1] + (k[2] ? ' | -' : ''); }).join('\n'),
+      cols: (d.cols || []).join(' | '),
+      rows: (d.rows || []).map(function (r) { return r.length === 1 ? '## ' + r[0] : r.slice(0, 4).join(' | ') + (r[4] ? ' | *' : ''); }).join('\n')
+    };
+  }
+  function gvFinFromText(kt, ct, rt) {
+    var tr = function (s) { return String(s).trim(); };
+    var num = function (v) { var s = String(v).replace(/[’'\s]/g, '').replace('–', '-'); return s !== '' && !isNaN(Number(s)) ? Number(s) : tr(v); };
+    return {
+      kpis: kt.split('\n').map(tr).filter(Boolean).map(function (l) { var p = l.split('|').map(tr); return [p[0], p[1] || '', p[2] === '-' ? 1 : 0]; }),
+      cols: ct.split('|').map(tr).filter(Boolean),
+      rows: rt.split('\n').map(tr).filter(Boolean).map(function (l) {
+        if (l.indexOf('## ') === 0) return [tr(l.slice(3))];
+        var p = l.split('|').map(tr), sub = p[p.length - 1] === '*';
+        if (sub) p.pop();
+        var r = [p[0]].concat(p.slice(1, 4).map(num));
+        while (r.length < 4) r.push(0);
+        if (sub) r.push(1);
+        return r;
+      })
+    };
+  }
+
+  // Jahresprogramm: die Events des Dialogs «Events» im Zeitraum der GV, wie dort dargestellt
+  function gvProgram(cur) {
+    var to = cur.program_until || '9999-12-31';
+    var list = S.events.filter(function (e) { return e.date >= cur.meeting_date && e.date <= to; })
+      .sort(function (a, b) { return (a.date + a.time) < (b.date + b.time) ? -1 : 1; });
+    var h = '<p class="ccnote gvhint">' + esc(L('gvProgramHint')) + '</p>';
+    if (!list.length) return h + '<p class="ccsum">' + esc(L('gvNoProgram')) + '</p>';
+    var last = '';
+    list.forEach(function (e) {
+      var m = monthYear(e.date);
+      if (m !== last) { h += '<div class="week gvweek">' + m + '</div>'; last = m; }
+      var title = fullDate(parseIso(e.date)) + ' – ' + esc(e.title);
+      if (e.cancelled) { h += '<article class="ccel ccoff"><div class="cceh"><b>' + title + ' (' + esc(L('cancelledLow')) + ')</b></div></article>'; return; }
+      h += '<article class="ccel"><div class="cceh"><button type="button" class="gvev" data-act="gv-event" data-id="' + esc(e.id) + '">' + title + '</button></div>' +
+        '<div class="ccbody"><div class="evline"><p class="muted small evinfo">' + esc(e.place ? L('timePlace', { time: evTimeText(e), place: e.place }) : L('atTime', { time: evTimeText(e) })) + '</p>' +
+        '<button type="button" class="hico calbtn" data-act="cal" data-id="' + esc(e.id) + '" aria-label="' + esc(L('calAdd')) + '" title="' + esc(L('calAdd')) + '">' + ICON.calplus + '</button></div></div></article>';
+    });
+    return h;
+  }
+  // Jahresprogramm als reiner Text: die 52 Wochen ab dem GV-Datum («Fr 08.05.2026, 19:00 – Anlass (Ort)»), zum Kopieren
+  function gvProgramEvents(cur) {
+    var to = ccAddDays(cur.meeting_date, 52 * 7 - 1);
+    return {
+      to: to,
+      list: S.events.filter(function (e) { return e.date >= cur.meeting_date && e.date <= to; })
+        .sort(function (a, b) { return (a.date + a.time) < (b.date + b.time) ? -1 : 1; })
+    };
+  }
+  function gvProgramText(cur) {
+    var pe = gvProgramEvents(cur), to = pe.to, list = pe.list;
+    var lines = list.map(function (e) {
+      var multi = e.endDate && e.endDate !== e.date;
+      var when = multi ? ccDate(e.date) + '–' + ccDate(e.endDate) : ccDate(e.date) + (e.time ? ', ' + evTimeText(e) : '');
+      return when + ' – ' + e.title + (e.place ? ' (' + e.place + ')' : '') + (e.cancelled ? ' [' + L('cancelledLow') + ']' : '');
+    });
+    return { from: cur.meeting_date, to: to, text: lines.join('\n'), n: lines.length };
+  }
+  function gvProgramTextBlock(cur) {
+    var t = gvProgramText(cur);
+    return '<h4 class="gvh">' + esc(L('gvTextTitle', { from: ccDate(t.from), to: ccDate(t.to) })) + '</h4>' +
+      (t.n ? '<pre class="gvplain">' + esc(t.text) + '</pre><button type="button" class="resp gvgo" data-act="gv-copytext">' + esc(L('gvTextCopy')) + '</button>'
+        : '<p class="ccsum">' + esc(L('gvTextNone')) + '</p>');
+  }
+  async function gvCopyText(text) {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(text);
+      else {
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:0;opacity:0';
+        document.body.appendChild(ta); ta.select();
+        var ok = document.execCommand('copy');
+        ta.remove();
+        if (!ok) throw new Error('copy');
+      }
+      toast(L('gvTextCopied'));
+    } catch (e) { console.error(e); toast(L('errFailed') + '.'); }
+  }
+  /* ---------- GV als PDF (A4, zweispaltig wie die gedruckte GV-Unterlage; Inhalt und Beschriftung deutsch) ---------- */
+  function gvPdfClean(s) {
+    return String(s == null ? '' : s).replace(/[^\u0009\u000A -~ -ÿ–—‘’‚“”„•…€]/g, '');
+  }
+  function gvBlocks(t) {
+    var out = [];
+    String(t || '').split(/\n\s*\n/).forEach(function (blk) {
+      var rows = [], par = [];
+      var flush = function () {
+        if (rows.length) out.push({ t: 'rows', rows: rows });
+        if (par.length) out.push({ t: 'p', lines: par });
+        rows = []; par = [];
+      };
+      blk.split('\n').forEach(function (raw) {
+        var x = raw.trim();
+        if (!x) return;
+        if (x.indexOf('## ') === 0) { flush(); out.push({ t: 'h', x: x.slice(3) }); }
+        else if (x.indexOf('> ') === 0) { flush(); out.push({ t: 'by', x: x.slice(2) }); }
+        else if (x.indexOf('! ') === 0) { flush(); out.push({ t: 'note', x: x.slice(2) }); }
+        else if (x.indexOf(' | ') > 0) { if (par.length) flush(); var p = x.split(' | '); rows.push([p[0], p.slice(1).join(' | ')]); }
+        else { if (rows.length) flush(); par.push(x); }
+      });
+      flush();
+    });
+    return out;
+  }
+  async function gvPdfImage(src) {
+    try {
+      var r = await fetch(src);
+      if (!r.ok) return null;
+      var blob = await r.blob();
+      var url = await new Promise(function (res, rej) { var fr = new FileReader(); fr.onload = function () { res(fr.result); }; fr.onerror = rej; fr.readAsDataURL(blob); });
+      if (!/^data:image\/(jpeg|png)/.test(url)) return null;
+      var dim = await new Promise(function (res) { var im = new Image(); im.onload = function () { res({ w: im.naturalWidth, h: im.naturalHeight }); }; im.onerror = function () { res(null); }; im.src = url; });
+      if (!dim || !dim.w || !dim.h) return null;
+      return { url: url, w: dim.w, h: dim.h, fmt: /^data:image\/png/.test(url) ? 'PNG' : 'JPEG' };
+    } catch (e) { return null; }
+  }
+
+  async function gvExportPdf() {
+    var G = S.gv, cur = G && G.cur;
+    if (!cur) return;
+    if (!window.jspdf) { toast(L('ccPdfFailed')); return; }
+    toast(L('ccPdfBuilding'));
+    try {
+      await gvSignUrls();
+      var logo = await ensureLogoDataUrl();
+      var photos = {}, jobs = [];
+      G.reports.forEach(function (r) {
+        (r.photos || []).filter(gvPhotoOk).forEach(function (f) {
+          var s = gvPhotoSrc(f);
+          if (s && !(f in photos)) { photos[f] = null; jobs.push(gvPdfImage(s).then(function (im) { photos[f] = im; })); }
+        });
+      });
+      await Promise.all(jobs);
+
+      var real = new window.jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      var doc = real;
+      // Zum Ausmessen der Spaltenhöhe (ohne zu zeichnen) wird «doc» kurz durch diese Attrappe ersetzt
+      var NOOP = {};
+      ['text', 'rect', 'roundedRect', 'line', 'addImage', 'setFillColor', 'setDrawColor', 'setLineWidth', 'setTextColor', 'addPage'].forEach(function (k) { NOOP[k] = function () {}; });
+      ['setFont', 'setFontSize', 'splitTextToSize'].forEach(function (k) { NOOP[k] = real[k].bind(real); });
+      var W = real.internal.pageSize.getWidth(), H = real.internal.pageSize.getHeight();
+      var M = 14, GAP = 8, CW = (W - 2 * M - GAP) / 2, TOP = 16, BOT = H - 17, FULL = W - 2 * M, BAND = 11, BANDGAP = 6;
+      var BLUE = [48, 124, 192], BLUE_DARK = [11, 47, 94], BLUE_SOFT = [227, 239, 249], GREY = [93, 103, 122], INK = [22, 35, 59], LINE = [218, 222, 214];
+      var DIM = [112, 119, 132], DIM_SOFT = [235, 237, 240];
+      // Spaltenzustand: aktuelle Spalte, Y je Spalte, Oberkante, Untergrenze je Spalte (für ausgewogene Spalten), Untergrenze ab der nächsten Seite
+      var col = 0, cy = [TOP, TOP], secTop = TOP, dim = false, lim = [BOT, BOT], pagesLeft = 0, lastLim = [BOT, BOT], pending = null;
+      var P = gvPdfClean;
+      var ink = function () { return dim ? DIM : INK; };
+      var setT = function (c) { doc.setTextColor(c[0], c[1], c[2]); };
+      var font = function (st, sz) { doc.setFont('helvetica', st); doc.setFontSize(sz); };
+      var wrapF = function (t, w, st, sz) { font(st, sz); return doc.splitTextToSize(P(t), w); };
+      var used = function () { return Math.max(cy[0], cy[1]); };
+      var colX = function () { return M + col * (CW + GAP); };
+      var newPage = function () {
+        doc.addPage(); col = 0; cy = [TOP, TOP]; secTop = TOP;
+        // Mehrseitiger Block: alle Seiten voll, nur die letzte Seite wird ausgewogen
+        if (pagesLeft > 0) { pagesLeft--; lim = pagesLeft === 0 ? lastLim.slice() : [BOT, BOT]; } else lim = [BOT, BOT];
+      };
+      // Platz in der aktuellen Spalte schaffen: erst zweite Spalte, dann neue Seite
+      var room = function (h) {
+        if (cy[col] + h <= lim[col]) return;
+        if (col === 0) { col = 1; if (cy[1] + h <= lim[1]) return; }
+        newPage();
+      };
+      var long = function (iso, o) { return parseIso(iso).toLocaleDateString('de-CH', o); };
+      var dateLong = function (iso) { return long(iso, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); };
+      var dateShort = function (iso) { return long(iso, { weekday: 'short' }).replace(/\.$/, '') + ' ' + long(iso, { day: '2-digit', month: '2-digit', year: 'numeric' }); };
+      var text = function (lines, size, style, color, lh) {
+        font(style, size); setT(color);
+        lines.forEach(function (ln) { room(lh); doc.text(ln, colX(), cy[col] + lh * 0.75); cy[col] += lh; });
+      };
+      var gap = function (h) { cy[col] += h; };
+
+      var drawBlocks = function (blocks) {
+        blocks.forEach(function (b) {
+          if (b.t === 'h') {
+            if (cy[col] > secTop + 1) gap(2.4);
+            room(15);
+            text(wrapF(b.x, CW, 'bold', 10), 10, 'bold', dim ? DIM : BLUE, 4.7); gap(1);
+          } else if (b.t === 'by') {
+            text(wrapF(b.x, CW, 'italic', 8.6), 8.6, 'italic', GREY, 4); gap(1.4);
+          } else if (b.t === 'note') {
+            var nl = wrapF(b.x, CW - 6, 'bold', 8.8), nh = nl.length * 4.1 + 4;
+            room(nh + 1);
+            doc.setFillColor(BLUE_SOFT[0], BLUE_SOFT[1], BLUE_SOFT[2]); doc.rect(colX(), cy[col], CW, nh, 'F');
+            doc.setFillColor(BLUE[0], BLUE[1], BLUE[2]); doc.rect(colX(), cy[col], 1, nh, 'F');
+            font('bold', 8.8); setT(BLUE_DARK);
+            nl.forEach(function (ln, i) { doc.text(ln, colX() + 4, cy[col] + 5.2 + i * 4.1); });
+            cy[col] += nh + 2;
+          } else if (b.t === 'rows') {
+            b.rows.forEach(function (r) {
+              var vl = wrapF(r[1], CW - 36, 'normal', 9), h = Math.max(vl.length, 1) * 4.1 + 1.2;
+              room(h);
+              font('bold', 8.8); setT(dim ? DIM : GREY); doc.text(P(r[0]), colX(), cy[col] + 3.6, { maxWidth: 33 });
+              font('normal', 9); setT(ink());
+              vl.forEach(function (ln, i) { doc.text(ln, colX() + 35, cy[col] + 3.6 + i * 4.1); });
+              cy[col] += h;
+            });
+            gap(1.6);
+          } else if (b.t === 'p') {
+            b.lines.forEach(function (ln, i) {
+              var pl = wrapF(ln, CW, 'normal', 9);
+              if (i === 0) room(Math.min(pl.length, 2) * 4.1);
+              text(pl, 9, 'normal', ink(), 4.1);
+            });
+            gap(2);
+          }
+        });
+      };
+
+      // Fotos eines Berichts: Zeilen mit je einem oder zwei Fotos, gleich hoch und bündig über die Spaltenbreite
+      var drawPhotos = function (ims) {
+        var rows = [], i0 = 0;
+        if (ims.length % 2 === 1) { rows.push([ims[0]]); i0 = 1; }
+        for (var q = i0; q < ims.length; q += 2) rows.push(ims.slice(q, q + 2));
+        rows.forEach(function (row) {
+          var ar = row.map(function (im) { return im.w / im.h; });
+          var sum = ar.reduce(function (a, b) { return a + b; }, 0);
+          var rh = Math.min(row.length === 1 ? 62 : 58, (CW - (row.length - 1) * 2) / sum);
+          var tw = rh * sum + (row.length - 1) * 2;
+          room(rh + 2);
+          var x = colX() + (CW - tw) / 2;
+          row.forEach(function (im, k) {
+            var dw = rh * ar[k];
+            try { doc.addImage(im.url, im.fmt, x, cy[col], dw, rh); } catch (e) { console.error(e); }
+            x += dw + 2;
+          });
+          cy[col] += rh + 2;
+        });
+      };
+      var drawReports = function () {
+        G.reports.forEach(function (r, ri) {
+          room(38);
+          if (cy[col] > secTop + 1) {
+            gap(2);
+            doc.setDrawColor(LINE[0], LINE[1], LINE[2]); doc.setLineWidth(0.25); doc.line(colX(), cy[col], colX() + CW, cy[col]);
+            gap(3.5);
+          }
+          text(wrapF(r.title, CW, 'bold', 12), 12, 'bold', BLUE, 5.4);
+          var mm = r.author_id ? ccMember(r.author_id) : null, an = (mm && mm.name) || r.author_name || '';
+          var meta = [an, r.subtitle].filter(Boolean).join(' · ');
+          if (meta) text(wrapF(meta, CW, 'italic', 8.6), 8.6, 'italic', GREY, 4);
+          gap(1.8);
+          drawPhotos((r.photos || []).filter(gvPhotoOk).map(function (f) { return photos[f]; }).filter(Boolean));
+          drawBlocks(gvBlocks(r.body));
+          gap(1.5);
+        });
+      };
+
+      // Kapitelband über die ganze Breite (wird erst mit dem ersten Inhalt gezeichnet, damit es nie allein am Seitenende steht)
+      var drawBand = function (p, y0) {
+        doc.setFillColor(p.dim ? DIM_SOFT[0] : BLUE_SOFT[0], p.dim ? DIM_SOFT[1] : BLUE_SOFT[1], p.dim ? DIM_SOFT[2] : BLUE_SOFT[2]); doc.rect(M, y0, FULL, BAND, 'F');
+        var bc = p.dim ? DIM : p.draft ? [176, 48, 48] : BLUE; doc.setDrawColor(bc[0], bc[1], bc[2]); doc.setLineWidth(0.5); doc.line(M, y0 + BAND, M + FULL, y0 + BAND);
+        font('bold', 15); setT(bc); doc.text(P(p.title), M + 3, y0 + 7.6);
+        if (p.tag) { font('bold', 8.5); doc.text(P(p.tag), M + FULL - 3, y0 + 7.2, { align: 'right' }); }
+      };
+      var placeBand = function (minContent) {
+        if (!pending) return;
+        var y0 = used();
+        if (y0 + BAND + BANDGAP + minContent > BOT) { newPage(); y0 = TOP; }
+        drawBand(pending, y0);
+        dim = !!pending.dim; pending = null;
+        col = 0; cy = [y0 + BAND + BANDGAP, y0 + BAND + BANDGAP]; secTop = cy[0];
+      };
+      var section = function (title, o) {
+        if (pending) placeBand(0);
+        pending = { title: title, dim: !!(o && o.dim), draft: !!(o && o.draft), tag: (o && o.tag) || '' };
+      };
+      // Höhe eines Inhalts als einzelne lange Spalte, ohne zu zeichnen
+      var measure = function (fn, d) {
+        var sv = { col: col, cy: cy.slice(), secTop: secTop, lim: lim.slice(), pagesLeft: pagesLeft, dim: dim };
+        doc = NOOP; col = 0; cy = [0, 0]; secTop = 0; lim = [1e9, 1e9]; pagesLeft = 0; dim = d;
+        var T = 0;
+        try { fn(); T = cy[0]; } finally { doc = real; col = sv.col; cy = sv.cy; secTop = sv.secTop; lim = sv.lim; pagesLeft = sv.pagesLeft; dim = sv.dim; }
+        return T;
+      };
+      // Zweispaltiger Block mit ausgewogenen Spalten (auch über mehrere Seiten gleichmässig verteilt)
+      var cols = function (fn) {
+        var bh = pending ? BAND + BANDGAP : 0, d = pending ? pending.dim : dim;
+        var T = measure(fn, d);
+        if (T < 1) return;
+        var y0 = used();
+        var availHere = BOT - (y0 + bh), fullAvail = BOT - TOP - bh, half = T / 2 + 9;
+        var startNew = false;
+        if (half > availHere) startNew = availHere < fullAvail * 0.55 || half <= fullAvail;
+        if (startNew) { newPage(); y0 = TOP; }
+        if (pending) { drawBand(pending, y0); dim = !!pending.dim; pending = null; y0 += BAND + BANDGAP; }
+        col = 0; cy = [y0, y0]; secTop = y0; pagesLeft = 0;
+        var availNow = BOT - y0;
+        if (half <= availNow) { lim = [y0 + half, BOT]; }
+        else {
+          // Mehrere Seiten: erste und mittlere Seiten voll, die letzte Seite ausgewogen
+          var capF = 2 * availNow * 0.94, capP = 2 * (BOT - TOP) * 0.94;
+          var rem = T - capF, nx = Math.max(1, Math.ceil(rem / capP)), remLast = Math.max(0, rem - (nx - 1) * capP);
+          var ch = Math.min(BOT - TOP, remLast / (2 * 0.94) + 9);
+          lastLim = [TOP + ch, Math.min(BOT, TOP + ch + 8)]; pagesLeft = nx; lim = [BOT, BOT];
+        }
+        fn();
+        var endY = used();
+        col = 0; cy = [endY + 3, endY + 3]; secTop = cy[0]; lim = [BOT, BOT]; pagesLeft = 0;
+      };
+      // Tabelle über die ganze Breite: rows = { c: [Zellen], k: 'n' | 'sec' | 'sub' }
+      var table = function (widths, head, rows, aligns) {
+        placeBand(26);
+        var y0 = used(), x0 = M;
+        if (y0 + 20 > BOT) { newPage(); y0 = TOP; }
+        var y = y0;
+        var drawHead = function () {
+          doc.setFillColor(BLUE_SOFT[0], BLUE_SOFT[1], BLUE_SOFT[2]); doc.rect(x0, y, FULL, 5.6, 'F');
+          font('bold', 8.6); setT(BLUE_DARK);
+          var x = x0;
+          head.forEach(function (h, i) { var tx = aligns[i] === 'r' ? x + widths[i] - 1.5 : x + 1.5; doc.text(P(h), tx, y + 3.9, { align: aligns[i] === 'r' ? 'right' : 'left' }); x += widths[i]; });
+          y += 5.6;
+        };
+        drawHead();
+        rows.forEach(function (r) {
+          var lines = [], h;
+          if (r.k === 'sec') { h = 5.4; }
+          else {
+            lines = r.c.map(function (c, i) { return wrapF(c, widths[i] - 3, r.k === 'sub' ? 'bold' : 'normal', 8.8); });
+            h = Math.max.apply(null, lines.map(function (l) { return Math.max(l.length, 1); })) * 4 + 1.6;
+          }
+          if (y + h > BOT) { newPage(); y = TOP; drawHead(); }
+          if (r.k === 'sec') {
+            doc.setFillColor(BLUE_SOFT[0], BLUE_SOFT[1], BLUE_SOFT[2]); doc.rect(x0, y, FULL, h, 'F');
+            font('bold', 8.8); setT(BLUE); doc.text(P(r.c[0]), x0 + 1.5, y + 3.9);
+          } else {
+            if (r.k === 'sub') { doc.setFillColor(BLUE_SOFT[0], BLUE_SOFT[1], BLUE_SOFT[2]); doc.rect(x0, y, FULL, h, 'F'); }
+            font(r.k === 'sub' ? 'bold' : 'normal', 8.8); setT(r.k === 'sub' ? BLUE_DARK : INK);
+            var x = x0;
+            lines.forEach(function (ls, i) {
+              ls.forEach(function (ln, j) { doc.text(ln, aligns[i] === 'r' ? x + widths[i] - 1.5 : x + 1.5, y + 3.7 + j * 4, { align: aligns[i] === 'r' ? 'right' : 'left' }); });
+              x += widths[i];
+            });
+            doc.setDrawColor(LINE[0], LINE[1], LINE[2]); doc.setLineWidth(0.15); doc.line(x0, y + h, x0 + FULL, y + h);
+          }
+          y += h;
+        });
+        y += 3; col = 0; cy = [y, y]; secTop = y;
+      };
+
+      /* ----- Titelseite ----- */
+      var ty = TOP;
+      doc.setFillColor(BLUE_SOFT[0], BLUE_SOFT[1], BLUE_SOFT[2]); doc.rect(M, ty, FULL, 26, 'F');
+      doc.setDrawColor(BLUE[0], BLUE[1], BLUE[2]); doc.setLineWidth(0.6); doc.line(M, ty + 26, M + FULL, ty + 26);
+      if (logo) { try { doc.addImage(logo, 'PNG', M + 4, ty + 3, 16, 20); doc.addImage(logo, 'PNG', M + FULL - 20, ty + 3, 16, 20); } catch (e) { /* Logo optional */ } }
+      font('bold', 24); setT(BLUE_DARK);
+      var titleLines = doc.splitTextToSize(P(cur.title), FULL - 50);
+      titleLines.forEach(function (ln, i) { doc.text(ln, W / 2, ty + 12.5 + i * 9 - (titleLines.length - 1) * 3, { align: 'center' }); });
+      font('normal', 10); setT(GREY);
+      doc.text(P(dateLong(cur.meeting_date)), W / 2, ty + 22.3, { align: 'center' });
+      col = 0; cy = [ty + 26 + 8, ty + 26 + 8]; secTop = cy[0];
+      // Rechte Spalte: Traktandenliste im Kasten
+      var tlWrapped = G.items.map(function (it) { return wrapF(it.nr + '. ' + it.title + (it.state === 'draft' ? ' (in Arbeit)' : ''), CW - 8, 'normal', 9); });
+      var boxH = 13 + tlWrapped.reduce(function (n, l) { return n + l.length * 4.5; }, 0) + 2;
+      var bx = M + CW + GAP, by0 = secTop;
+      doc.setFillColor(BLUE_SOFT[0], BLUE_SOFT[1], BLUE_SOFT[2]); doc.setDrawColor(BLUE[0], BLUE[1], BLUE[2]); doc.setLineWidth(0.3); doc.rect(bx, by0, CW, boxH, 'FD');
+      font('bold', 11); setT(BLUE_DARK); doc.text('Traktandenliste', bx + 4, by0 + 7);
+      font('normal', 9); setT(INK);
+      var tly = by0 + 13.5;
+      tlWrapped.forEach(function (ls) { ls.forEach(function (ln, i) { doc.text(ln, bx + 4 + (i ? 4 : 0), tly); tly += 4.5; }); });
+      cy[1] = by0 + boxH + 4;
+      // Linke Spalte: Einladung, dann Zeit und Ort
+      var introDraft = cur.intro_state === 'draft', introProto = cur.intro_state === 'protocol';
+      text(wrapF((cur.intro_title || 'Einladung') + (introDraft ? ' (in Arbeit)' : ''), CW, 'bold', 12), 12, 'bold', introDraft ? [176, 48, 48] : introProto ? DIM : BLUE, 5.6); gap(1.5);
+      dim = introProto;
+      drawBlocks(gvBlocks(cur.intro));
+      dim = false;
+      gap(1);
+      text(wrapF('am ' + dateLong(cur.meeting_date) + (cur.meeting_time ? ' um ' + hhmm(cur.meeting_time).replace(':', '.') + ' Uhr' : ''), CW, 'bold', 9.5), 9.5, 'bold', INK, 4.4);
+      if (cur.place) text(wrapF(cur.place, CW, 'bold', 9.5), 9.5, 'bold', INK, 4.4);
+      col = 0; cy = [used() + 3, used() + 3]; secTop = cy[0];
+
+      /* ----- Traktanden ----- */
+      for (var ii = 0; ii < G.items.length; ii++) {
+        var it = G.items[ii], proto = it.state === 'protocol', draftSt = it.state === 'draft';
+        dim = false;
+        section('Traktandum ' + it.nr + ': ' + it.title + (draftSt ? ' (in Arbeit)' : ''), { dim: proto, draft: draftSt, tag: proto ? 'Protokoll' : '' });
+        if (it.kind === 'reports') {
+          cols(function () { drawBlocks(gvBlocks(it.body)); drawReports(); });
+        } else if (it.kind === 'finance') {
+          var fd = it.data || {};
+          if (fd.kpis && fd.kpis.length) {
+            placeBand(75);   // Band, Kennzahlen und Tabellenanfang bleiben zusammen
+            var kn = fd.kpis.length, kw = (FULL - (kn - 1) * 3) / kn, ky = used();
+            if (ky + 17 > BOT) { newPage(); ky = TOP; }
+            fd.kpis.forEach(function (k, i) {
+              var kx = M + i * (kw + 3);
+              doc.setFillColor(BLUE_SOFT[0], BLUE_SOFT[1], BLUE_SOFT[2]); doc.rect(kx, ky, kw, 14, 'F');
+              font('normal', 7.8); setT(GREY); doc.text(P(k[0]), kx + 3, ky + 4.6, { maxWidth: kw - 5 });
+              font('bold', 12); setT(k[2] ? [176, 48, 48] : BLUE_DARK); doc.text(P(k[1]), kx + 3, ky + 11);
+            });
+            col = 0; cy = [ky + 17, ky + 17]; secTop = cy[0];
+          }
+          if (fd.rows && fd.rows.length) {
+            var fc = fd.cols || [], nc = fc.length || 4, lw = FULL - (nc - 1) * 26, fw = [lw];
+            for (var q = 1; q < nc; q++) fw.push(26);
+            table(fw, fc, fd.rows.map(function (r) {
+              if (r.length === 1) return { k: 'sec', c: [r[0]] };
+              return { k: r[4] ? 'sub' : 'n', c: [r[0]].concat(r.slice(1, 4).map(function (v) { return typeof v === 'number' ? gvNum(v) : String(v); })) };
+            }), fw.map(function (w, i) { return i ? 'r' : 'l'; }));
+          }
+          cols(function () { drawBlocks(gvBlocks(it.body)); });
+        } else if (it.kind === 'program') {
+          cols(function () { drawBlocks(gvBlocks(it.body)); });
+          var pe = gvProgramEvents(cur);
+          if (pe.list.length) {
+            table([42, FULL - 42 - 52, 52], ['Datum', 'Anlass', 'Zeit / Ort'], pe.list.map(function (e) {
+              var multi = e.endDate && e.endDate !== e.date;
+              var dt = multi ? dateShort(e.date) + ' – ' + dateShort(e.endDate) : dateShort(e.date);
+              var sameEnd = e.endTime && (!e.endDate || e.endDate === e.date);
+              var zo = [multi ? '' : (e.time ? e.time + (sameEnd ? '–' + e.endTime : '') : ''), e.place].filter(Boolean).join(', ');
+              return { k: 'n', c: [dt, e.title + (e.cancelled ? ' (abgesagt)' : ''), zo] };
+            }), ['l', 'l', 'l']);
+          }
+        } else if (it.kind === 'jass') {
+          cols(function () { drawBlocks(gvBlocks(it.body)); });
+          if (!S.jsErr) {
+            var all = S.js.days.slice().sort(function (a, b) { return a.day < b.day ? -1 : a.day > b.day ? 1 : ccByCreated(a, b); });
+            var past = all.filter(function (d) { return d.closed; }).reverse();
+            var res = jsEternalRows(past, ccMap());
+            if (res.rows.length) {
+              table([14, FULL - 14 - 40 - 24, 40, 24], ['Rang', 'Ewige Rangliste Jassmasters', 'Runden', 'Punkte'], res.rows.map(function (r) {
+                return { k: 'n', c: [r.rank + '.', r.name, String(r.rounds), String(r.points)] };
+              }), ['l', 'l', 'r', 'r']);
+            }
+          }
+        } else {
+          cols(function () { drawBlocks(gvBlocks(it.body)); });
+        }
+        if (pending) placeBand(0);
+        dim = false;
+      }
+
+      /* ----- Fusszeilen: wie in der gedruckten Unterlage abwechselnd links/rechts ----- */
+      var pages = doc.getNumberOfPages(), dShort = P(long(cur.meeting_date, { day: 'numeric', month: 'long', year: 'numeric' }));
+      for (var pn = 1; pn <= pages; pn++) {
+        doc.setPage(pn);
+        doc.setDrawColor(LINE[0], LINE[1], LINE[2]); doc.setLineWidth(0.2); doc.line(M, H - 13, W - M, H - 13);
+        font('normal', 8); setT(GREY);
+        var odd = pn % 2 === 1;
+        doc.text(odd ? dShort : 'Seite ' + pn, M, H - 8.5);
+        doc.text(P(cur.title), W / 2, H - 8.5, { align: 'center' });
+        doc.text(odd ? 'Seite ' + pn : dShort, W - M, H - 8.5, { align: 'right' });
+      }
+
+      var fname = 'FBRO-GV-' + cur.year + '.pdf';
+      var blob = doc.output('blob');
+      try {
+        var file = new File([blob], fname, { type: 'application/pdf' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: cur.title });
+          return;
+        }
+      } catch (e) { /* Teilen abgebrochen oder nicht verfügbar: als Download anbieten */ }
+      var url = URL.createObjectURL(blob);
+      var a2 = document.createElement('a'); a2.href = url; a2.download = fname;
+      document.body.appendChild(a2); a2.click(); document.body.removeChild(a2);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+    } catch (err) { console.error(err); toast(L('ccPdfFailed')); }
+  }
+
+  // Link auf den Dialog «Events»: zum Termin springen, falls er dort noch angezeigt wird
+  function gvGoEvent(id) {
+    S.tab = 'events'; S.edit = null; render();
+    var b = document.querySelector('[data-act="cal"][data-id="' + String(id).replace(/[^\w-]/g, '') + '"]');
+    var card = b && b.closest('.ccel');
+    if (card) card.scrollIntoView({ block: 'center' }); else window.scrollTo(0, 0);
+  }
+
+  // Ewige Rangliste aus dem Dialog «Jass» (letzte 10 abgeschlossene Runden)
+  function gvJass() {
+    if (S.jsErr) return '';
+    var all = S.js.days.slice().sort(function (a, b) { return a.day < b.day ? -1 : a.day > b.day ? 1 : ccByCreated(a, b); });
+    var past = all.filter(function (d) { return d.closed; }).reverse();
+    var res = jsEternalRows(past, ccMap());
+    var h = '<h4 class="gvh">' + esc(L('jsEternal')) + '</h4>';
+    if (!res.rows.length) return h + '<p class="ccsum">' + esc(L('jsNoPoints')) + '</p>';
+    h += '<p class="ccnote gvhint">' + esc(L('jsEternalHint', { n: res.n })) + '</p><ol class="jsrank">' + res.rows.map(function (r) {
+      return '<li><span class="jsrk">' + r.rank + '.</span><span class="jsrn">' + esc(r.name) + '</span><span class="jsstp">' + esc(L(r.rounds === 1 ? 'jsEternalRound' : 'jsEternalRounds', { n: r.rounds })) + '</span><span class="jsrp">' + r.points + '</span></li>';
+    }).join('') + '</ol>';
+    return h + '<button type="button" class="resp gvgo" data-act="tab" data-tab="jass">' + esc(L('gvToJass')) + '</button>';
+  }
+
+  function gvPhotoOk(f) { return gvIsStored(f) ? GV_PATH.test(f) : (/^[\w][\w.\-]*\.(jpe?g|png|webp)$/i.test(f) && f.indexOf('..') < 0); }
+  function gvGallery(r) {
+    var ph = (r.photos || []).filter(gvPhotoOk).filter(function (f) { return !!gvPhotoSrc(f); });
+    if (!ph.length) return '';
+    return '<div class="gvgal"><div class="gvstrip" tabindex="0" aria-label="' + esc(r.title) + '">' + ph.map(function (f, i) {
+      return '<img src="' + esc(gvPhotoSrc(f)) + '" loading="lazy" data-act="gv-photo" alt="' + esc(L('gvPhotoAlt', { i: i + 1, n: ph.length, t: r.title })) + '">';
+    }).join('') + '</div>' + (ph.length > 1
+      ? '<button type="button" class="gvgb p" data-act="gv-gal" data-dir="-1" aria-label="' + esc(L('gvPrev')) + '" disabled>‹</button><button type="button" class="gvgb n" data-act="gv-gal" data-dir="1" aria-label="' + esc(L('gvNext')) + '">›</button><span class="gvgn">1 / ' + ph.length + '</span>'
+      : '') + '</div>';
+  }
+
+  function gvWhen(ts) {
+    var d = new Date(ts);
+    return esc(fmt(d, { day: 'numeric', month: 'short' })) + ', ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  }
+  // Reaktionen und Kommentare zu einem Abschnitt (post_key: inv:<gv>, item:<id>, rep:<id>)
+  function gvSocial(key) {
+    var cnt = {}, mine = null;
+    S.gv.reactions.forEach(function (r) {
+      if (r.post_key !== key) return;
+      cnt[r.emoji] = (cnt[r.emoji] || 0) + 1;
+      if (S.me && r.user_id === S.me.id) mine = r.emoji;
+    });
+    var cs = S.gv.comments.filter(function (c) { return c.post_key === key; });
+    var open = !!S.gvCom[key], kid = 'gvi-' + key.replace(/[^\w-]/g, '_');
+    var h = '<div class="gvsoc"><div class="gvreacts">' + GV_REACT.map(function (k) {
+      return '<button type="button" class="gvrb" data-act="gv-react" data-key="' + esc(key) + '" data-e="' + k + '" aria-pressed="' + (mine === k) + '" aria-label="' + esc(L('gvReactAria', { e: GV_EMOJI[k] })) + '">' + GV_EMOJI[k] + (cnt[k] ? ' <span>' + cnt[k] + '</span>' : '') + '</button>';
+    }).join('') + '<button type="button" class="gvcb" data-act="gv-com" data-key="' + esc(key) + '" aria-expanded="' + open + '">' + esc(cs.length ? (cs.length === 1 ? L('gvComments1') : L('gvCommentsN', { n: cs.length })) : L('gvComment')) + '</button></div>';
+    if (open) {
+      h += '<div class="gvcwrap">' + (cs.length ? cs.map(function (c) {
+        var m = ccMember(c.user_id), own = !!(S.me && c.user_id === S.me.id);
+        return '<div class="gvcm' + (own ? ' mine' : '') + '"><div class="gvcn"><b>' + esc(m ? m.name : '?') + '</b><small>' + gvWhen(c.created_at) + '</small>' +
+          ((own || canGvEdit() || (S.me && S.me.isAdmin)) ? '<button type="button" class="gvcx" data-act="gv-cdel" data-id="' + esc(c.id) + '">' + esc(L('del')) + '</button>' : '') + '</div><div class="gvct">' + esc(c.body) + '</div></div>';
+      }).join('') : '<p class="ccsum">' + esc(L('gvNoComments')) + '</p>') +
+        '<form class="gvcform" data-form="gvc" data-key="' + esc(key) + '"><input class="input" id="' + kid + '" name="body" maxlength="500" autocomplete="off" placeholder="' + esc(L('gvWrite')) + '" aria-label="' + esc(L('gvWrite')) + '" required><button class="btn inline" type="submit">' + esc(L('gvSend')) + '</button></form></div>';
+    }
+    return h + '</div>';
+  }
+
+  function gvPost(r, map) {
+    var more = !!S.gvMore[r.id];
+    return '<article class="ccel gvpost"><div class="cceh">' + gvX('report', r.id, '<b>' + esc(r.title) + '</b>') + '</div><div class="gvpbody">' +
+      '<div class="gvauth">' + ccChip({ id: r.author_id, name: r.author_name }, map) + (r.subtitle ? '<span class="muted small">' + esc(r.subtitle) + '</span>' : '') + '</div>' +
+      gvGallery(r) +
+      (gvEditing()
+        ? gvX('report', r.id, '<div class="gvtext">' + gvMarkup(r.body) + '</div>')
+        : '<div class="gvtext' + (more ? '' : ' clamp') + '">' + gvMarkup(r.body) + '</div>' +
+          '<button type="button" class="linkbtn gvmore" data-act="gv-more" data-id="' + esc(r.id) + '">' + esc(L(more ? 'gvLess' : 'gvMore')) + '</button>') +
+      gvSocial('rep:' + r.id) + '</div></article>';
+  }
+
+  // o.k/o.id: Traktandum im Bearbeiten-Modus antippbar (Stift); o.proto: Zustand Protokoll (abgedunkelt); o.draft: Zustand in Arbeit (Titel rot mit Zusatz)
+  function gvSection(id, nr, title, summary, bodyFn, o) {
+    o = o || {};
+    var open = gvIsOpen(id);
+    return '<section class="ccel' + (o.proto ? ' gvproto' : '') + (o.draft ? ' gvdrafts' : '') + '"><div class="cceh"><button type="button" class="cct" data-act="gv-fold" data-id="' + id + '" aria-expanded="' + open + '">' +
+      (nr ? '<span class="gvnr">' + nr + '</span>' : '') + esc(title) + (o.draft ? esc(L('gvStateDraftSfx')) : '') + '</button>' +
+      (o.proto ? '<span class="gvtag">' + esc(L('gvProtoTag')) + '</span>' : '') +
+      (o.k && gvEditing() ? '<button type="button" class="hico gvtedit" data-act="gv-edit" data-k="' + o.k + '" data-id="' + esc(o.id || '') + '" aria-label="' + esc(L('gvChapterEdit')) + '" title="' + esc(L('gvChapterEdit')) + '">' + ICON.pencil + '</button>' : '') +
+      '<button type="button" class="ccfold' + (open ? ' open' : '') + '" data-act="gv-fold" data-id="' + id + '" aria-hidden="true" tabindex="-1">' + ICON.chev + '</button></div>' +
+      (summary && !open ? '<p class="ccsum gvsum">' + esc(summary) + '</p>' : '') +
+      (open ? '<div class="gvbody">' + bodyFn() + '</div>' : '') + '</section>';
+  }
+
+  function viewGv() {
+    var G = S.gv, cur = G.cur, map = ccMap(), d = parseIso(cur.meeting_date), edit = gvEditing();
+    // Vorstand: Stift öffnet direkt die Aktionen (Bearbeiten ein/aus und PDF stehen dort); alle anderen: PDF-Symbol
+    var tools = canGvEdit() ? hico('gv-menu', ICON.pencil, L('gvEditMode'), { on: !!S.gvEdit }) : hico('gv-pdf', ICON.print, L('gvPdf'));
+    var html = '<div class="top" style="align-items:center"><div><h1 class="pagetitle">' + esc(cur.title) + '</h1></div>' + tools + '</div>';
+    if (G.all.length > 1) {
+      html += '<div class="gvyears" role="group">' + G.all.map(function (x) {
+        return '<button type="button" class="gvyr" data-act="gv-year" data-id="' + esc(x.id) + '" aria-pressed="' + (x.id === cur.id) + '"' + (x.visibility === 'members' ? '' : ' title="' + esc(L(gvVisNote(x.visibility))) + '"') + '>' + x.year + (x.visibility === 'members' ? '' : '<span class="gvdot" aria-hidden="true"></span>') + '</button>';
+      }).join('') + '</div>';
+    }
+    html += '<section class="gvhero' + (edit ? ' gvx' : '') + '"' + (edit ? ' role="button" tabindex="0" data-act="gv-edit" data-k="meta" data-id="' + esc(cur.id) + '"' : '') + '><h2>' + esc(fmt(d, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })) + '</h2><div class="gvfacts">' +
+      (cur.meeting_time ? '<div class="gvfact"><b>' + esc(L('time')) + '</b><span>' + esc(L('atTime', { time: hhmm(cur.meeting_time) })) + '</span></div>' : '') +
+      (cur.place ? '<div class="gvfact"><b>' + esc(L('place')) + '</b><span>' + esc(cur.place) + '</span></div>' : '') + '</div></section>';
+    html += gvSection('inv', null, cur.intro_title || L('gvInvite'), '', function () {
+      return gvX('intro', cur.id, gvMarkup(cur.intro)) +
+        '<div class="gvnote">' + esc(L('gvRsvp', { date: ccDate(ccAddDays(cur.meeting_date, -7)) })) + '</div>' +
+        '<button type="button" class="resp gvgo" data-act="tab" data-tab="events">' + esc(L('gvToEvents')) + '</button>' + gvSocial('inv:' + cur.id);
+    }, { k: 'intro', id: cur.id, proto: cur.intro_state === 'protocol', draft: cur.intro_state === 'draft' });
+    G.items.forEach(function (it) {
+      html += gvSection('i' + it.nr, it.nr, it.title, it.summary, function () {
+        var b = '';
+        if (it.kind === 'reports') {
+          b = gvX('item', it.id, gvMarkup(it.body)) + G.reports.map(function (r) { return gvPost(r, map); }).join('') +
+            (edit ? '<button type="button" class="resp gvgo" data-act="gv-edit" data-k="newreport" data-id="">+ ' + esc(L('gvAddReport')) + '</button>' : '');
+        }
+        else if (it.kind === 'finance') b = gvX('item', it.id, gvFinance(it));
+        else if (it.kind === 'program') b = gvX('item', it.id, gvMarkup(it.body)) + gvProgram(cur) + gvProgramTextBlock(cur);
+        else if (it.kind === 'jass') b = gvX('item', it.id, gvMarkup(it.body)) + gvJass();
+        else b = gvX('item', it.id, gvMarkup(it.body));
+        return b + (it.kind === 'reports' ? '' : gvSocial('item:' + it.id));
+      }, { k: 'item', id: it.id, proto: it.state === 'protocol', draft: it.state === 'draft' });
+    });
+    return html;
+  }
+
+  /* ----- Bearbeiten (nur Vorstand): Fenster von oben wie bei den Events ----- */
+  function gvKey(e) { if (e.key === 'Escape' && !document.getElementById('dlg')) { e.preventDefault(); gvCloseSheet(); } }
+  function gvCloseSheet() {
+    var st = gvSheet;
+    // Neu hochgeladene, nicht gespeicherte Fotos wieder entfernen
+    if (st && st.added && st.added.length && !st.saved) gvPurge(st.added, true);
+    if (st && st.prev) Object.keys(st.prev).forEach(function (k) { try { URL.revokeObjectURL(st.prev[k]); } catch (e) { /* ignorieren */ } });
+    var el = document.getElementById('gvsheet');
+    if (el) el.remove();
+    gvSheet = null;
+    document.removeEventListener('keydown', gvKey, true);
+  }
+  function gvPhotoState() {
+    var st = gvSheet;
+    if (!st || (st.kind !== 'report' && st.kind !== 'newreport')) return;
+    var rp = st.kind === 'report' ? S.gv.reports.filter(function (x) { return x.id === st.id; })[0] : null;
+    st.photos = rp ? (rp.photos || []).slice() : [];
+    st.orig = st.photos.slice(); st.added = []; st.prev = {}; st.busy = false; st.saved = false;
+  }
+  function gvOpenSheet(kind, id) { if (!canGvEdit()) return; gvSheet = { kind: kind, id: id || null }; gvPhotoState(); gvDrawSheet(); }
+
+  // Fotos verwalten (im Bericht-Fenster): verkleinern, in den privaten Speicher laden, ordnen, entfernen
+  async function gvResize(file) {
+    var bmp;
+    try { bmp = await createImageBitmap(file, { imageOrientation: 'from-image' }); }
+    catch (e) {
+      bmp = await new Promise(function (res, rej) {
+        var im = new Image(), u = URL.createObjectURL(file);
+        im.onload = function () { URL.revokeObjectURL(u); res(im); };
+        im.onerror = function () { URL.revokeObjectURL(u); rej(new Error('Bild nicht lesbar')); };
+        im.src = u;
+      });
+    }
+    var w = bmp.width, h = bmp.height, sc = Math.min(1, 1600 / Math.max(w, h));
+    var c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(w * sc)); c.height = Math.max(1, Math.round(h * sc));
+    var ctx = c.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+    ctx.drawImage(bmp, 0, 0, c.width, c.height);
+    if (bmp.close) bmp.close();
+    var blob = await new Promise(function (res) { c.toBlob(res, 'image/jpeg', 0.82); });
+    if (!blob) throw new Error('Bild konnte nicht umgewandelt werden');
+    return blob;
+  }
+  function gvPhotoGrid() {
+    var st = gvSheet, h = '';
+    (st.photos || []).forEach(function (f, i) {
+      var src = st.prev[f] || gvPhotoSrc(f);
+      h += '<div class="gvpt"><img src="' + esc(src) + '" alt="">' +
+        '<div class="gvptb">' +
+        (i > 0 ? '<button type="button" data-gva="pmove" data-i="' + i + '" data-d="-1" aria-label="' + esc(L('gvPhotoMoveL')) + '">‹</button>' : '') +
+        (i < st.photos.length - 1 ? '<button type="button" data-gva="pmove" data-i="' + i + '" data-d="1" aria-label="' + esc(L('gvPhotoMoveR')) + '">›</button>' : '') +
+        '<button type="button" data-gva="pdel" data-i="' + i + '" aria-label="' + esc(L('gvPhotoDel')) + '">✕</button></div></div>';
+    });
+    h += '<label class="gvpadd' + (st.busy ? ' busy' : '') + '"><input type="file" id="gvpfile" accept="image/*" multiple hidden><span>' + (st.busy ? esc(L('gvUploading')) : '+ ' + esc(L('gvPhotoAdd'))) + '</span></label>';
+    return h + '<p class="small muted gvfmt" style="grid-column:1/-1;margin:0">' + esc(L('gvPhotosHint')) + '</p>';
+  }
+  function gvRedrawPhotos() { var box = document.getElementById('gvphotos'); if (box && gvSheet) box.innerHTML = gvPhotoGrid(); }
+  async function gvAddPhotos(files) {
+    var st = gvSheet, cur = S.gv.cur;
+    if (!st || !st.photos || !files || !files.length || !canGvEdit() || !cur) return;
+    st.busy = true; gvRedrawPhotos();
+    try {
+      for (var i = 0; i < files.length && i < 12; i++) {
+        var blob = await gvResize(files[i]);
+        var path = cur.id + '/' + gvUuid() + '.jpg';
+        var r = await sb.storage.from(GV_BUCKET).upload(path, blob, { contentType: 'image/jpeg', upsert: false });
+        if (r.error) throw r.error;
+        if (gvSheet !== st) { gvPurge([path], true); return; }   // Fenster wurde inzwischen geschlossen
+        st.photos.push(path); st.added.push(path); st.prev[path] = URL.createObjectURL(blob);
+        gvRedrawPhotos();
+      }
+    } catch (e) { console.error(e); toast(L('gvUploadFail')); }
+    if (gvSheet === st) { st.busy = false; gvRedrawPhotos(); }
+  }
+  // Dateien im Speicher löschen; ohne force nur, wenn kein Bericht (z. B. einer kopierten GV) sie noch verwendet
+  async function gvPurge(paths, force) {
+    try {
+      var del = [];
+      for (var i = 0; i < paths.length; i++) {
+        var p = paths[i];
+        if (!gvIsStored(p) || !GV_PATH.test(p)) continue;
+        if (!force) {
+          var q = await sb.from('gv_reports').select('id').contains('photos', [p]).limit(1);
+          if (q.error) throw q.error;
+          if (q.data && q.data.length) continue;
+        }
+        del.push(p);
+      }
+      if (del.length) { var r = await sb.storage.from(GV_BUCKET).remove(del); if (r.error) throw r.error; }
+    } catch (e) { console.error(e); }
+  }
+  // Fotos aus dem App-Ordner (alte Einträge ohne «/») in den geschützten Speicher übernehmen
+  function gvLegacy() {
+    var l = [];
+    S.gv.reports.forEach(function (r) { (r.photos || []).forEach(function (f) { if (!gvIsStored(f) && gvPhotoOk(f)) l.push([r, f]); }); });
+    return l;
+  }
+  async function gvMigrate() {
+    var cur = S.gv.cur, list = gvLegacy(), n = 0, fail = 0, map = {};
+    if (!cur || !list.length || !canGvEdit()) return;
+    if (!(await askConfirm(L('gvMigrate'), L('gvMigrateAsk', { n: list.length }), false))) return;
+    toast(L('gvUploading'));
+    for (var i = 0; i < list.length; i++) {
+      var r = list[i][0], f = list[i][1];
+      try {
+        var resp = await fetch(f, { cache: 'no-store' });
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        var blob = await resp.blob();
+        var ext = /png/.test(blob.type) ? 'png' : /webp/.test(blob.type) ? 'webp' : 'jpg';
+        var path = cur.id + '/' + gvUuid() + '.' + ext;
+        var up = await sb.storage.from(GV_BUCKET).upload(path, blob, { contentType: ext === 'jpg' ? 'image/jpeg' : blob.type, upsert: false });
+        if (up.error) throw up.error;
+        (map[r.id] = map[r.id] || {})[f] = path; n++;
+      } catch (e) { console.error(e); fail++; }
+    }
+    for (var k = 0; k < S.gv.reports.length; k++) {
+      var rp = S.gv.reports[k], m = map[rp.id];
+      if (!m) continue;
+      try {
+        var res = await sb.from('gv_reports').update({ photos: (rp.photos || []).map(function (x) { return m[x] || x; }) }).eq('id', rp.id);
+        if (res.error) throw res.error;
+      } catch (e2) { console.error(e2); fail++; }
+    }
+    toast(L('gvMigrated', { n: n }) + (fail ? ' · ' + L('errFailed') + ': ' + fail : ''));
+    try { await loadAll(); render(); } catch (e3) { console.error(e3); }
+  }
+  function gvFormat() { return '<p class="small muted gvfmt">' + esc(L('gvFormat')) + '</p>'; }
+  // Zustand eines Traktandums oder des Einladungstexts: Final, Draft (in Arbeit) oder Protokoll (grau hinterlegt)
+  function gvStateField(cur) {
+    var opts = ['final', 'draft', 'protocol'].map(function (sv) {
+      return '<option value="' + sv + '"' + ((cur || 'final') === sv ? ' selected' : '') + '>' + esc(L(sv === 'draft' ? 'gvStateDraft' : sv === 'protocol' ? 'gvStateProtocol' : 'gvStateFinal')) + '</option>';
+    }).join('');
+    return fld(esc(L('gvStateF')), '<select class="input" name="state">' + opts + '</select>') + '<p class="small muted gvfmt">' + esc(L('gvStateHint')) + '</p>';
+  }
+  function gvDrawSheet() {
+    var st = gvSheet, cur = S.gv && S.gv.cur;
+    if (!st || !cur) { gvCloseSheet(); return; }
+    var ta = function (name, val, rows) { return '<textarea class="input gvta" name="' + name + '" rows="' + rows + '">' + esc(val || '') + '</textarea>'; };
+    var inp = function (name, val, max) { return '<input class="input" name="' + name + '" value="' + esc(val || '') + '" maxlength="' + (max || 200) + '" autocomplete="off">'; };
+    var btns = function (del) {
+      return '<div class="dlgbtns">' + (del ? '<button type="button" class="btn ghost inline dangerbtn" data-gva="del">' + esc(L('del')) + '</button>' : '') +
+        '<button type="button" class="btn ghost inline" data-gva="close">' + esc(L('dismiss')) + '</button><button type="button" class="btn inline" data-gva="save">' + esc(L('save')) + '</button></div>';
+    };
+    var body = '', label = cur.title;
+    if (st.kind === 'menu') {
+      body = '<h3>' + esc(cur.title) + '</h3>' +
+        '<button type="button" class="ccact" data-gva="toggle">' + ICON.pencil + '<span>' + esc(L(S.gvEdit ? 'gvEditOff' : 'gvEditOn')) + '</span></button>' +
+        '<button type="button" class="ccact" data-gva="pdf">' + ICON.print + '<span>' + esc(L('gvPdf')) + '</span></button>' +
+        '<button type="button" class="ccact" data-gva="meta">' + ICON.pencil + '<span>' + esc(L('gvMetaEdit')) + '</span></button>' +
+        '<button type="button" class="ccact" data-gva="addreport">' + ICON.plus + '<span>' + esc(L('gvAddReport')) + '</span></button>' +
+        '<button type="button" class="ccact" data-gva="copy">' + ICON.copy + '<span>' + esc(L('gvCopy')) + '</span></button>' +
+        (gvLegacy().length ? '<button type="button" class="ccact" data-gva="migrate">' + ICON.copy + '<span>' + esc(L('gvMigrate')) + '</span></button>' : '') +
+        '<button type="button" class="ccact del" data-gva="delgv">' + ICON.trash + '<span>' + esc(L('gvDelete')) + '</span></button>' +
+        '<button type="button" class="ccact close" data-gva="close">' + esc(L('ccClose')) + '</button>';
+    } else if (st.kind === 'meta') {
+      body = '<p class="cck">' + esc(L('gvMetaEdit')) + '</p><h3>' + esc(cur.title) + '</h3><form data-gvform="meta" novalidate>' +
+        fld(esc(L('gvTitleF')), inp('title', cur.title, 120)) +
+        grid(fld(esc(L('date')), '<input class="input" type="date" name="meeting_date" value="' + esc(cur.meeting_date) + '">'), fld(esc(L('time')), '<input class="input" type="time" name="meeting_time" value="' + esc(hhmm(cur.meeting_time)) + '">')) +
+        fld(esc(L('place')), inp('place', cur.place, 120)) +
+        fld(esc(L('gvProgUntil')), '<input class="input" type="date" name="program_until" value="' + esc(cur.program_until || '') + '">') +
+        '<p class="small muted gvfmt">' + esc(L('gvVisHint', { v: L(gvVisLabel(cur.visibility)) })) + '</p>' + btns(false) + '</form>';
+    } else if (st.kind === 'intro') {
+      body = '<p class="cck">' + esc(cur.intro_title || L('gvInvite')) + '</p><h3>' + esc(cur.title) + '</h3><form data-gvform="intro" novalidate>' +
+        fld(esc(L('gvTitleF')), inp('intro_title', cur.intro_title || L('gvInvite'), 60)) +
+        gvStateField(cur.intro_state) +
+        fld(esc(L('gvIntro')), ta('intro', cur.intro, 14)) + gvFormat() + btns(false) + '</form>';
+    } else if (st.kind === 'item') {
+      var it = S.gv.items.filter(function (x) { return x.id === st.id; })[0];
+      if (!it) { gvCloseSheet(); return; }
+      var ft = it.kind === 'finance' ? gvFinToText(it.data) : null;
+      body = '<p class="cck">' + it.nr + '</p><h3>' + esc(it.title) + '</h3><form data-gvform="item" novalidate>' +
+        fld(esc(L('gvChapterF')), inp('title', it.title, 120)) + fld(esc(L('gvSummary')), inp('summary', it.summary, 160)) +
+        gvStateField(it.state) +
+        (ft ? fld(esc(L('gvFinKpi')), ta('kpis', ft.kpis, 4)) + fld(esc(L('gvFinCols')), inp('cols', ft.cols, 200)) + fld(esc(L('gvFinRows')), ta('rows', ft.rows, 12)) : '') +
+        fld(esc(L('gvBody')), ta('body', it.body, it.kind === 'reports' || it.kind === 'finance' ? 8 : 12)) + gvFormat() + btns(false) + '</form>';
+    } else if (st.kind === 'report' || st.kind === 'newreport') {
+      var rp = st.kind === 'report' ? S.gv.reports.filter(function (x) { return x.id === st.id; })[0] : null;
+      if (st.kind === 'report' && !rp) { gvCloseSheet(); return; }
+      var authors = S.members.filter(function (m) { return !m.isGuest && !m.isCandidate && !m.isPassive && !m.isSupporter; });
+      var opts = '<option value="">' + esc(L('gvNoAuthor')) + '</option>' + authors.map(function (m) {
+        return '<option value="' + esc(m.id) + '"' + (rp && rp.author_id === m.id ? ' selected' : '') + '>' + esc(m.name) + '</option>';
+      }).join('');
+      label = rp ? rp.title : L('gvAddReport');
+      body = '<p class="cck">' + esc(L('gvAddReport')) + '</p><h3>' + esc(rp ? rp.title : L('gvAddReport')) + '</h3><form data-gvform="report" novalidate>' +
+        fld(esc(L('gvTitleF')), inp('title', rp && rp.title, 120)) + fld(esc(L('gvSubtitle')), inp('subtitle', rp && rp.subtitle, 160)) +
+        fld(esc(L('gvAuthor')), '<select class="input" name="author_id">' + opts + '</select>') +
+        fld(esc(L('gvAuthorName')), inp('author_name', rp && rp.author_name, 80)) +
+        fld(esc(L('gvBody')), ta('body', rp && rp.body, 14)) + gvFormat() +
+        '<div class="field"><span>' + esc(L('gvPhotos')) + '</span><div id="gvphotos" class="gvphotos">' + gvPhotoGrid() + '</div></div>' + btns(!!rp) + '</form>';
+    }
+    var wrap = document.getElementById('gvsheet');
+    if (!wrap) {
+      wrap = document.createElement('div');
+      wrap.id = 'gvsheet';
+      wrap.className = 'ccsheet';
+      wrap.addEventListener('click', gvSheetClick);
+      wrap.addEventListener('change', function (e) {
+        if (e.target && e.target.id === 'gvpfile') { var fl = Array.prototype.slice.call(e.target.files || []); e.target.value = ''; gvAddPhotos(fl); }
+      });
+      document.body.appendChild(wrap);
+      document.addEventListener('keydown', gvKey, true);
+    }
+    wrap.innerHTML = '<div class="ccsheetcard" role="dialog" aria-modal="true" aria-label="' + esc(label) + '">' + body + '</div>';
+    var first = wrap.querySelector('.input') || wrap.querySelector('button');
+    if (first) { try { first.focus({ preventScroll: true }); } catch (x) { first.focus(); } }
+  }
+
+  async function gvSheetClick(e) {
+    var wrap = document.getElementById('gvsheet');
+    if (e.target === wrap) { gvCloseSheet(); return; }
+    var b = e.target.closest('[data-gva]');
+    if (!b || !canGvEdit() || !gvSheet) return;
+    var a = b.dataset.gva, st = gvSheet;
+    if (a === 'close') { gvCloseSheet(); return; }
+    if (a === 'toggle') { gvCloseSheet(); S.gvEdit = !S.gvEdit; render(); return; }
+    if (a === 'pdf') { gvCloseSheet(); return gvExportPdf(); }
+    if (a === 'meta') { gvSheet = { kind: 'meta', id: null }; gvDrawSheet(); return; }
+    if (a === 'addreport') { gvSheet = { kind: 'newreport', id: null }; gvPhotoState(); gvDrawSheet(); return; }
+    if (a === 'copy') { gvCloseSheet(); return gvCopy(); }
+    if (a === 'migrate') { gvCloseSheet(); return gvMigrate(); }
+    if (a === 'delgv') { gvCloseSheet(); return gvDeleteGv(); }
+    if (a === 'pmove' && st.photos) {
+      var pi = Number(b.dataset.i), pj = pi + Number(b.dataset.d);
+      if (pj >= 0 && pj < st.photos.length) { var tmp = st.photos[pi]; st.photos[pi] = st.photos[pj]; st.photos[pj] = tmp; gvRedrawPhotos(); }
+      return;
+    }
+    if (a === 'pdel' && st.photos) {
+      var gone = st.photos.splice(Number(b.dataset.i), 1)[0];
+      var ai = st.added.indexOf(gone);
+      if (ai > -1) { st.added.splice(ai, 1); gvPurge([gone], true); }   // in diesem Fenster neu hochgeladen: gleich wieder löschen
+      gvRedrawPhotos();
+      return;
+    }
+    if (a === 'del' && st.kind === 'report') {
+      if (!(await askConfirm(L('del'), L('gvDeleteRep'), true))) return;
+      var rp0 = S.gv.reports.filter(function (x) { return x.id === st.id; })[0];
+      var rm0 = rp0 ? (rp0.photos || []).slice() : [];
+      gvCloseSheet();
+      return act(function () { return sb.from('gv_reports').delete().eq('id', st.id); }, L('ccSaved')).then(function (ok) { if (ok) gvPurge(rm0); return ok; });
+    }
+    if (a === 'save') {
+      var form = wrap.querySelector('[data-gvform]');
+      if (form) return gvSave(form, st);
+    }
+  }
+
+  function gvSave(form, st) {
+    var cur = S.gv.cur, kind = form.dataset.gvform;
+    var v = function (k) { var el = form.elements[k]; return el ? String(el.value).replace(/\r\n?/g, '\n').trim() : ''; };
+    if (kind === 'meta') {
+      if (!v('title') || !v('meeting_date')) { toast(L('gvNeedTitle')); return; }
+      var row = { title: v('title'), meeting_date: v('meeting_date'), meeting_time: v('meeting_time') || null, place: v('place') || null, program_until: v('program_until') || null };
+      gvCloseSheet();
+      return act(function () { return sb.from('gv').update(row).eq('id', cur.id); }, L('ccSaved'));
+    }
+    if (kind === 'intro') {
+      var intro = v('intro') || null;
+      var ititle = v('intro_title');
+      if (ititle === L('gvInvite')) ititle = '';   // Standardname: bleibt sprachabhängig
+      gvCloseSheet();
+      var istate = ['final', 'draft', 'protocol'].indexOf(v('state')) < 0 ? 'final' : v('state');
+      return act(function () { return sb.from('gv').update({ intro: intro, intro_title: ititle || null, intro_state: istate }).eq('id', cur.id); }, L('ccSaved'));
+    }
+    if (kind === 'item') {
+      var it = S.gv.items.filter(function (x) { return x.id === st.id; })[0];
+      if (!it || !v('title')) { toast(L('gvNeedTitle')); return; }
+      var irow = { title: v('title'), summary: v('summary') || null, body: v('body') || null, state: ['final', 'draft', 'protocol'].indexOf(v('state')) < 0 ? 'final' : v('state') };
+      if (it.kind === 'finance') irow.data = gvFinFromText(v('kpis'), v('cols'), v('rows'));
+      gvCloseSheet();
+      return act(function () { return sb.from('gv_items').update(irow).eq('id', it.id); }, L('ccSaved'));
+    }
+    if (kind === 'report') {
+      var ph = (st.photos || []).slice();
+      if (st.busy) return;   // Foto wird noch hochgeladen
+      if (!v('title') || !v('body')) { toast(L('gvNeedTitle')); return; }
+      if (!ph.every(gvPhotoOk)) { toast(L('gvPhotoBad')); return; }
+      var rrow = { title: v('title'), subtitle: v('subtitle') || null, author_id: v('author_id') || null, author_name: v('author_name') || null, body: v('body'), photos: ph };
+      var removed = (st.orig || []).filter(function (f) { return ph.indexOf(f) < 0; });
+      st.saved = true;
+      gvCloseSheet();
+      var after = function (ok) { if (ok && removed.length) gvPurge(removed); return ok; };
+      if (st.kind === 'newreport') {
+        rrow.gv_id = cur.id;
+        rrow.sort = S.gv.reports.reduce(function (n, x) { return Math.max(n, x.sort || 0); }, 0) + 1;
+        return act(function () { return sb.from('gv_reports').insert(rrow); }, L('ccSaved')).then(after);
+      }
+      return act(function () { return sb.from('gv_reports').update(rrow).eq('id', st.id); }, L('ccSaved')).then(after);
+    }
+  }
+
+  // GV für das nächste Jahr als Entwurf kopieren (Datenbankfunktion gv_copy, nur Vorstand)
+  async function gvCopy() {
+    var cur = S.gv.cur;
+    if (!cur || !canGvEdit()) return;
+    if (!(await askConfirm(L('gvCopy'), L('gvCopyAsk', { y: cur.year, n: cur.year + 1 }), false))) return;
+    try {
+      var r = await sb.rpc('gv_copy', { p_from: cur.id });
+      if (r.error) throw r.error;
+      S.gvSel = r.data; S.gvOpen = {}; S.gvMore = {}; S.gvCom = {};
+      toast(L('gvCopied'));
+    } catch (e) {
+      console.error(e);
+      toast(/GV_EXISTS/.test(String(e && e.message)) ? L('gvExists') : L('errFailed') + (e && e.message ? ': ' + String(e.message).slice(0, 100) : '') + '.');
+    }
+    try { await loadAll(); render(); window.scrollTo(0, 0); } catch (e2) { console.error(e2); }
+  }
+  async function gvDeleteGv() {
+    var cur = S.gv.cur;
+    if (!cur || !canGvEdit()) return;
+    if (!(await askConfirm(L('gvDelete'), L('gvDeleteAsk', { y: cur.year }), true))) return;
+    var rm = [];
+    S.gv.reports.forEach(function (r) { (r.photos || []).forEach(function (f) { rm.push(f); }); });
+    S.gvSel = null; S.gvEdit = false;
+    var okDel = await act(function () { return sb.from('gv').delete().eq('id', cur.id); }, L('ccSaved'));
+    if (okDel && rm.length) gvPurge(rm);
+    if (!S.gv.cur) { S.tab = 'trainings'; render(); }
+  }
+
+  async function gvReact(key, e) {
+    if (!S.me || !key || GV_REACT.indexOf(e) < 0) return;
+    var mine = S.gv.reactions.filter(function (r) { return r.post_key === key && r.user_id === S.me.id; })[0];
+    if (mine && mine.emoji === e) {
+      S.gv.reactions = S.gv.reactions.filter(function (r) { return r !== mine; });
+      render();
+      await act(function () { return sb.from('gv_reactions').delete().eq('post_key', key).eq('user_id', S.me.id); });
+    } else {
+      if (mine) mine.emoji = e; else S.gv.reactions.push({ post_key: key, user_id: S.me.id, emoji: e });
+      render();
+      await act(function () { return sb.from('gv_reactions').upsert({ post_key: key, user_id: S.me.id, emoji: e }, { onConflict: 'post_key,user_id' }); });
+    }
+  }
+  async function gvSend(form) {
+    var key = form.dataset.key, inp = form.querySelector('input[name="body"]');
+    var txt = String(inp ? inp.value : '').trim().slice(0, 500);
+    if (!txt || !key || !S.me) return;
+    inp.value = '';
+    S.gvCom[key] = true;
+    await act(function () { return sb.from('gv_comments').insert({ post_key: key, user_id: S.me.id, body: txt }); });
+  }
+
+  // Foto im Vollbild; Tippen oder Esc schliesst
+  function gvLightbox(src, alt) {
+    var old = document.querySelector('.gvlb'); if (old) old.remove();
+    var lb = document.createElement('div');
+    lb.className = 'gvlb'; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true');
+    var im = document.createElement('img'); im.src = src; im.alt = alt || '';
+    var bt = document.createElement('button'); bt.type = 'button'; bt.textContent = '✕'; bt.setAttribute('aria-label', L('gvClose'));
+    lb.appendChild(im); lb.appendChild(bt);
+    var onKey = function (ev) { if (ev.key === 'Escape') close(); };
+    var close = function () { lb.remove(); document.removeEventListener('keydown', onKey, true); };
+    lb.addEventListener('click', close);
+    document.addEventListener('keydown', onKey, true);
+    document.body.appendChild(lb);
+    bt.focus();
+  }
+  // Foto-Zähler und Pfeile beim Wischen (scroll bubbelt nicht: im Capture-Modus abfangen)
+  document.addEventListener('scroll', function (e) {
+    var s = e.target;
+    if (!s || !s.classList || !s.classList.contains('gvstrip') || !s.firstElementChild) return;
+    var w = s.firstElementChild.getBoundingClientRect().width + 6, g = s.parentNode;
+    var n = g.querySelector('.gvgn'), p = g.querySelector('.gvgb.p'), nx = g.querySelector('.gvgb.n');
+    if (n) n.textContent = (Math.min(s.children.length - 1, Math.round(s.scrollLeft / w)) + 1) + ' / ' + s.children.length;
+    if (p) p.disabled = s.scrollLeft < 4;
+    if (nx) nx.disabled = s.scrollLeft + s.clientWidth >= s.scrollWidth - 4;
+  }, true);
+  // Antippbare Inhalte auch per Tastatur (Enter/Leertaste)
+  document.addEventListener('keydown', function (e) {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.classList && e.target.classList.contains('gvx')) { e.preventDefault(); e.target.click(); }
+  });
+
   /* ---------- Live-Aktualisierung ---------- */
   var channel = null, reloadTimer;
   function scheduleReload() {
@@ -3649,7 +4797,7 @@
   function subscribe() {
     if (channel || !sb) return;
     try {
-      channel = sb.channel('vereins-daten').on('postgres_changes', { event: '*', schema: 'public' }, scheduleReload).subscribe();
+      channel = sb.channel('vereins-daten').on('postgres_changes', { event: '*', schema: 'public' }, function (p) { if (!TP || (p && p.table && p.table.indexOf(TP) === 0)) scheduleReload(); }).subscribe();
     } catch (e) { console.error(e); }
   }
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') scheduleReload(); });
@@ -3689,6 +4837,19 @@
     if (act_ === 'tr-people') { if (canEditPeople()) evOpen(D.key, 'trpeople'); return; }
     if (act_ === 'cc-guest') { if (S.me && S.me.isAdmin) ccOpen('guest', null, 'guest', { name: D.name }); return; }
     if (act_ === 'who-ev') { S.open['ev:' + D.id] = !S.open['ev:' + D.id]; render(); return; }
+    if (act_ === 'gv-pdf') { if (S.gv && S.gv.cur) await gvExportPdf(); return; }
+    if (act_ === 'gv-menu') { gvOpenSheet('menu'); return; }
+    if (act_ === 'gv-edit') { gvOpenSheet(D.k, D.id); return; }
+    if (act_ === 'gv-year') { S.gvSel = D.id; S.gvOpen = {}; S.gvMore = {}; S.gvCom = {}; await loadGv(); render(); window.scrollTo(0, 0); return; }
+    if (act_ === 'gv-fold') { S.gvOpen[D.id] = !gvIsOpen(D.id); render(); return; }
+    if (act_ === 'gv-copytext') { if (S.gv && S.gv.cur) gvCopyText(gvProgramText(S.gv.cur).text); return; }
+    if (act_ === 'gv-more') { S.gvMore[D.id] = !S.gvMore[D.id]; render(); return; }
+    if (act_ === 'gv-gal') { var gs = el.parentNode.querySelector('.gvstrip'); if (gs && gs.firstElementChild) gs.scrollBy({ left: Number(D.dir) * (gs.firstElementChild.getBoundingClientRect().width + 6), behavior: 'smooth' }); return; }
+    if (act_ === 'gv-photo') { gvLightbox(el.getAttribute('src'), el.getAttribute('alt')); return; }
+    if (act_ === 'gv-react') { await gvReact(D.key, D.e); return; }
+    if (act_ === 'gv-com') { S.gvCom[D.key] = !S.gvCom[D.key]; render(); if (S.gvCom[D.key]) { var gi = document.getElementById('gvi-' + D.key.replace(/[^\w-]/g, '_')); if (gi) gi.focus(); } return; }
+    if (act_ === 'gv-cdel') { await act(function () { return sb.from('gv_comments').delete().eq('id', D.id); }); return; }
+    if (act_ === 'gv-event') { gvGoEvent(D.id); return; }
     if (act_ === 'sec') { S.sec[D.id] = !S.sec[D.id]; render(); return; }
     if (act_ === 'info-toggle') { S.info[D.id] = !S.info[D.id]; render(); return; }   // nur den Text ein-/ausblenden, Auf-/Zuklappen bleibt unabhängig
     if (act_ === 'ev-new') { if (canManageEvents()) evOpen(null, 'new'); return; }
@@ -3811,7 +4972,7 @@
     }
     if (act_ === 'set-group') {
       var tg = S.members.filter(function (m) { return m.id === D.id; })[0];
-      if ((D.val === 'guest' || D.val === 'candidate') && tg && (tg.isAdmin || tg.isEventManager || tg.isChilbiManager || tg.isChraenzliManager || tg.isJassMaster || tg.isDirector || tg.isActor) &&
+      if ((D.val === 'guest' || D.val === 'candidate') && tg && (tg.isAdmin || tg.isEventManager || tg.isChilbiManager || tg.isChraenzliManager || tg.isJassMaster || tg.isDirector || tg.isActor || tg.isBoard) &&
           !(await askConfirm(L(D.val === 'guest' ? 'guestTag' : 'grpCandidate'), L('confirmGuestLoses', { name: tg.name }), false))) return;
       return act(function () { return sb.rpc('set_member_group', { target: D.id, grp: D.val }); }, L('groupChanged'));
     }
@@ -3823,6 +4984,10 @@
     }
     if (act_ === 'set-actor') {
       return act(function () { return sb.rpc('set_actor', { target: D.id, make_actor: D.val === '1' }); }, D.val === '1' ? L('actorGranted') : L('actorRevoked'));
+    }
+    if (act_ === 'set-bo') {
+      if (!S.me || !S.me.isAdmin) return;
+      return act(function () { return sb.rpc('set_board', { target: D.id, make_board: D.val === '1' }); }, D.val === '1' ? L('boGranted') : L('boRevoked'));
     }
     if (act_ === 'set-jm') {
       return act(function () { return sb.rpc('set_jass_master', { target: D.id, make_master: D.val === '1' }); }, D.val === '1' ? L('jmGranted') : L('jmRevoked'));
@@ -3852,6 +5017,7 @@
 
     if (kind === 'auth') return handleAuth(g);
     if (!S.me) return;
+    if (kind === 'gvc') return gvSend(form);
 
     if (kind === 'name') {
       return act(function () { return sb.from('profiles').update({ name: g('name') }).eq('id', S.me.id); }, L('nameSaved'));
