@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   // Version dieser App: bei jeder Auslieferung zusammen mit sw.js (CACHE = 'training-vNNN') erhöhen; steht im Profil oben rechts
-  var APP_VERSION = 'v132';
+  var APP_VERSION = 'v133';
 
   /* ---------- Konfiguration & Supabase ---------- */
   var cfg = window.APP_CONFIG || {};
@@ -1183,6 +1183,11 @@
   function canEditPeople() { return !!(S.me && S.me.isAdmin); }
   function canEditEvPeople() { return !!(S.me && (S.me.isEventManager || S.me.isAdmin)); }
 
+  // Kopfzeile einer Trainingskarte: Datum; bei einem Extra-Training zusätzlich « - Bezeichnung»
+  function trDateLabel(t) {
+    return fullDate(t.date) + (t.extraId && t.title ? ' - ' + esc(t.title) : '');
+  }
+
   function cardHtml(t) {
     var r = S.tr[t.key] || {};
     var off = !!S.cancelled[t.key];
@@ -1193,11 +1198,11 @@
     var cls = yes.length < 8 ? 'low' : yes.length < 13 ? 'ok' : 'high';
     if (off) {
       return '<article class="ccel off" title="' + esc(t.title) + '">' +
-        '<div class="cceh grey"><b>' + fullDate(t.date) + ' (' + L('cancelledLow') + ')</b></div>' +
+        '<div class="cceh grey"><b>' + trDateLabel(t) + ' (' + L('cancelledLow') + ')</b></div>' +
       '</article>';
     }
     return '<article class="ccel" title="' + esc(t.title + ', ' + L('timePlace', { time: t.time, place: t.place })) + '">' +
-      '<div class="cceh"><b>' + fullDate(t.date) + '</b>' +
+      '<div class="cceh"><b>' + trDateLabel(t) + '</b>' +
       (canEditPeople() ? hico('tr-people', ICON.pencil, L('evManagePeople'), { data: { key: t.key } }) : '') +
       '</div>' +
       '<div class="ccbody">' +
