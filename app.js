@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   // Version dieser App: bei jeder Auslieferung zusammen mit sw.js (CACHE = 'training-vNNN') erhöhen; steht im Profil oben rechts
-  var APP_VERSION = 'v133';
+  var APP_VERSION = 'v134';
 
   /* ---------- Konfiguration & Supabase ---------- */
   var cfg = window.APP_CONFIG || {};
@@ -1506,8 +1506,11 @@
 
   function renderNav() {
     var nav = document.getElementById('nav');
-    if (S.step !== 'app' || (S.me && S.me.isCandidate)) { nav.hidden = true; return; }
+    if (S.step !== 'app' || (S.me && S.me.isCandidate)) { nav.hidden = true; document.body.classList.remove('hasnav'); return; }
     nav.hidden = false;
+    // Mit Fussleiste ist jede Seite mindestens so hoch wie der Bildschirm bei eingeklappter Browserleiste (siehe .hasnav .shell):
+    // sonst hängt die Fussleiste bei kurzen Seiten (Jass, C&C, Admin) höher als bei langen
+    document.body.classList.add('hasnav');
     // Admin ist immer von der Einschränkung ausgenommen (z. B. falls ein Admin zusätzlich bei
     // Gast/Friends and Family eingeteilt ist). Gast & Friends and Family: nur Trainings und Profil.
     var restricted = (S.me.isGuest || S.me.isSupporter) && !S.me.isAdmin;

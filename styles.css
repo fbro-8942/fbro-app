@@ -799,3 +799,6 @@ textarea.shgrow { resize: none; overflow: hidden; min-height: 44px; }
 .ccel.gvdrafts .gvnr { color: var(--no); }
 
 .appver { font-size: .8rem; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* Fussleiste: jede Seite so hoch wie der Bildschirm bei eingeklappter Browserleiste, damit die Leiste auf kurzen Seiten nicht hÃ¶her hÃ¤ngt */
+.hasnav .shell { min-height: 100vh; min-height: 100lvh; }
