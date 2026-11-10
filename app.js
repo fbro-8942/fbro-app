@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   // Version dieser App: bei jeder Auslieferung zusammen mit sw.js (CACHE = 'training-vNNN') erhöhen; steht im Profil oben rechts
-  var APP_VERSION = 'v138';
+  var APP_VERSION = 'v141';
 
   /* ---------- Konfiguration & Supabase ---------- */
   var cfg = window.APP_CONFIG || {};
@@ -37,6 +37,7 @@
   var DICT = {
     de: {
       gvPdf: 'Als PDF (A4)', gvEditOn: 'Inhalte bearbeiten', gvEditOff: 'Bearbeiten beenden', gvVisSec: 'Generalversammlung', gvVisInfo: 'Legt fest, wer die GV sieht: niemand (auch Admins nicht), nur Admins, Vorstand (und Admins) oder alle Aktiv- und Passivmitglieder. Gäste, Kandidaten und Supporter sehen die GV nie.', trLogTitle: 'Letzte Transaktionen', trLogInfo: 'Festgehalten werden alle An- und Abmeldungen in den letzten 48 Stunden vor dem Training, oder ab dem Zeitpunkt, an dem 14 Personen angemeldet sind, wenn das früher ist.', trLogIn: 'angemeldet #{n}', trLogOut: 'abgemeldet', trLogByAdmin: 'durch Admin', appVersion: 'Version der App', gvStateF: 'Zustand', gvStateFinal: 'Final', gvStateDraft: 'Draft (in Arbeit)', gvStateProtocol: 'Protokoll (grau hinterlegt)', gvStateDraftSfx: ' (in Arbeit)', gvStateHint: 'Final: normal. Draft: Titel rot mit dem Zusatz «(in Arbeit)». Protokoll: abgedunkelt dargestellt.', gvVisAdmin: 'sichtbar für Admin', gvVisAdminNote: 'Nur für Admins sichtbar.', gvVisNone: 'sichtbar für niemanden', gvVisBoard: 'sichtbar für Vorstand', gvVisMembers: 'sichtbar für alle (Aktiv & Passiv)', gvVisNoneNote: 'Für niemanden sichtbar, nur Admins sehen diese GV.', gvVisEmpty: 'Es gibt noch keine GV.', gvVisHint: 'Aktuell: {v}. Das ändert nur der Admin in der Admin-Konsole.', gvTextTitle: 'Als Text: 52 Wochen ab {from} bis {to}', gvTextCopy: 'Text kopieren', gvTextCopied: 'Text kopiert', gvTextNone: 'Keine Termine in diesen 52 Wochen.', gvChapterF: 'Traktandum', gvChapterEdit: 'Traktandum bearbeiten', gvProtocol: 'Als Protokoll kennzeichnen', gvProtocolHint: 'Das Protokoll wird leicht abgedunkelt dargestellt und hebt sich so von den übrigen Unterlagen ab.', gvProtoTag: 'Protokoll', gvPhotoAdd: 'Foto hinzufügen', gvPhotoDel: 'Foto entfernen', gvPhotoMoveL: 'Nach vorne', gvPhotoMoveR: 'Nach hinten', gvUploading: 'Wird hochgeladen …', gvUploadFail: 'Das Foto konnte nicht hochgeladen werden.', gvMigrate: 'Fotos in den geschützten Speicher übernehmen', gvMigrateAsk: '{n} Fotos dieser GV werden aus dem App-Ordner in den geschützten Speicher kopiert. Danach kannst du die Dateien gv26-….jpg im Repo löschen. Fortfahren?', gvMigrated: 'Fotos übernommen: {n}', gvPhotosHint: 'Fotos werden verkleinert und geschützt gespeichert. Nur angemeldete Mitglieder sehen sie.',
+      pushTitle: 'Mitteilungen', pushHint: 'Wähle, wofür du Push-Nachrichten auf diesem Gerät willst. Standard: keine Mitteilungen.', pushEvents: 'Events: neue Events und Absagen', pushTrainings: 'Trainings: Absagen und Verschiebungen sowie Zu- und Absagen (ab der 14. Zusage)', pushHoursLbl: 'Zusätzlich alle Zu- und Absagen in den letzten', pushH24: '24 Std.', pushH48: '48 Std.', pushDenied: 'Mitteilungen sind im Browser blockiert. Erlaube sie in den Einstellungen des Geräts oder der Website.', pushIos: 'Auf dem iPhone: Lege die App zuerst auf den Home-Bildschirm (Teilen, dann «Zum Home-Bildschirm») und wähle die Mitteilungen danach hier.', pushUnsupported: 'Dieses Gerät oder dieser Browser unterstützt keine Push-Mitteilungen.', pushEnabledToast: 'Mitteilungen gespeichert', pushDisabledToast: 'Mitteilungen ausgeschaltet', pushFail: 'Mitteilungen konnten nicht gespeichert werden.',
       boTag: 'Vorstand', mMakeBo: 'Zum Vorstand machen', mRevokeBo: 'Vorstand-Rechte entziehen', boGranted: 'Als Vorstand festgelegt', boRevoked: 'Vorstand-Rechte entzogen', gvEditMode: 'Inhalte bearbeiten', gvEditHint: 'Bearbeiten ist aktiv: Tippe auf einen Inhalt, um ihn zu ändern.', gvCopy: 'GV kopieren', gvCopyAsk: 'Die GV {y} wird als GV {n} kopiert, mit allen Traktanden, Berichten und Fotos, aber ohne Reaktionen und Kommentare. Das Datum verschiebt sich um 52 Wochen. Die Kopie ist ein Entwurf.', gvCopied: 'Kopiert. Die neue GV ist ein Entwurf.', gvExists: 'Für das nächste Jahr gibt es schon eine GV.', gvDelete: 'GV löschen', gvDeleteAsk: 'Die GV {y} mit allen Berichten, Reaktionen und Kommentaren endgültig löschen?', gvDeleteRep: 'Diesen Bericht endgültig löschen?', gvAddReport: 'Bericht hinzufügen', gvMetaEdit: 'Titel, Datum und Ort', gvTitleF: 'Titel', gvSubtitle: 'Untertitel', gvSummary: 'Kurzinfo (sichtbar, wenn zugeklappt)', gvBody: 'Text', gvIntro: 'Einladungstext', gvPublished: 'Veröffentlicht (für alle Mitglieder sichtbar)', gvProgUntil: 'Jahresprogramm bis', gvAuthor: 'Autor (Aktivmitglied)', gvNoAuthor: 'Kein Mitglied', gvAuthorName: 'Autor als Text (nur wenn kein Mitglied)', gvPhotos: 'Fotos', gvPhotoBad: 'Fotos: nur Dateinamen wie gv26-jass-1.jpg (Buchstaben, Ziffern, - _ .)', gvFormat: 'Format: «## Zwischentitel», «> Zeile unter dem Titel», «! Hinweis», «Name | Wert». Eine Leerzeile beginnt einen neuen Absatz.', gvFinKpi: 'Kennzahlen (Name | Wert, am Ende | - für negativ)', gvFinCols: 'Spalten (mit | getrennt)', gvFinRows: 'Tabelle («## Abschnitt» oder Name | Zahl | Zahl | Zahl, am Ende | * für Zwischensumme)', gvNeedTitle: 'Bitte Titel (und bei Berichten den Text) ausfüllen.',
       navGv: 'GV', gvTitle: 'GV {y}', gvDraft: 'Entwurf, nur für den Vorstand sichtbar', gvInvite: 'Einladung', gvRsvp: 'An- oder abmelden im Dialog «Events», bis eine Woche im Voraus ({date}). Das gilt für alle Teilnehmer, auch für das Znacht.', gvToEvents: 'Zu den Events', gvToJass: 'Zum Dialog «Jass»', gvProgramHint: 'Die Termine stammen aus dem Dialog «Events», dort meldest du dich an. Das Kalendersymbol speichert den Termin in deinem Kalender.', gvNoProgram: 'Im Zeitraum sind keine Events eingetragen.', gvMore: 'Weiterlesen', gvLess: 'Weniger anzeigen', gvPrev: 'Voriges Foto', gvNext: 'Nächstes Foto', gvClose: 'Schliessen', gvPhotoAlt: 'Foto {i} von {n}: {t}', gvComment: 'Kommentieren', gvComments1: '1 Kommentar', gvCommentsN: '{n} Kommentare', gvWrite: 'Kommentar schreiben …', gvSend: 'Senden', gvNoComments: 'Noch keine Kommentare.', gvReactAria: 'Reaktion {e}',
       wd0: 'Sonntag', wd1: 'Montag', wd2: 'Dienstag', wd3: 'Mittwoch', wd4: 'Donnerstag', wd5: 'Freitag', wd6: 'Samstag',
@@ -121,6 +122,7 @@
 
     en: {
       gvPdf: 'As PDF (A4)', gvEditOn: 'Edit content', gvEditOff: 'Stop editing', gvVisSec: 'General meeting', gvVisInfo: 'Sets who sees the AGM: nobody (not even admins), admins only, the board (and admins) or all active and passive members. Guests, candidates and supporters never see it.', trLogTitle: 'Latest transactions', trLogInfo: 'All sign-ups and withdrawals are recorded during the last 48 hours before training, or from the moment 14 people are signed up if that comes earlier.', trLogIn: 'signed up #{n}', trLogOut: 'withdrawn', trLogByAdmin: 'by admin', appVersion: 'App version', gvStateF: 'Status', gvStateFinal: 'Final', gvStateDraft: 'Draft (in progress)', gvStateProtocol: 'Minutes (grey background)', gvStateDraftSfx: ' (in progress)', gvStateHint: 'Final: normal. Draft: title in red with “(in progress)”. Minutes: shown dimmed.', gvVisAdmin: 'visible to admin', gvVisAdminNote: 'Visible to admins only.', gvVisNone: 'visible to nobody', gvVisBoard: 'visible to board', gvVisMembers: 'visible to all (active & passive)', gvVisNoneNote: 'Visible to nobody, only admins see this AGM.', gvVisEmpty: 'There is no AGM yet.', gvVisHint: 'Currently: {v}. Only the admin changes this in the admin console.', gvTextTitle: 'As text: 52 weeks from {from} to {to}', gvTextCopy: 'Copy text', gvTextCopied: 'Text copied', gvTextNone: 'No dates in these 52 weeks.', gvChapterF: 'Agenda item', gvChapterEdit: 'Edit agenda item', gvProtocol: 'Mark as minutes', gvProtocolHint: 'The minutes are shown slightly dimmed so they stand out from the rest of the documents.', gvProtoTag: 'Minutes', gvPhotoAdd: 'Add photo', gvPhotoDel: 'Remove photo', gvPhotoMoveL: 'Move forward', gvPhotoMoveR: 'Move back', gvUploading: 'Uploading …', gvUploadFail: 'The photo could not be uploaded.', gvMigrate: 'Move photos to protected storage', gvMigrateAsk: '{n} photos of this AGM will be copied from the app folder to protected storage. Afterwards you can delete the gv26-….jpg files from the repository. Continue?', gvMigrated: 'Photos moved: {n}', gvPhotosHint: 'Photos are resized and stored protected. Only signed-in members can see them.',
+      pushTitle: 'Notifications', pushHint: 'Choose what you want push notifications for on this device. Default: none.', pushEvents: 'Events: new events and cancellations', pushTrainings: 'Trainings: cancellations and changes, plus sign-ups and withdrawals (from the 14th sign-up)', pushHoursLbl: 'Additionally all sign-ups and withdrawals in the last', pushH24: '24 h', pushH48: '48 h', pushDenied: 'Notifications are blocked in the browser. Allow them in the settings of your device or the website.', pushIos: 'On iPhone: first add the app to your Home Screen (Share, then "Add to Home Screen"), then choose your notifications here.', pushUnsupported: 'This device or browser does not support push notifications.', pushEnabledToast: 'Notifications saved', pushDisabledToast: 'Notifications turned off', pushFail: 'Notifications could not be saved.',
       boTag: 'Board', mMakeBo: 'Make board member', mRevokeBo: 'Remove board rights', boGranted: 'Set as board member', boRevoked: 'Board rights removed', gvEditMode: 'Edit content', gvEditHint: 'Editing is on: tap any content to change it.', gvCopy: 'Copy AGM', gvCopyAsk: 'The AGM {y} will be copied as AGM {n}, with all agenda items, reports and photos, but without reactions and comments. The date moves by 52 weeks. The copy is a draft.', gvCopied: 'Copied. The new AGM is a draft.', gvExists: 'There is already an AGM for the next year.', gvDelete: 'Delete AGM', gvDeleteAsk: 'Permanently delete the AGM {y} with all reports, reactions and comments?', gvDeleteRep: 'Permanently delete this report?', gvAddReport: 'Add report', gvMetaEdit: 'Title, date and place', gvTitleF: 'Title', gvSubtitle: 'Subtitle', gvSummary: 'Short info (shown when collapsed)', gvBody: 'Text', gvIntro: 'Invitation text', gvPublished: 'Published (visible to all members)', gvProgUntil: 'Annual programme until', gvAuthor: 'Author (active member)', gvNoAuthor: 'No member', gvAuthorName: 'Author as text (only if not a member)', gvPhotos: 'Photos', gvPhotoBad: 'Photos: file names only, like gv26-jass-1.jpg (letters, digits, - _ .)', gvFormat: 'Format: “## Subheading”, “> Line below the title”, “! Note”, “Name | Value”. A blank line starts a new paragraph.', gvFinKpi: 'Key figures (Name | Value, add | - for negative)', gvFinCols: 'Columns (separated by |)', gvFinRows: 'Table (“## Section” or Name | number | number | number, add | * for subtotal)', gvNeedTitle: 'Please fill in the title (and the text for reports).',
       navGv: 'AGM', gvTitle: 'AGM {y}', gvDraft: 'Draft, visible to the board only', gvInvite: 'Invitation', gvRsvp: 'Sign up or cancel in the “Events” tab, one week in advance at the latest ({date}). This applies to all participants, including the dinner.', gvToEvents: 'Go to Events', gvToJass: 'Go to “Jass”', gvProgramHint: 'The dates come from the “Events” tab, where you sign up. The calendar icon saves the date to your calendar.', gvNoProgram: 'No events are entered for this period.', gvMore: 'Read more', gvLess: 'Show less', gvPrev: 'Previous photo', gvNext: 'Next photo', gvClose: 'Close', gvPhotoAlt: 'Photo {i} of {n}: {t}', gvComment: 'Comment', gvComments1: '1 comment', gvCommentsN: '{n} comments', gvWrite: 'Write a comment …', gvSend: 'Send', gvNoComments: 'No comments yet.', gvReactAria: 'Reaction {e}',
       wd0: 'Sunday', wd1: 'Monday', wd2: 'Tuesday', wd3: 'Wednesday', wd4: 'Thursday', wd5: 'Friday', wd6: 'Saturday',
@@ -205,6 +207,7 @@
 
     gsw: {
       gvPdf: 'Als PDF (A4)', gvEditOn: 'Inhalt bearbeite', gvEditOff: 'Bearbeite beände', gvVisSec: 'Generalversammlig', gvVisInfo: 'Leit fescht, wär d GV gseht: niemer (au d Admins nöd), nume d Admins, de Vorstand (und d Admins) oder alli Aktiv- und Passivmitglieder. Gäscht, Kandidate und Supporter gsehnd d GV nie.', trLogTitle: 'Letschti Transaktione', trLogInfo: 'Alli Aamäldige und Abmäldige i de letschte 48 Stund vor em Training werded festghalte, oder ab em Momänt, wo 14 Lüüt aagmäldet sind, wänn das früecher isch.', trLogIn: 'aagmäldet #{n}', trLogOut: 'abgmäldet', trLogByAdmin: 'dur Admin', appVersion: 'Version vo de App', gvStateF: 'Zuestand', gvStateFinal: 'Final', gvStateDraft: 'Draft (i Arbeit)', gvStateProtocol: 'Protokoll (grau hinterlegt)', gvStateDraftSfx: ' (i Arbeit)', gvStateHint: 'Final: normal. Draft: Titel rot mit «(i Arbeit)». Protokoll: abdunklet aazeigt.', gvVisAdmin: 'sichtbar für Admin', gvVisAdminNote: 'Nume für Admins sichtbar.', gvVisNone: 'sichtbar für niemer', gvVisBoard: 'sichtbar für de Vorstand', gvVisMembers: 'sichtbar für alli (Aktiv & Passiv)', gvVisNoneNote: 'Für niemer sichtbar, nume Admins gsehnd die GV.', gvVisEmpty: 'Es gits no kei GV.', gvVisHint: 'Jetzt: {v}. Das ändered nume d Admins i de Admin-Konsole.', gvTextTitle: 'Als Text: 52 Wuche ab {from} bis {to}', gvTextCopy: 'Text kopiere', gvTextCopied: 'Text kopiert', gvTextNone: 'Kei Termin i dene 52 Wuche.', gvChapterF: 'Traktandum', gvChapterEdit: 'Traktandum bearbeite', gvProtocol: 'Als Protokoll kennzeichne', gvProtocolHint: 'S Protokoll wird liecht abdunklet aazeigt und hebt sich so vo de andere Underlage ab.', gvProtoTag: 'Protokoll', gvPhotoAdd: 'Foti hinzuefüege', gvPhotoDel: 'Foti entfärne', gvPhotoMoveL: 'Nach vorne', gvPhotoMoveR: 'Nach hinde', gvUploading: 'Wird ufeglade …', gvUploadFail: 'S Foti het nöd chöne ufeglade wärde.', gvMigrate: 'Foti is gschützt Spychere übernäh', gvMigrateAsk: '{n} Foti vo dere GV werded us em App-Ordner is gschützt Spychere kopiert. Nachhär chasch d Dateie gv26-….jpg im Repo lösche. Wiiter?', gvMigrated: 'Foti übernoo: {n}', gvPhotosHint: 'D Foti werded verchleineret und gschützt gspycheret. Nume aagmäldeti Mitglieder gsehnd si.',
+      pushTitle: 'Mitteilige', pushHint: 'Wähl, für was du Push-Nachrichte uf dem Gerät wotsch. Standard: kei Mitteilige.', pushEvents: 'Events: neui Events und Absage', pushTrainings: 'Trainings: Absage und Verschiebige sowie Zue- und Absage (ab de 14. Zuesag)', pushHoursLbl: 'Zuesätzlich alli Zue- und Absage i de letschte', pushH24: '24 Std.', pushH48: '48 Std.', pushDenied: 'D Mitteilige sind im Browser blockiert. Erlaub si i de Iistellige vom Gerät oder vo de Website.', pushIos: 'Uf em iPhone: Leg d App zerscht uf de Home-Bildschirm (Teile, denn «Zum Home-Bildschirm») und wähl d Mitteilige danach do.', pushUnsupported: 'Das Gerät oder dä Browser understützt kei Push-Mitteilige.', pushEnabledToast: 'Mitteilige gspeicheret', pushDisabledToast: 'Mitteilige usgschaltet', pushFail: 'D Mitteilige hend nöd chöne gspeicheret werde.',
       boTag: 'Vorstand', mMakeBo: 'Zum Vorstand mache', mRevokeBo: 'Vorstand-Rächt entzieh', boGranted: 'Als Vorstand festgleit', boRevoked: 'Vorstand-Rächt entzoge', gvEditMode: 'Inhält bearbeite', gvEditHint: 'Bearbeite isch aktiv: Tipp uf en Inhalt, zum en ändere.', gvCopy: 'GV kopiere', gvCopyAsk: 'D GV {y} wird als GV {n} kopiert, mit allne Traktande, Bricht und Foti, aber ohni Reaktione und Kommentär. S Datum rutscht um 52 Wuche wiiter. D Kopie isch en Entwurf.', gvCopied: 'Kopiert. D neu GV isch en Entwurf.', gvExists: 'Fürs nächscht Jahr gits scho e GV.', gvDelete: 'GV lösche', gvDeleteAsk: 'D GV {y} mit allne Bricht, Reaktione und Kommentär ändgültig lösche?', gvDeleteRep: 'Dä Bricht ändgültig lösche?', gvAddReport: 'Bricht hinzuefüege', gvMetaEdit: 'Titel, Datum und Ort', gvTitleF: 'Titel', gvSubtitle: 'Untertitel', gvSummary: 'Churzinfo (gsehsch, wänn zuegchlappt)', gvBody: 'Text', gvIntro: 'Iladigstext', gvPublished: 'Veröffentlicht (für alli Mitglieder sichtbar)', gvProgUntil: 'Jahresprogramm bis', gvAuthor: 'Autor (Aktivmitglied)', gvNoAuthor: 'Kei Mitglied', gvAuthorName: 'Autor als Text (nume wänn kei Mitglied)', gvPhotos: 'Foti', gvPhotoBad: 'Foti: nume Dateinäme wie gv26-jass-1.jpg (Buechstabe, Ziffere, - _ .)', gvFormat: 'Format: «## Zwüschetitel», «> Zile under em Titel», «! Hiwis», «Name | Wert». E Leerzile fangt en neue Abschnitt aa.', gvFinKpi: 'Kennzahle (Name | Wert, am Schluss | - für negativ)', gvFinCols: 'Spalte (mit | trennt)', gvFinRows: 'Tabälle («## Abschnitt» oder Name | Zahl | Zahl | Zahl, am Schluss | * für Zwüschesumme)', gvNeedTitle: 'Bitte Titel (und bi Bricht de Text) usfülle.',
       navGv: 'GV', gvTitle: 'GV {y}', gvDraft: 'Entwurf, nume für de Vorstand sichtbar', gvInvite: 'Iladig', gvRsvp: 'Aa- oder abmälde im Dialog «Events», bis ei Wuche vorher ({date}). Das gilt für alli Teilnähmer, au fürs Znacht.', gvToEvents: 'Zu de Events', gvToJass: 'Zum Dialog «Jass»', gvProgramHint: 'D Termin chömed us em Dialog «Events», det mäldisch dich aa. S Kaländer-Symbol speicheret de Termin i dim Kaländer.', gvNoProgram: 'Im Ziitruum sind kei Events igtrait.', gvMore: 'Wiiterlääse', gvLess: 'Weniger aazeige', gvPrev: 'Vorigs Foti', gvNext: 'Nächschts Foti', gvClose: 'Zuemache', gvPhotoAlt: 'Foti {i} vo {n}: {t}', gvComment: 'Kommentiere', gvComments1: '1 Kommentar', gvCommentsN: '{n} Kommentär', gvWrite: 'Kommentar schriibe …', gvSend: 'Sände', gvNoComments: 'Na kei Kommentär.', gvReactAria: 'Reaktion {e}',
       wd0: 'Sunntig', wd1: 'Mäntig', wd2: 'Ziischtig', wd3: 'Mittwuch', wd4: 'Dunnschtig', wd5: 'Fritig', wd6: 'Samschtig',
@@ -290,6 +293,7 @@
 
     uk: {
       gvPdf: 'У форматі PDF (A4)', gvEditOn: 'Редагувати вміст', gvEditOff: 'Завершити редагування', gvVisSec: 'Загальні збори', gvVisInfo: 'Визначає, хто бачить збори: ніхто (навіть адміністратори), лише адміністратори, правління (й адміністратори) або всі активні та пасивні члени. Гості, кандидати й прихильники ніколи їх не бачать.', trLogTitle: 'Останні операції', trLogInfo: 'Фіксуються всі записи й відмови протягом останніх 48 годин перед тренуванням або з моменту, коли записано 14 осіб, якщо це раніше.', trLogIn: 'записався #{n}', trLogOut: 'відмовився', trLogByAdmin: 'адміністратором', appVersion: 'Версія застосунку', gvStateF: 'Стан', gvStateFinal: 'Остаточний', gvStateDraft: 'Чернетка (у роботі)', gvStateProtocol: 'Протокол (сірий фон)', gvStateDraftSfx: ' (у роботі)', gvStateHint: 'Остаточний: звичайно. Чернетка: заголовок червоним із «(у роботі)». Протокол: показано затемненим.', gvVisAdmin: 'видно адміністратору', gvVisAdminNote: 'Видно лише адміністраторам.', gvVisNone: 'нікому не видно', gvVisBoard: 'видно правлінню', gvVisMembers: 'видно всім (активним і пасивним)', gvVisNoneNote: 'Нікому не видно, ці збори бачать лише адміністратори.', gvVisEmpty: 'Загальних зборів ще немає.', gvVisHint: 'Зараз: {v}. Змінює це лише адміністратор у консолі адміністратора.', gvTextTitle: 'Текстом: 52 тижні з {from} до {to}', gvTextCopy: 'Копіювати текст', gvTextCopied: 'Текст скопійовано', gvTextNone: 'У ці 52 тижні подій немає.', gvChapterF: 'Пункт порядку денного', gvChapterEdit: 'Редагувати пункт', gvProtocol: 'Позначити як протокол', gvProtocolHint: 'Протокол відображається трохи затемненим і відрізняється від решти документів.', gvProtoTag: 'Протокол', gvPhotoAdd: 'Додати фото', gvPhotoDel: 'Видалити фото', gvPhotoMoveL: 'Ближче до початку', gvPhotoMoveR: 'Ближче до кінця', gvUploading: 'Завантаження …', gvUploadFail: 'Не вдалося завантажити фото.', gvMigrate: 'Перенести фото в захищене сховище', gvMigrateAsk: '{n} фото цих ЗЗ буде скопійовано з теки застосунку в захищене сховище. Після цього можна видалити файли gv26-….jpg з репозиторію. Продовжити?', gvMigrated: 'Фото перенесено: {n}', gvPhotosHint: 'Фото зменшуються й зберігаються захищено. Їх бачать лише авторизовані члени.',
+      pushTitle: 'Сповіщення', pushHint: 'Виберіть, про що ви хочете отримувати push-сповіщення на цьому пристрої. За замовчуванням: жодних.', pushEvents: 'Події: нові події та скасування', pushTrainings: 'Тренування: скасування та перенесення, а також записи й відмови (від 14-го запису)', pushHoursLbl: 'Додатково всі записи та відмови протягом останніх', pushH24: '24 год', pushH48: '48 год', pushDenied: 'Сповіщення заблоковано в браузері. Дозвольте їх у налаштуваннях пристрою або вебсайту.', pushIos: 'На iPhone: спершу додайте застосунок на головний екран (Поділитися, потім «На початковий екран»), а потім виберіть сповіщення тут.', pushUnsupported: 'Цей пристрій або браузер не підтримує push-сповіщень.', pushEnabledToast: 'Сповіщення збережено', pushDisabledToast: 'Сповіщення вимкнено', pushFail: 'Не вдалося зберегти сповіщення.',
       boTag: 'Правління', mMakeBo: 'Призначити членом правління', mRevokeBo: 'Забрати права правління', boGranted: 'Призначено членом правління', boRevoked: 'Права правління забрано', gvEditMode: 'Редагувати вміст', gvEditHint: 'Редагування активне: торкніться вмісту, щоб змінити його.', gvCopy: 'Копіювати ЗЗ', gvCopyAsk: 'ЗЗ {y} буде скопійовано як ЗЗ {n}, з усіма пунктами, звітами та фото, але без реакцій і коментарів. Дата зміститься на 52 тижні. Копія є чернеткою.', gvCopied: 'Скопійовано. Нові ЗЗ є чернеткою.', gvExists: 'На наступний рік уже є ЗЗ.', gvDelete: 'Видалити ЗЗ', gvDeleteAsk: 'Остаточно видалити ЗЗ {y} з усіма звітами, реакціями та коментарями?', gvDeleteRep: 'Остаточно видалити цей звіт?', gvAddReport: 'Додати звіт', gvMetaEdit: 'Назва, дата й місце', gvTitleF: 'Назва', gvSubtitle: 'Підзаголовок', gvSummary: 'Коротко (видно у згорнутому вигляді)', gvBody: 'Текст', gvIntro: 'Текст запрошення', gvPublished: 'Опубліковано (видно всім членам)', gvProgUntil: 'Річна програма до', gvAuthor: 'Автор (активний член)', gvNoAuthor: 'Не член клубу', gvAuthorName: 'Автор текстом (лише якщо не член)', gvPhotos: 'Фото', gvPhotoBad: 'Фото: лише імена файлів, як gv26-jass-1.jpg (літери, цифри, - _ .)', gvFormat: 'Формат: «## Підзаголовок», «> Рядок під заголовком», «! Примітка», «Ім’я | Значення». Порожній рядок починає новий абзац.', gvFinKpi: 'Ключові показники (Назва | Значення, в кінці | - для від’ємного)', gvFinCols: 'Стовпці (розділені |)', gvFinRows: 'Таблиця («## Розділ» або Назва | число | число | число, в кінці | * для проміжної суми)', gvNeedTitle: 'Заповніть назву (і текст для звітів).',
       navGv: 'ЗЗ', gvTitle: 'ЗЗ {y}', gvDraft: 'Чернетка, видима лише правлінню', gvInvite: 'Запрошення', gvRsvp: 'Записатися або відмовитися можна в розділі «Події» не пізніше ніж за тиждень ({date}). Це стосується всіх учасників, також вечері.', gvToEvents: 'До подій', gvToJass: 'До розділу «Джас»', gvProgramHint: 'Дати беруться з розділу «Події», там ви й записуєтеся. Значок календаря зберігає подію у вашому календарі.', gvNoProgram: 'На цей період подій немає.', gvMore: 'Читати далі', gvLess: 'Показати менше', gvPrev: 'Попереднє фото', gvNext: 'Наступне фото', gvClose: 'Закрити', gvPhotoAlt: 'Фото {i} з {n}: {t}', gvComment: 'Коментувати', gvComments1: '1 коментар', gvCommentsN: '{n} коментарів', gvWrite: 'Написати коментар …', gvSend: 'Надіслати', gvNoComments: 'Коментарів ще немає.', gvReactAria: 'Реакція {e}',
       wd0: 'Неділя', wd1: 'Понеділок', wd2: 'Вівторок', wd3: 'Середа', wd4: 'Четвер', wd5: 'П’ятниця', wd6: 'Субота',
@@ -1241,6 +1245,86 @@
     return L(S.me.isCandidate ? 'grpCandidate' : S.me.isGuest ? 'ccGuests' : S.me.isSupporter ? 'grpSupporter' : S.me.isPassive ? 'grpPassive' : 'grpActive');
   }
 
+  /* ---------- Push-Mitteilungen (pro Gerät; Standard: keine) ---------- */
+  function pushSupported() {
+    return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+  }
+  function b64uToBytes(s) {
+    var b = atob((s + '='.repeat((4 - s.length % 4) % 4)).replace(/-/g, '+').replace(/_/g, '/'));
+    var a = new Uint8Array(b.length);
+    for (var i = 0; i < b.length; i++) a[i] = b.charCodeAt(i);
+    return a;
+  }
+  // Einstellung dieses Geräts: ev = Events, tr = Trainings, h = Stunden vor dem Training (24 oder 48)
+  function pushPrefs() { return S.pp || { ev: false, tr: false, h: 48 }; }
+  async function pushRefresh() {
+    var on = false, pp = { ev: false, tr: false, h: (S.pp && S.pp.h) || 48 };
+    try {
+      if (pushSupported() && S.me) {
+        var reg = await navigator.serviceWorker.getRegistration();
+        var sub = reg ? await reg.pushManager.getSubscription() : null;
+        if (sub) {
+          var r = await sb.from('push_subscriptions').select('pref_events,pref_trainings,train_hours').eq('endpoint', sub.endpoint).limit(1);
+          if (r.data && r.data.length) {
+            on = true;
+            pp = { ev: !!r.data[0].pref_events, tr: !!r.data[0].pref_trainings, h: r.data[0].train_hours === 24 ? 24 : 48 };
+          }
+        }
+      }
+    } catch (e) { console.error(e); }
+    if (!!S.pushOn !== on || JSON.stringify(pushPrefs()) !== JSON.stringify(pp)) { S.pushOn = on; S.pp = pp; render(); }
+  }
+  // Abo anlegen bzw. Einstellungen speichern; false = Erlaubnis verweigert
+  async function pushSave(np) {
+    if (Notification.permission !== 'granted') {
+      var perm = await Notification.requestPermission();
+      if (perm !== 'granted') return false;
+    }
+    var reg = await navigator.serviceWorker.ready;
+    var key = await sb.rpc('push_public_key');
+    if (key.error || !key.data) throw (key.error || new Error('kein Schluessel'));
+    for (var attempt = 0; attempt < 2; attempt++) {
+      var sub = await reg.pushManager.getSubscription();
+      if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64uToBytes(key.data) });
+      var j = sub.toJSON();
+      var up = await sb.from('push_subscriptions').upsert({ user_id: S.me.id, endpoint: j.endpoint, p256dh: j.keys.p256dh, auth: j.keys.auth, pref_events: !!np.ev, pref_trainings: !!np.tr, train_hours: np.h === 24 ? 24 : 48 }, { onConflict: 'endpoint' });
+      if (!up.error) return true;
+      // Das Abo gehoert noch einer anderen Person (gemeinsames Geraet): neues Abo erzeugen
+      console.error(up.error);
+      await sub.unsubscribe();
+    }
+    throw new Error('push subscribe');
+  }
+  async function pushDisable() {
+    var reg = await navigator.serviceWorker.getRegistration();
+    var sub = reg ? await reg.pushManager.getSubscription() : null;
+    if (sub) {
+      await sb.from('push_subscriptions').delete().eq('endpoint', sub.endpoint);
+      await sub.unsubscribe();
+    }
+  }
+  function pushPanel() {
+    if (!S.me || S.me.isGuest || S.me.isCandidate || S.me.isSupporter) return '';
+    var ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    var standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone;
+    var h = '<section class="panel"><h2>' + L('pushTitle') + '</h2><p>' + L('pushHint') + '</p>';
+    if (!pushSupported()) {
+      h += '<p class="small muted">' + L(ios && !standalone ? 'pushIos' : 'pushUnsupported') + '</p>';
+    } else if (window.Notification && Notification.permission === 'denied') {
+      h += '<p class="small muted">' + L('pushDenied') + '</p>';
+    } else {
+      if (S.pushChk === undefined) { S.pushChk = true; pushRefresh(); }
+      var pp = pushPrefs();
+      h += '<label class="check"><input type="checkbox" data-act="push-pref" data-k="ev"' + (pp.ev ? ' checked' : '') + '><span>' + L('pushEvents') + '</span></label>' +
+        '<label class="check"><input type="checkbox" data-act="push-pref" data-k="tr"' + (pp.tr ? ' checked' : '') + '><span>' + L('pushTrainings') + '</span></label>';
+      if (pp.tr) {
+        h += '<p class="small muted" style="margin:10px 0 6px">' + L('pushHoursLbl') + '</p><div class="segctl" role="group">' +
+          [24, 48].map(function (n) { return '<button type="button" class="segbtn' + (pp.h === n ? ' on' : '') + '" data-act="push-hours" data-val="' + n + '" aria-pressed="' + (pp.h === n) + '"><span>' + L(n === 24 ? 'pushH24' : 'pushH48') + '</span></button>'; }).join('') + '</div>';
+      }
+    }
+    return h + '</section>';
+  }
+
   function viewProfile() {
     var iosHint = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.navigator.standalone;
     var standalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
@@ -1266,6 +1350,7 @@
         (S.me.isSupporter ? '<p class="small muted" style="margin:10px 0 0">' + L('supporterInfo') + '</p>' : '') +
       '</section>' +
       '<section class="panel"><h2>' + L('language') + '</h2><p>' + L('languageHint') + '</p>' + langSelect() + '</section>' +
+      pushPanel() +
       '<section class="panel"><h2>' + L('themeTitle') + '</h2><p>' + L('themeHint') + '</p>' + themeSelect() + '</section>' +
       '<section class="panel"><h2>' + L('designTitle') + '</h2><p>' + L('designHint') + '</p>' + designSelect() + '</section>' +
       install +
@@ -4658,6 +4743,24 @@
       return;
     }
     if (act_ === 'edit-cancel') { S.edit = null; render(); return; }
+    if (act_ === 'push-pref' || act_ === 'push-hours') {
+      try {
+        var cur = pushPrefs(), np = { ev: cur.ev, tr: cur.tr, h: cur.h };
+        if (act_ === 'push-pref') np[D.k] = !!el.checked; else np.h = D.val === '24' ? 24 : 48;
+        if (!np.ev && !np.tr) {
+          await pushDisable();
+          S.pushOn = false; S.pp = np;
+          toast(L('pushDisabledToast'));
+        } else if (act_ === 'push-hours' && !S.pushOn) {
+          S.pp = np;
+        } else if (await pushSave(np)) {
+          S.pushOn = true; S.pp = np;
+          toast(L('pushEnabledToast'));
+        }
+      } catch (err) { console.error(err); toast(L('pushFail')); }
+      render();
+      return;
+    }
     if (act_ === 'install') {
       if (installPrompt) { installPrompt.prompt(); await installPrompt.userChoice; installPrompt = null; render(); }
       return;
